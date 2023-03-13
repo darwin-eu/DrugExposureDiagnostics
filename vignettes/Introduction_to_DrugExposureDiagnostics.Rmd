@@ -1,0 +1,106 @@
+---
+title: "Introduction To DrugExposureDiagnostics"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction_to_DrugExposureDiagnostics}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r , include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>")
+```
+
+```{r setup,message= FALSE, warning=FALSE}
+library(DrugExposureDiagnostics)
+library(CDMConnector)
+library(dplyr)
+library(DT)
+```
+First, connect to the database.
+
+```{r}
+cdm <- getEunomiaCdm()
+```
+
+### Check for single ingredient. 
+
+In the DrugExposureDiagnostics package, all the diagnostics are conducted on ingredient level. We will use "acetaminophen" as an example. Here is a brief look at this ingredient. 
+
++------------------+---------------+
+| Property         | Value         |
++------------------+---------------+
+| Concept Name     | acetaminophen |
++------------------+---------------+
+| Domain ID        | Drug          |
++------------------+---------------+
+| Concept Class ID | Ingredient    |
++------------------+---------------+
+| Vocabulary ID    | RxNorm        |
++------------------+---------------+
+| Concept ID       | 1125315       |
++------------------+---------------+
+| Concept code     | 161           |
++------------------+---------------+
+| Validity         | Valid         |
++------------------+---------------+
+| Concept          | Standard      |
++------------------+---------------+
+| Valid start      | 01-Jan-1970   |
++------------------+---------------+
+| Valid end        | 31-Dec-2099   |
++------------------+---------------+
+
+We can run all available checks at the same time using the ´executeChecks()´ function. This will return a list which contains the results of each check.
+
+```{r eval=FALSE}
+executeChecks(cdm,
+              ingredients = c(1125315), 
+              checks = c("missing", "exposureDuration", "type", "route","sourceConcept", "daysSupply", "verbatimEndDate","dailyDose", "sig", "quantity", "histogram"), 
+              minCellCount = 5,
+              sample = 1000000,
+              verbose = FALSE
+)
+```
+
+The`cdm` is the database reference of the OMOP CDM using the `CDMConnector` package.    
+The `ingredient` is the `concept_id` of ingredients of interests, by default it is 1125315 for acetaminophen.   
+`checks` allows to select the checks to be executed, by default, all the checks will be run.   
+`sample` is the number of samples, by default, 1 million drug record samples will be used.  
+The `minCellCount` is minimum number of events to report, numbers lower than this will be obscured.    
+
+
+```{r executeChecks}
+all_checks<-executeChecks(cdm, ingredients = 1125315)
+
+```
+
+We can then check what results available from ´executeChecks()´ by
+```{r}
+names(all_checks)
+```
+
+Let's take a look at the results. `ingredientConcepts` contains information on the concept ids that are used in the database for a given ingredient. So in the case of acetaminophen, the following drugs contain the acetaminophen as an ingredient. 
+
+
+
+```{r,  message=FALSE, warning=FALSE }  
+datatable(all_checks$ingredientConcepts,
+  rownames = FALSE
+)
+```
+
+
+After running the checks, we can write the CSV files into a zip file to disk using the `writeResultToDisk()` function. 
+```{r eval=FALSE}
+writeResultToDisk(all_checks,
+                  databaseId = "your_database_id", 
+                  outputFolder = "output_folder")
+```
+
+
+```{r, echo=FALSE}
+  DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
+```

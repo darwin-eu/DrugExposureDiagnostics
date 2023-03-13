@@ -1,0 +1,97 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# DrugExposureDiagnostics
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of DrugExposureDiagnostics is to summarise ingredient specific drug exposure data in the OMOP CDM.
+
+## Installation
+
+You can install the development version of DrugExposureDiagnostics like this:
+
+``` r
+install.packages("remotes")
+remotes::install_github("darwin-eu-dev/DrugExposureDiagnostics")
+```
+## Setup
+
+In order to use the example data from the eunomia dataset, you need to set an environment variable. You can do it like this:
+
+* ```{r} usethis::edit_r_environ() ```
+* EUNOMIA_DATA_FOLDER = "/mypath/eunomiaData"
+* save the file
+* restart RStudio
+
+## Example use
+```{r, message=FALSE}
+library(DrugExposureDiagnostics)
+library(CDMConnector)
+library(dplyr)
+```
+
+```{r}
+cdm <- getEunomiaCdm()
+```
+
+Let´s look at the ingredient acetaminophen (https://athena.ohdsi.org/search-terms/terms/1125315).
+
+We can run all the checks available in ´DrugExposureDiagnostics´ using the ´executeChecks´ function. 
+
+```{r}
+all_checks <- executeChecks(cdm, 1125315, minCellCount = NULL)
+```
+
+The output is a list which contains the following set of tibbles:
+```{r}
+names(all_checks)
+```
+
+The first item contains information on the concept ids that are used in the database for a given ingredient. 
+```{r}
+glimpse(all_checks$conceptSummary)
+all_checks$conceptSummary %>% 
+  select("drug_concept_id", "drug")
+```
+
+Other tibbles then contain information from the various checks performed.
+
+For example, we can see a summary of missingness for the ingredient-related records in the  drug exposure table, both overall and by concept.
+```{r}
+all_checks$missingValuesOverall
+all_checks$missingValuesByConcept
+```
+
+Or we can also see a summary of drug exposure duration (drug_exposure_end_date - drug_exposure_end_date + 1), again overall or by concept.
+```{r}
+all_checks$drugExposureDurationOverall
+all_checks$drugExposureDurationByConcept
+```
+
+For further information on the checks performed please see the package vignettes.
+
+After running the checks we can write the CSVs to disk using the `writeResultToDisk` function.
+```{r}
+writeResultToDisk(all_checks,
+                  databaseId = "Synthea", 
+                  outputFolder =tempdir())
+```
+
+
+```{r, echo=FALSE}
+  DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
+```

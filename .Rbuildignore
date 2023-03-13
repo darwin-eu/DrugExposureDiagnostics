@@ -1,0 +1,13 @@
+^DrugExposureDiagnostics\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^README\.Rmd$
+^\.github$
+^extras$
+^tmp$
+^output$
+^cran-comments\.md$
+^CRAN-SUBMISSION$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
