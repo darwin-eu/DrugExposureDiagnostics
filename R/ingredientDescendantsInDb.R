@@ -165,6 +165,7 @@ ingredientDescendantsInDb <- function(cdm,
     dplyr::select("concept_id","concept_name") %>%
     dplyr::rename("dose_form" = "concept_name") %>%
     dplyr::collect()
+
   # can have multiple forms so pivot (locally)
   drugConceptForm <- drugConceptForm %>%
     dplyr::group_by(.data$concept_id) %>%
@@ -174,21 +175,22 @@ ingredientDescendantsInDb <- function(cdm,
       values_from = "dose_form"
     )
   if (nrow(drugConceptForm) > 0) {
-    if(ncol(drugConceptForm) > 2){ # multiple forms for at least one concept
-    drugConceptForm <- drugConceptForm %>%
-      tidyr::unite(
-        col = "dose_form", 2:ncol(drugConceptForm), sep = "; ",
-        na.rm = TRUE
-      )} else {
+    if (ncol(drugConceptForm) > 2) { # multiple forms for at least one concept
+      drugConceptForm <- drugConceptForm %>%
+        tidyr::unite(
+          col = "dose_form", 2:ncol(drugConceptForm), sep = "; ",
+          na.rm = TRUE
+        )
+    } else {
         names(drugConceptForm)[2] <- "dose_form"
-      }
-
+    }
     dbConceptsTable <- dbConceptsTable %>%
       dplyr::left_join(drugConceptForm,
                        by="concept_id",
                        copy = TRUE)
   } else {
-    dbConceptsTable$dose_form <- NA
+    dbConceptsTable <- dbConceptsTable %>%
+      dplyr::mutate(dose_form = NA)
   }
   # store result
   dbConceptsTable <- computeDBQuery(table = dbConceptsTable,
@@ -202,6 +204,5 @@ ingredientDescendantsInDb <- function(cdm,
       "Overall time taken: {floor(duration/60)} minutes and {duration %% 60 %/% 1} seconds"
     ))
   }
-
   return(dbConceptsTable)
 }

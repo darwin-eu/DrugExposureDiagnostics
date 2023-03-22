@@ -166,17 +166,15 @@ test_that("summary", {
 
   expect_equal(
     names(result$diagnostics_summary),
-    c("ingredient_concept_id","ingredient",
-      "n_records",
-      "proportion_of_records_with_dose_form",
-      "proportion_of_records_by_route_type",
+    c("ingredient", "ingredient_concept_id", "n_records",
       "proportion_of_records_by_drug_type",
-      "proportion_of_records_with_negative_drug_exposure_days",
-      "median_drug_exposure_days_q05_q95",
-      "proportion_of_records_missing_days_supply_or_dates",
-      "median_quantity_q05_q95",
+      "proportion_of_records_by_route_type",
+      "proportion_of_records_with_dose_form",
       "proportion_of_records_missing_denominator_unit_concept_id",
       "median_amount_value_q05_q95",
+      "median_quantity_q05_q95",
+      "median_drug_exposure_days_q05_q95",
+      "proportion_of_records_with_negative_drug_exposure_days",
       "result_obscured"))
 
   DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
