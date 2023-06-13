@@ -34,3 +34,11 @@ test_that("test save load fucntionality for histograms", {
   reloadedHist <- dataFrame2Hist(df)
   expect_equal(resultDaysSupply, reloadedHist)
 })
+
+test_that("test NA input", {
+  cdm <- getInputDb()
+  cdm$drug_exposure <- cdm$drug_exposure %>% dplyr::mutate(days_supply = NA)
+  resultDaysSupply <- createHistogram(cdm, "drug_exposure", type = "days_supply")
+  expect_equal(resultDaysSupply, NULL)
+})
+

@@ -18,6 +18,9 @@
 #'
 #' @param cdm CDMConnector reference object
 #' @param ingredients vector of ingredients, by default: acetaminophen
+#' @param subsetToConceptId vector of concept IDs of the ingredients
+#'  to subset down to. If NULL, all concept IDs for an ingredient will be
+#'  considered.
 #' @param checks the checks to be executed, by default everything
 #' @param minCellCount minimum number of events to report- results
 #' lower than this will be obscured. If NULL all results will be reported.
@@ -46,6 +49,7 @@
 #' }
 executeChecks <- function(cdm,
                           ingredients = c(1125315),
+                          subsetToConceptId = NULL,
                           checks = c("missing", "exposureDuration", "type", "route",
                                      "sourceConcept", "daysSupply", "verbatimEndDate",
                                      "dose", "sig", "quantity", "histogram"),
@@ -69,6 +73,7 @@ executeChecks <- function(cdm,
   for (ingredient in ingredients) {
     newResultList <- executeChecksSingleIngredient(cdm = cdm,
                                                    ingredient = ingredient,
+                                                   subsetToConceptId = subsetToConceptId,
                                                    checks = checks,
                                                    minCellCount = minCellCount,
                                                    sample = sample,
@@ -92,6 +97,9 @@ executeChecks <- function(cdm,
 #'
 #' @param cdm CDMConnector reference object
 #' @param ingredient ingredient, by default: acetaminophen
+#' @param subsetToConceptId vector of concept IDs of the ingredients
+#'  to subset down to. If NULL, all concept IDs for an ingredient will be
+#'  considered.
 #' @param checks the checks to be executed, by default everything
 #' @param minCellCount minimum number of events to report- results
 #' lower than this will be obscured. If NULL all results will be reported.
@@ -107,6 +115,7 @@ executeChecks <- function(cdm,
 #' @return named list with results
 executeChecksSingleIngredient <- function(cdm,
                                           ingredient = 1125315,
+                                          subsetToConceptId = NULL,
                                           checks = c("missing", "exposureDuration", "type", "route",
                                                      "sourceConcept", "daysSupply", "verbatimEndDate",
                                                      "dose", "sig", "quantity", "histogram"),
@@ -137,6 +146,10 @@ executeChecksSingleIngredient <- function(cdm,
     verbose = verbose,
     tablePrefix = tablePrefix
   )
+  if(!is.null(subsetToConceptId)){
+    cdm[["ingredient_concepts"]] <- cdm[["ingredient_concepts"]] %>%
+    dplyr::filter(.data$concept_id %in%  .env$subsetToConceptId)
+  }
 
   if (verbose == TRUE) {
     start <- printDurationAndMessage("Progress: getting drug strength for ingredient", start)

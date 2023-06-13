@@ -7,6 +7,7 @@
 executeChecksSingleIngredient(
   cdm,
   ingredient = 1125315,
+  subsetToConceptId = NULL,
   checks = c("missing", "exposureDuration", "type", "route", "sourceConcept",
     "daysSupply", "verbatimEndDate", "dose", "sig", "quantity", "histogram"),
   minCellCount = 5,
@@ -20,6 +21,10 @@ executeChecksSingleIngredient(
 \item{cdm}{CDMConnector reference object}
 
 \item{ingredient}{ingredient, by default: acetaminophen}
+
+\item{subsetToConceptId}{vector of concept IDs of the ingredients
+to subset down to. If NULL, all concept IDs for an ingredient will be
+considered.}
 
 \item{checks}{the checks to be executed, by default everything}
 

@@ -294,14 +294,9 @@ mockDrugExposure <- function(drug_exposure = NULL,
                       overwrite = TRUE)
   })
 
-  cdm <- CDMConnector::cdm_from_con(db,
-                                    cdm_tables = c(
-                                      "concept_ancestor",
-                                      "concept_relationship",
-                                      "concept",
-                                      "drug_strength",
-                                      "drug_exposure"
-                                    ))
+  cdm <- CDMConnector::cdm_from_con(db) %>%
+    CDMConnector::cdm_select_tbl(c(concept_ancestor, concept_relationship,
+                                   concept, drug_strength, drug_exposure))
 
   return(cdm)
 }

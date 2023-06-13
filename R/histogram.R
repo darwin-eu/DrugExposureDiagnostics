@@ -45,15 +45,20 @@ createHistogram <- function(cdm,
 
   histogram <- NULL
   if (nrow(histData) > 0) {
-    histogram <- hist(histData[[type]],
-                      plot = FALSE)
-    histogram$xname <- type
-    histogram$ingredient_concept_id <- histData %>%
-      dplyr::pull("ingredient_concept_id") %>%
-      unique()
-    histogram$ingredient <- histData %>%
-      dplyr::pull("ingredient") %>%
-      unique()
+    tryCatch({
+      histogram <- hist(histData[[type]],
+                        plot = FALSE)
+      histogram$xname <- type
+      histogram$ingredient_concept_id <- histData %>%
+        dplyr::pull("ingredient_concept_id") %>%
+        unique()
+      histogram$ingredient <- histData %>%
+        dplyr::pull("ingredient") %>%
+        unique()
+    },
+    error = function(message) {
+      warning(glue::glue("histogram could not be created for {type}"))
+    })
   }
   return(histogram)
 }

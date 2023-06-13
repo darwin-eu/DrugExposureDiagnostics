@@ -16,17 +16,23 @@ knitr::opts_chunk$set(
 # DrugExposureDiagnostics
 
 <!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/DrugExposureDiagnostics)](https://CRAN.R-project.org/package=DrugExposureDiagnostics)
+[![R-CMD-check](https://github.com/darwin-eu/DrugExposureDiagnostics/workflows/R-CMD-check/badge.svg)](https://github.com/darwin-eu/DrugExposureDiagnostics/actions)
 <!-- badges: end -->
 
 The goal of DrugExposureDiagnostics is to summarise ingredient specific drug exposure data in the OMOP CDM.
 
 ## Installation
 
-You can install the development version of DrugExposureDiagnostics like this:
+You can install the DrugExposureDiagnostics from CRAN like this:
 
 ``` r
+install.packages("DrugExposureDiagnostics")
+```
+or install the development version:
+``` r
 install.packages("remotes")
-remotes::install_github("darwin-eu-dev/DrugExposureDiagnostics")
+remotes::install_github("darwin-eu/DrugExposureDiagnostics")
 ```
 ## Setup
 

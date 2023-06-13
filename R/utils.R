@@ -67,16 +67,23 @@ checkIsIngredient <- function(cdm, conceptId, messageStore) {
       dplyr::select("concept_class_id") %>%
     dplyr::collect()
 
+  ingredientCheckResult <- TRUE
+  ingredientCheckMessage <- NULL
   if (nrow(ingredientConcepts) > 0) {
-    ingredientCheck <- all(ingredientConcepts %>%
+    ingredientCheckResult <- all(ingredientConcepts %>%
         dplyr::pull() == "Ingredient")
+    if (!isTRUE(ingredientCheckResult)) {
+      ingredientCheckMessage <- glue::glue("- ingredient concept ({conceptId}) does not have concept_class_id of Ingredient")
+    }
   } else {
-    ingredientCheck <- FALSE
+    ingredientCheckResult <- FALSE
+    ingredientCheckMessage <- glue::glue("- ingredient concept ({conceptId}) could not be found in concept table")
+
   }
-  checkmate::assertTRUE(ingredientCheck,
+  checkmate::assertTRUE(ingredientCheckResult,
                         add = messageStore)
-  if (!isTRUE(ingredientCheck)) {
-    messageStore$push(glue::glue("- ingredient concepts given do not have concept_class_id of Ingredient"))
+  if (!isTRUE(ingredientCheckResult)) {
+    messageStore$push(ingredientCheckMessage)
   }
 }
 

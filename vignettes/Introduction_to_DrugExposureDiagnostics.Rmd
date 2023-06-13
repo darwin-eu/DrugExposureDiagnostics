@@ -57,7 +57,8 @@ We can run all available checks at the same time using the ´executeChecks()´ f
 
 ```{r eval=FALSE}
 executeChecks(cdm,
-              ingredients = c(1125315), 
+              ingredients = c(1125315),
+              subsetToConceptId = NULL,
               checks = c("missing", "exposureDuration", "type", "route","sourceConcept", "daysSupply", "verbatimEndDate","dailyDose", "sig", "quantity", "histogram"), 
               minCellCount = 5,
               sample = 1000000,
@@ -66,7 +67,8 @@ executeChecks(cdm,
 ```
 
 The`cdm` is the database reference of the OMOP CDM using the `CDMConnector` package.    
-The `ingredient` is the `concept_id` of ingredients of interests, by default it is 1125315 for acetaminophen.   
+The `ingredients` is a list of ingredients of interests, by default it is 1125315 for acetaminophen. 
+The `subsetToConceptId` is a vector of drug concept ID's to subset down to.
 `checks` allows to select the checks to be executed, by default, all the checks will be run.   
 `sample` is the number of samples, by default, 1 million drug record samples will be used.  
 The `minCellCount` is minimum number of events to report, numbers lower than this will be obscured.    

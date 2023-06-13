@@ -1,5 +1,14 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 0.4.3
+
+* Update CDMConnector to 1.0.0
+* Add subsetToConceptId to executeChecks function
+
+# DrugExposureDiagnostics 0.4.2
+
+* Update diagnostics summary for the onboarding
+
 # DrugExposureDiagnostics 0.4.1
 
 * Update CDMConnector to 0.5.0 

@@ -51,3 +51,23 @@ test_that("check writeResultToDisk", {
   checkResultOnDisk(resultList, outFolder, dbId)
   unlink(outFolder)
 })
+
+test_that("checkIsIngredient", {
+  messageStore <- checkmate::makeAssertCollection()
+  cdm <- mockDrugExposure()
+
+  checkIsIngredient(cdm = cdm, conceptId = 1125315, messageStore = messageStore)
+  expect_true(messageStore$isEmpty())
+
+  # concept id does not exist
+  messageStore <- checkmate::makeAssertCollection()
+  checkIsIngredient(cdm = cdm, conceptId = 123456789, messageStore = messageStore)
+  expect_true(!messageStore$isEmpty())
+  expect_equal(messageStore$getMessages()[2], "- ingredient concept (123456789) could not be found in concept table")
+
+  # concept id has wrong class
+  messageStore <- checkmate::makeAssertCollection()
+  checkIsIngredient(cdm = cdm, conceptId = 19133768, messageStore = messageStore)
+  expect_true(!messageStore$isEmpty())
+  expect_equal(messageStore$getMessages()[2], "- ingredient concept (19133768) does not have concept_class_id of Ingredient")
+})
