@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">DrugExposureDiagnostics</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,9 +63,9 @@
 
 
 <script src="Introduction_to_DrugExposureDiagnostics_files/htmlwidgets-1.6.2/htmlwidgets.js"></script><link href="Introduction_to_DrugExposureDiagnostics_files/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
-<script src="Introduction_to_DrugExposureDiagnostics_files/datatables-binding-0.27/datatables.js"></script><link href="Introduction_to_DrugExposureDiagnostics_files/dt-core-1.12.1/css/jquery.dataTables.min.css" rel="stylesheet">
-<link href="Introduction_to_DrugExposureDiagnostics_files/dt-core-1.12.1/css/jquery.dataTables.extra.css" rel="stylesheet">
-<script src="Introduction_to_DrugExposureDiagnostics_files/dt-core-1.12.1/js/jquery.dataTables.min.js"></script><link href="Introduction_to_DrugExposureDiagnostics_files/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet">
+<script src="Introduction_to_DrugExposureDiagnostics_files/datatables-binding-0.28/datatables.js"></script><link href="Introduction_to_DrugExposureDiagnostics_files/dt-core-1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="Introduction_to_DrugExposureDiagnostics_files/dt-core-1.13.4/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="Introduction_to_DrugExposureDiagnostics_files/dt-core-1.13.4/js/jquery.dataTables.min.js"></script><link href="Introduction_to_DrugExposureDiagnostics_files/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet">
 <script src="Introduction_to_DrugExposureDiagnostics_files/crosstalk-1.2.0/js/crosstalk.min.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Introduction To DrugExposureDiagnostics</h1>
@@ -78,14 +78,14 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://darwin-eu.github.io/DrugExposureDiagnostics/">DrugExposureDiagnostics</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">DrugExposureDiagnostics</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">CDMConnector</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rstudio/DT" class="external-link">DT</a></span><span class="op">)</span></span></code></pre></div>
 <p>First, connect to the database.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getEunomiaCdm.html">getEunomiaCdm</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; attempting to extract and load /tmp/RtmpAXFX5l/GiBleed_5.3.zip</span></span></code></pre></div>
+<span><span class="co">#&gt; attempting to extract and load /tmp/RtmpeAIE59/GiBleed_5.3.zip</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="check-for-single-ingredient-">Check for single ingredient.<a class="anchor" aria-label="anchor" href="#check-for-single-ingredient-"></a>
 </h3>
@@ -149,7 +149,8 @@ example. Here is a brief look at this ingredient.</p>
 results of each check.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/executeChecks.html">executeChecks</a></span><span class="op">(</span><span class="va">cdm</span>,</span>
-<span>              ingredients <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1125315</span><span class="op">)</span>, </span>
+<span>              ingredients <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1125315</span><span class="op">)</span>,</span>
+<span>              subsetToConceptId <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>              checks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"missing"</span>, <span class="st">"exposureDuration"</span>, <span class="st">"type"</span>, <span class="st">"route"</span>,<span class="st">"sourceConcept"</span>, <span class="st">"daysSupply"</span>, <span class="st">"verbatimEndDate"</span>,<span class="st">"dailyDose"</span>, <span class="st">"sig"</span>, <span class="st">"quantity"</span>, <span class="st">"histogram"</span><span class="op">)</span>, </span>
 <span>              minCellCount <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>              sample <span class="op">=</span> <span class="fl">1000000</span>,</span>
@@ -157,10 +158,11 @@ results of each check.</p>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The<code>cdm</code> is the database reference of the OMOP CDM using
 the <code>CDMConnector</code> package.<br>
-The <code>ingredient</code> is the <code>concept_id</code> of
-ingredients of interests, by default it is 1125315 for
-acetaminophen.<br><code>checks</code> allows to select the checks to be executed, by
-default, all the checks will be run.<br><code>sample</code> is the number of samples, by default, 1 million drug
+The <code>ingredients</code> is a list of ingredients of interests, by
+default it is 1125315 for acetaminophen. The
+<code>subsetToConceptId</code> is a vector of drug concept ID’s to
+subset down to. <code>checks</code> allows to select the checks to be
+executed, by default, all the checks will be run.<br><code>sample</code> is the number of samples, by default, 1 million drug
 record samples will be used.<br>
 The <code>minCellCount</code> is minimum number of events to report,
 numbers lower than this will be obscured.</p>
@@ -195,8 +197,8 @@ drugs contain the acetaminophen as an ingredient.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/DT/man/datatable.html" class="external-link">datatable</a></span><span class="op">(</span><span class="va">all_checks</span><span class="op">$</span><span class="va">ingredientConcepts</span>,</span>
 <span>  rownames <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-a92a934d246beee6a14b" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-a92a934d246beee6a14b">{"x":null,"evals":[],"jsHooks":[]}</script><p>After running the checks, we can write the CSV files into a zip file
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-dfb9f864dd3257066660" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-dfb9f864dd3257066660">{"x":null,"evals":[],"jsHooks":[]}</script><p>After running the checks, we can write the CSV files into a zip file
 to disk using the <code><a href="../reference/writeResultToDisk.html">writeResultToDisk()</a></code> function.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/writeResultToDisk.html">writeResultToDisk</a></span><span class="op">(</span><span class="va">all_checks</span>,</span>

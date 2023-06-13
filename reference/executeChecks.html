@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">DrugExposureDiagnostics</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,6 +55,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">executeChecks</span><span class="op">(</span></span>
 <span>  <span class="va">cdm</span>,</span>
 <span>  ingredients <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1125315</span><span class="op">)</span>,</span>
+<span>  subsetToConceptId <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  checks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"missing"</span>, <span class="st">"exposureDuration"</span>, <span class="st">"type"</span>, <span class="st">"route"</span>, <span class="st">"sourceConcept"</span>,</span>
 <span>    <span class="st">"daysSupply"</span>, <span class="st">"verbatimEndDate"</span>, <span class="st">"dose"</span>, <span class="st">"sig"</span>, <span class="st">"quantity"</span>, <span class="st">"histogram"</span><span class="op">)</span>,</span>
 <span>  minCellCount <span class="op">=</span> <span class="fl">5</span>,</span>
@@ -73,6 +74,12 @@
 
 <dt>ingredients</dt>
 <dd><p>vector of ingredients, by default: acetaminophen</p></dd>
+
+
+<dt>subsetToConceptId</dt>
+<dd><p>vector of concept IDs of the ingredients
+to subset down to. If NULL, all concept IDs for an ingredient will be
+considered.</p></dd>
 
 
 <dt>checks</dt>

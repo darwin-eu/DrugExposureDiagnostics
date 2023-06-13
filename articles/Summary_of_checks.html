@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">DrugExposureDiagnostics</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,13 +78,13 @@
 <h2 id="run-checks">Run checks<a class="anchor" aria-label="anchor" href="#run-checks"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://darwin-eu.github.io/DrugExposureDiagnostics/">DrugExposureDiagnostics</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">DrugExposureDiagnostics</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># acetaminophen concept id is 1125315</span></span>
 <span><span class="va">acetaminophen</span> <span class="op">&lt;-</span> <span class="fl">1125315</span></span>
 <span><span class="va">cdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getEunomiaCdm.html">getEunomiaCdm</a></span><span class="op">(</span>ingredientId <span class="op">=</span> <span class="va">acetaminophen</span><span class="op">)</span></span>
-<span><span class="co">#&gt; attempting to extract and load /tmp/RtmpKFA8ZF/GiBleed_5.3.zip</span></span>
+<span><span class="co">#&gt; attempting to extract and load /tmp/RtmprOC7Mx/GiBleed_5.3.zip</span></span>
 <span><span class="va">acetaminophen_checks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/executeChecks.html">executeChecks</a></span><span class="op">(</span>cdm <span class="op">=</span> <span class="va">cdm</span>, ingredients <span class="op">=</span> <span class="va">acetaminophen</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
