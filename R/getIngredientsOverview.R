@@ -50,8 +50,8 @@ getIngredientOverview <- function(cdm,
   return(records %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
     dplyr::summarise(
-      n_records = dplyr::n(),
-      n_people = dplyr::count(dplyr::distinct(.data$person_id)),
+      n_records = as.integer(dplyr::n()),
+      n_people = as.integer(dplyr::count(dplyr::distinct(.data$person_id))),
       .groups = "drop"))
 }
 
@@ -99,7 +99,7 @@ getIngredientPresence <- function(cdm,
   records %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
     dplyr::summarise(
-      n_records = dplyr::n(),
-      n_people = dplyr::count(dplyr::distinct(.data$person_id)),
+      n_records = as.integer(dplyr::n()),
+      n_people = as.integer(dplyr::count(dplyr::distinct(.data$person_id))),
       .groups = "drop")
 }

@@ -1,5 +1,11 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 0.4.4
+
+* Fixed bug when running subset of checks
+* Fixed bug when applying minCellCount
+* Fixed bug that caused invalid counts
+
 # DrugExposureDiagnostics 0.4.3
 
 * Update CDMConnector to 1.0.0

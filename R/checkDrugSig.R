@@ -52,7 +52,7 @@ checkDrugSig <- function(cdm,
 
   records <- records %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
-    dplyr::tally(name = "n_records") %>%
+    dplyr::summarise(n_records = as.integer(dplyr::n())) %>%
     dplyr::select(tidyselect::any_of(
       c("drug_concept_id", "drug",
         "ingredient_concept_id",

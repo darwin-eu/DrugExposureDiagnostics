@@ -69,7 +69,7 @@ test_that("check for drugDaysSupply", {
   expect_equal(result, table)
 })
 
-test_that("check for drugRoutes|drugSig|drugSourceConcepts|drugTypes|ingredientConcepts", {
+test_that("check for drugRoutes|drugSig|drugSourceConcepts|drugTypes", {
   table <- tibble::tibble(
     "drug_concept_id" = c("1", "2", "3", "4", "5", "6"),
     "ingredient_concept_id" = c("1", "2", "3", "4", "5", "6"),
@@ -85,14 +85,9 @@ test_that("check for drugRoutes|drugSig|drugSourceConcepts|drugTypes|ingredientC
 
   result <- obscureCounts(table, "drugRoutes", minCellCount = NULL)
   expect_equal(result, table)
-
-  result <- obscureCounts(table, "ingredientConcepts", minCellCount = 10, substitute = NA)
-
-  expect_equal(result$result_obscured, c(FALSE, FALSE, FALSE, TRUE, TRUE, FALSE))
-  expect_equal(result$n_records, c(10, 10, 100, NA, NA, 0))
 })
 
-test_that("check for ingredientConcepts", {
+test_that("check for conceptSummary", {
   table <- tibble::tibble(
     "drug_concept_id" = c("1", "2", "3", "4", "5", "6"),
     "ingredient_concept_id" = c("1", "2", "3", "4", "5", "6"),
@@ -101,7 +96,7 @@ test_that("check for ingredientConcepts", {
     "n_records" = c(10, 10, 100, 5, 6, 0)
   )
 
-  result <- obscureCounts(table, "ingredientConcepts", minCellCount = 10, substitute = NA)
+  result <- obscureCounts(table, "conceptSummary", minCellCount = 10, substitute = NA)
 
   expect_equal(result$result_obscured, c(FALSE, FALSE, FALSE, TRUE, TRUE, FALSE))
   # only n should be obscured
@@ -110,9 +105,6 @@ test_that("check for ingredientConcepts", {
   expect_equal(result$concept_id, table$concept_id)
   expect_equal(result$concept_name, table$concept_name)
   expect_equal(result$n_records, c(10, 10, 100, NA, NA, 0))
-
-  result <- obscureCounts(table, "drugRoutes", minCellCount = NULL)
-  expect_equal(result, table)
 })
 
 test_that("check for drugsMissing", {

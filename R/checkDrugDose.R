@@ -61,7 +61,7 @@ checkDrugDose <- function(cdm,
 
   records <- records %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
-    dplyr::summarise(n_records = dplyr::n(),
+    dplyr::summarise(n_records = as.integer(dplyr::n()),
                      missing_days_supply_or_dates = sum(.data$days_supply == 0 | is.na(.data$drug_exposure_start_date) | is.na(.data$drug_exposure_end_date)),
                      proportion_of_records_missing_days_supply_or_dates = .data$missing_days_supply_or_dates / dplyr::n(),
                      missing_or_null_quantity = sum(.data$quantity == 0 | is.na(.data$quantity)),

@@ -46,7 +46,7 @@ obscureCounts <- function(table,
       checkColNames <- colNames[!grepl("prop_", colNames)]
     } else if (grepl("drugRoutes|drugSig|drugSourceConcepts|drugTypes", tableName)) {
       checkColNames <- c("n_records")
-    } else if (grepl("ingredientConcepts", tableName)) {
+    } else if (grepl("conceptSummary", tableName)) {
       checkColNames <- colNames <- c("n_records")
     } else if (grepl("drugVerbatimEndDate|drugsMissing", tableName)) {
       checkColNames <- colNames[grepl("count", colNames)]

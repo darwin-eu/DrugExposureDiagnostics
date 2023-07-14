@@ -183,25 +183,37 @@ test_that("summary", {
 test_that("subset on specific concepts", {
   cdm <- getEunomiaCdm(1125315)
   result_all <- executeChecks(cdm = cdm,
-                          ingredients = 1125315,
-                          subsetToConceptId = NULL)
+                              ingredients = 1125315,
+                              subsetToConceptId = NULL)
 
   expect_true(all(result_all$conceptSummary$drug_concept_id %in%
     c(40162522, 1127078)))
 
 
   result_subset <- executeChecks(cdm = cdm,
-                              ingredients = 1125315,
-                              subsetToConceptId = 40162522)
+                                 ingredients = 1125315,
+                                 subsetToConceptId = 40162522)
   expect_true(all(result_subset$conceptSummary$drug_concept_id %in%
                     c(40162522)))
 
   result_subset2 <- executeChecks(cdm = cdm,
-                                 ingredients = 1125315,
-                                 subsetToConceptId = c(40162522, 1127078))
+                                  ingredients = 1125315,
+                                  subsetToConceptId = c(40162522, 1127078))
 
   expect_true(all(result_subset2$conceptSummary$drug_concept_id %in%
                     c(40162522, 1127078)))
 
   DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
 })
+
+test_that("obscuring results by minCellCount", {
+  cdm <- getEunomiaCdm(1125315)
+  result_all <- executeChecks(cdm = cdm,
+                              ingredients = 1125315,
+                              minCellCount = 1000)
+
+  expect_equal(result_all$conceptSummary$n_records, c(NA, 2158))
+
+  DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
+})
+

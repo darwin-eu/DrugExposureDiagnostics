@@ -69,27 +69,20 @@ executeChecks <- function(cdm,
   checkLogical(verbose, messageStore = errorMessage)
   checkmate::reportAssertions(collection = errorMessage)
 
-  resultList <- NULL
-  for (ingredient in ingredients) {
-    newResultList <- executeChecksSingleIngredient(cdm = cdm,
-                                                   ingredient = ingredient,
-                                                   subsetToConceptId = subsetToConceptId,
-                                                   checks = checks,
-                                                   minCellCount = minCellCount,
-                                                   sample = sample,
-                                                   tablePrefix = tablePrefix,
-                                                   earliestStartDate = earliestStartDate,
-                                                   verbose = verbose)
-    if (is.null(resultList)) {
-      resultList <- newResultList
-    } else {
-      checkNames <- names(resultList)
-      resultList <- lapply(checkNames, FUN = function(name) {
-        rbind(resultList[[name]], newResultList[[name]])
-      })
-      names(resultList) <- checkNames
-    }
+  resultList <- vector(mode = "list", length = length(ingredients))
+  for (i in seq_along(ingredients)) {
+    ingredient <- ingredients[i]
+    resultList[[i]] <- executeChecksSingleIngredient(cdm = cdm,
+                                                     ingredient = ingredient,
+                                                     subsetToConceptId = subsetToConceptId,
+                                                     checks = checks,
+                                                     minCellCount = minCellCount,
+                                                     sample = sample,
+                                                     tablePrefix = tablePrefix,
+                                                     earliestStartDate = earliestStartDate,
+                                                     verbose = verbose)
   }
+  resultList <- do.call(Map, c(f = rbind, resultList))
   return(resultList)
 }
 
@@ -178,7 +171,7 @@ executeChecksSingleIngredient <- function(cdm,
 
   conceptsUsed <- cdm[["ingredient_drug_records"]] %>%
     dplyr::group_by(.data$drug_concept_id) %>%
-    dplyr::tally(name = "n_records") %>%
+    dplyr::summarise(n_records = as.integer(dplyr::n())) %>%
     dplyr::inner_join(cdm[["ingredient_concepts"]],
                       by=c("drug_concept_id" = "concept_id")) %>%
     dplyr::rename("drug" = "concept_name") %>%
@@ -206,11 +199,13 @@ executeChecksSingleIngredient <- function(cdm,
     if (dplyr::pull(dplyr::tally(dplyr::filter(cdm[["ingredient_drug_records"]], .data$drug_exposure_start_date > .env$earliestStartDate)), .data$n) < sample) {
       message("population after earliestStartDate smaller than sample, ignoring date for sampling")
       cdm[["ingredient_drug_records"]] <- cdm[["ingredient_drug_records"]] %>%
-        dplyr::slice_sample(n = sample)
+        dplyr::slice_sample(n = sample) %>%
+        CDMConnector::computeQuery()
     } else{
       cdm[["ingredient_drug_records"]] <- cdm[["ingredient_drug_records"]] %>%
         dplyr::filter(.data$drug_exposure_start_date > .env$earliestStartDate) %>%
-        dplyr::slice_sample(n = sample)
+        dplyr::slice_sample(n = sample) %>%
+        CDMConnector::computeQuery()
     }
   }
   drugIngredientPresence <- getIngredientPresence(cdm, "ingredient_drug_records",

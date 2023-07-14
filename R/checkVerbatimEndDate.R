@@ -48,11 +48,11 @@ checkVerbatimEndDate <- function(cdm,
     dplyr::summarise(
       minimum_verbatim_end_date = min(.data$verbatim_end_date, na.rm = T),
       maximum_verbatim_end_date = max(.data$verbatim_end_date, na.rm = T),
-      n_records = dplyr::n(),
+      n_records = as.integer(dplyr::n()),
       n_missing_verbatim_end_date = sum(dplyr::case_when(is.na(.data$verbatim_end_date) ~ 1, TRUE ~ 0), na.rm = T),
-      n_not_missing_verbatim_end_date = dplyr::n() - sum(dplyr::case_when(is.na(.data$verbatim_end_date) ~ 1, TRUE ~ 0), na.rm = T),
-      n_verbatim_end_date_equal_to_drug_exposure_end_date = dplyr::n() -
-        sum(dplyr::case_when(.data$drug_exposure_end_date != .data$verbatim_end_date ~ 1, TRUE ~ 0), na.rm = T),
+      n_not_missing_verbatim_end_date = as.integer(dplyr::n() - sum(dplyr::case_when(is.na(.data$verbatim_end_date) ~ 1, TRUE ~ 0), na.rm = T)),
+      n_verbatim_end_date_equal_to_drug_exposure_end_date = as.integer(dplyr::n() -
+        sum(dplyr::case_when(.data$drug_exposure_end_date != .data$verbatim_end_date ~ 1, TRUE ~ 0), na.rm = T)),
       n_verbatim_end_date_and_drug_exposure_end_date_differ =
         sum(dplyr::case_when(.data$drug_exposure_end_date != .data$verbatim_end_date ~ 1, TRUE ~ 0), na.rm = T))
 }

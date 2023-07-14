@@ -100,7 +100,7 @@ summariseDaysSupply <- function (cdm, drugRecordsTable = "drug_exposure"){
 
     summ <- daysSupply %>%
       dplyr::summarise(
-        n_records = dplyr::n(),
+        n_records = as.integer(dplyr::n()),
         minimum_drug_exposure_days_supply =  min(.data$days_supply, na.rm = T),
         maximum_drug_exposure_days_supply = max(.data$days_supply, na.rm = T),
         n_records_with_days_supply = sum(!is.na(.data$days_supply)),

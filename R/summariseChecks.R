@@ -55,7 +55,7 @@ summariseChecks <- function(resultList) {
   }
 
   # duration
-  if (!is.null(resultList$drugExposureDurationOverall)) {
+  if (!is.null(resultList$drugExposureDurationOverall) && !is.null(resultList$drugDose)) {
     diagnostics_summary <- diagnostics_summary %>% dplyr::left_join(
       resultList$drugExposureDurationOverall %>%
         dplyr::left_join(

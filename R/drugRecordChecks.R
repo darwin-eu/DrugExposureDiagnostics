@@ -48,7 +48,7 @@ getDrugMissings <- function(cdm,
   summMissings <- records %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
     dplyr::summarise(
-      total_by_concept = dplyr::n(),
+      total_by_concept = as.integer(dplyr::n()),
       n_missing_drug_exposure_start_date =
         sum(dplyr::case_when(is.na(.data$drug_exposure_start_date) ~ 1, TRUE ~ 0), na.rm = T),
       n_missing_drug_exposure_end_date =
@@ -136,7 +136,8 @@ getDrugTypes <- function(cdm,
 
   summ <- cdm[[drugRecordsTable]] %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
-    dplyr::tally(name = "n_records") %>%
+    dplyr::summarise(n_records = as.integer(dplyr::n())) %>%
+    CDMConnector::computeQuery() %>%
     dplyr::left_join(cdm$concept %>%
                        dplyr::rename("drug_type_concept_id" = "concept_id",
                                      "drug_type" = "concept_name") %>%
@@ -181,7 +182,8 @@ getDrugRoutes <- function(cdm,
 
   summ <- cdm[[drugRecordsTable]] %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
-    dplyr::tally(name = "n_records") %>%
+    dplyr::summarise(n_records = as.integer(dplyr::n())) %>%
+    CDMConnector::computeQuery() %>%
     dplyr::left_join(cdm$concept %>%
                        dplyr::rename("route_concept_id" = "concept_id",
                                      "route_type" = "concept_name") %>%
@@ -226,7 +228,8 @@ getDrugSourceConcepts <- function(cdm,
 
 summ <- cdm[[drugRecordsTable]] %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
-    dplyr::tally(name = "n_records") %>%
+    dplyr::summarise(n_records = as.integer(dplyr::n())) %>%
+    CDMConnector::computeQuery() %>%
     dplyr::left_join(cdm$concept %>%
                        dplyr::rename("drug_source_concept_id" = "concept_id",
                                      "drug_source" = "concept_name") %>%
