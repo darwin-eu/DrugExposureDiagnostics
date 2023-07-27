@@ -17,6 +17,7 @@ test_that("check for drugDailyDose|drugQuantity", {
   expect_equal(result$prop_negative_days, c(0.1, NA, 0.1, 0.5, NA, 0))
   expect_equal(result$prop_zero_days, c(10, NA, 100, 5, NA, 0))
   expect_equal(result$min_drug_daily_dose, c(100, NA, 11, 12, NA, 0))
+  expect_equal(typeof(result$result_obscured),"logical")
 
   result <- obscureCounts(table, "drugDailyDose", minCellCount = NULL)
   expect_equal(result, table)
@@ -29,6 +30,7 @@ test_that("check for drugDailyDose|drugQuantity", {
   expect_equal(result$prop_negative_days, c(0.1, NA, 0.1, 0.5, NA, 0))
   expect_equal(result$prop_zero_days, c(10, NA, 100, 5, NA, 0))
   expect_equal(result$min_drug_daily_dose, c(100, NA, 11, 12, NA, 0))
+  expect_equal(typeof(result$result_obscured),"logical")
 
   result <- obscureCounts(table, "drugQuantity", minCellCount = NULL)
   expect_equal(result, table)
@@ -44,6 +46,7 @@ test_that("check for drugExposureDuration", {
   result <- obscureCounts(table, "drugExposureDuration", minCellCount = NULL)
   expect_equal(result, table)
   result <- obscureCounts(table, "drugExposureDuration", minCellCount = 5, substitute = NA)
+  expect_equal(typeof(result$result_obscured),"logical")
   expect_equal(result[,1:3], table)
 })
 
@@ -64,6 +67,7 @@ test_that("check for drugDaysSupply", {
   expect_equal(result$match_days_supply, c(NA, 5, 100, 5, 6, 0))
   expect_equal(result$missing_days_supply_or_dates, c(NA, 99, 100, 5, 5, 0))
   expect_equal(result$prop_different_days_supply, c(NA, 0.2, 0.1, 0.5, 0.4, 0))
+  expect_equal(typeof(result$result_obscured),"logical")
 
   result <- obscureCounts(table, "drugDaysSupply", minCellCount = NULL)
   expect_equal(result, table)
@@ -82,6 +86,7 @@ test_that("check for drugRoutes|drugSig|drugSourceConcepts|drugTypes", {
 
   expect_equal(result$result_obscured, c(FALSE, FALSE, FALSE, TRUE, TRUE, FALSE))
   expect_equal(result$n_records, c(10, 10, 100, NA, NA, 0))
+  expect_equal(typeof(result$result_obscured),"logical")
 
   result <- obscureCounts(table, "drugRoutes", minCellCount = NULL)
   expect_equal(result, table)
@@ -105,6 +110,7 @@ test_that("check for conceptSummary", {
   expect_equal(result$concept_id, table$concept_id)
   expect_equal(result$concept_name, table$concept_name)
   expect_equal(result$n_records, c(10, 10, 100, NA, NA, 0))
+  expect_equal(typeof(result$result_obscured),"logical")
 })
 
 test_that("check for drugsMissing", {
@@ -120,6 +126,7 @@ test_that("check for drugsMissing", {
   expect_equal(result$result_obscured, c(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE))
   expect_equal(result$count_missing, c(NA, 10, 100, 5, 6, 0))
   expect_equal(result$proportion_missing, c(NA, 0.1, 0.1, 0.5, 0.6, 0))
+  expect_equal(typeof(result$result_obscured),"logical")
 
   result <- obscureCounts(table, "drugsMissing", minCellCount = NULL)
   expect_equal(result, table)
@@ -139,6 +146,7 @@ test_that("check for drugVerbatimEndDate", {
   expect_equal(result$count, c(6, 10, NA, 5, 6, 0))
   expect_equal(result$count_not_null, c(9, 10, NA, 5, 6, 0))
   expect_equal(result$count_not_equal, c(12, 10, NA, 5, 6, 0))
+  expect_equal(typeof(result$result_obscured),"logical")
 
   result <- obscureCounts(table, "drugVerbatimEndDate", minCellCount = NULL)
   expect_equal(result, table)
@@ -158,6 +166,7 @@ test_that("check for drugIngredientOverview", {
   expect_equal(result$ingredient, c("test1", "test2", "test3", "test4", "test5", "test6"))
   expect_equal(result$n_records, c(9, 10, NA, 5, 6, 0))
   expect_equal(result$n_people, c(8, 10, NA, 5, 6, 0))
+  expect_equal(typeof(result$result_obscured),"logical")
 
   result <- obscureCounts(table, "drugIngredientOverview", minCellCount = NULL)
   expect_equal(result, table)
@@ -168,6 +177,7 @@ test_that("check for drugIngredientOverview", {
   expect_equal(result$ingredient, c("test1", "test2", "test3", "test4", "test5", "test6"))
   expect_equal(result$n_records, c(9, 10, NA, 5, 6, 0))
   expect_equal(result$n_people, c(8, 10, NA, 5, 6, 0))
+  expect_equal(typeof(result$result_obscured),"logical")
 
   result <- obscureCounts(table, "drugIngredientPresence", minCellCount = NULL)
   expect_equal(result, table)

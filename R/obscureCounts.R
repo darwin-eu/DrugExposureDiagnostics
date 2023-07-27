@@ -37,7 +37,7 @@ obscureCounts <- function(table,
 
   if (!is.null(minCellCount)) {
     # initialise result_obscured as FALSE
-    table$result_obscured <- "FALSE"
+    table$result_obscured <- FALSE
 
     colNames <- setdiff(colnames(table), c("drug_concept_id", "drug",
                                            "ingredient_concept_id", "ingredient", "result_obscured"))
