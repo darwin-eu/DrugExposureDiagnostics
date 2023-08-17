@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">DrugExposureDiagnostics</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,7 +84,7 @@
 <span><span class="co"># acetaminophen concept id is 1125315</span></span>
 <span><span class="va">acetaminophen</span> <span class="op">&lt;-</span> <span class="fl">1125315</span></span>
 <span><span class="va">cdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getEunomiaCdm.html">getEunomiaCdm</a></span><span class="op">(</span>ingredientId <span class="op">=</span> <span class="va">acetaminophen</span><span class="op">)</span></span>
-<span><span class="co">#&gt; attempting to extract and load /tmp/RtmpsbFMuQ/GiBleed_5.3.zip</span></span>
+<span><span class="co">#&gt; attempting to extract and load /tmp/RtmpHcN54i/GiBleed_5.3.zip</span></span>
 <span><span class="va">acetaminophen_checks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/executeChecks.html">executeChecks</a></span><span class="op">(</span>cdm <span class="op">=</span> <span class="va">cdm</span>, ingredients <span class="op">=</span> <span class="va">acetaminophen</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -95,17 +95,18 @@
 <span>  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 1</span></span>
 <span><span class="co">#&gt; Columns: 12</span></span>
+<span><span class="co">#&gt; Rowwise: </span></span>
 <span><span class="co">#&gt; $ ingredient                                                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Acetaminoph…</span></span>
 <span><span class="co">#&gt; $ ingredient_concept_id                                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1125315</span></span>
 <span><span class="co">#&gt; $ n_records                                                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 2470</span></span>
 <span><span class="co">#&gt; $ proportion_of_records_by_drug_type                        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "NA (2470, 1…</span></span>
 <span><span class="co">#&gt; $ proportion_of_records_by_route_type                       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "No matching…</span></span>
-<span><span class="co">#&gt; $ proportion_of_records_with_dose_form                      <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span> "0 (0%)"</span></span>
-<span><span class="co">#&gt; $ proportion_of_records_missing_denominator_unit_concept_id <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span> "0 (0%)"</span></span>
-<span><span class="co">#&gt; $ median_amount_value_q05_q95                               <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span> "1 (1-1) [0,…</span></span>
-<span><span class="co">#&gt; $ median_quantity_q05_q95                                   <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span> "0 (0-0) [24…</span></span>
-<span><span class="co">#&gt; $ median_drug_exposure_days_q05_q95                         <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span> "15 (1-68) …</span></span>
-<span><span class="co">#&gt; $ proportion_of_records_with_negative_drug_exposure_days    <span style="color: #949494; font-style: italic;">&lt;glue&gt;</span> "0 (0%)"</span></span>
+<span><span class="co">#&gt; $ proportion_of_records_with_dose_form                      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "0 (0%)"</span></span>
+<span><span class="co">#&gt; $ proportion_of_records_missing_denominator_unit_concept_id <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "0 (0%)"</span></span>
+<span><span class="co">#&gt; $ median_amount_value_q05_q95                               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "1 (1-1) [0,…</span></span>
+<span><span class="co">#&gt; $ median_quantity_q05_q95                                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "0 (0-0) [24…</span></span>
+<span><span class="co">#&gt; $ median_drug_exposure_days_q05_q95                         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "15 (1-68) […</span></span>
+<span><span class="co">#&gt; $ proportion_of_records_with_negative_drug_exposure_days    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "0 (0%)"</span></span>
 <span><span class="co">#&gt; $ result_obscured                                           <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> FALSE</span></span></code></pre></div>
 <table class="table">
 <colgroup>
@@ -367,7 +368,7 @@ the minimum cell count, otherwise FALSE.</td>
 <span>  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 36</span></span>
 <span><span class="co">#&gt; Columns: 10</span></span>
-<span><span class="co">#&gt; Groups: drug_concept_id, drug, ingredient_concept_id, ingredient [2]</span></span>
+<span><span class="co">#&gt; Rowwise: drug_concept_id, drug, ingredient_concept_id, ingredient</span></span>
 <span><span class="co">#&gt; $ drug_concept_id                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1127078, 1127078, 1127078, 1127078, 1…</span></span>
 <span><span class="co">#&gt; $ drug                             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Acetaminophen 160 MG Oral Tablet", "…</span></span>
 <span><span class="co">#&gt; $ ingredient_concept_id            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1125315, 1125315, 1125315, 1125315, 1…</span></span>
@@ -443,7 +444,7 @@ the minimum cell count, otherwise FALSE.</td>
 <span>  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 2</span></span>
 <span><span class="co">#&gt; Columns: 18</span></span>
-<span><span class="co">#&gt; Groups: drug_concept_id, drug, ingredient_concept_id [2]</span></span>
+<span><span class="co">#&gt; Rowwise: drug_concept_id, drug, ingredient_concept_id</span></span>
 <span><span class="co">#&gt; $ drug_concept_id            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1127078, 40162522</span></span>
 <span><span class="co">#&gt; $ drug                       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Acetaminophen 160 MG Oral Tablet", "Acetam…</span></span>
 <span><span class="co">#&gt; $ ingredient_concept_id      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1125315, 1125315</span></span>
@@ -928,43 +929,43 @@ the minimum cell count, otherwise FALSE.</td>
 <span>  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 2</span></span>
 <span><span class="co">#&gt; Columns: 36</span></span>
-<span><span class="co">#&gt; Groups: drug_concept_id, drug, ingredient_concept_id [2]</span></span>
+<span><span class="co">#&gt; Rowwise: drug_concept_id, drug, ingredient_concept_id</span></span>
 <span><span class="co">#&gt; $ drug_concept_id                                           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1127078, 401…</span></span>
 <span><span class="co">#&gt; $ drug                                                      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Acetaminoph…</span></span>
 <span><span class="co">#&gt; $ ingredient_concept_id                                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1125315, 112…</span></span>
 <span><span class="co">#&gt; $ ingredient                                                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Acetaminoph…</span></span>
-<span><span class="co">#&gt; $ n_records                                                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 2158, 312</span></span>
-<span><span class="co">#&gt; $ missing_days_supply_or_dates                              <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 0, 312</span></span>
-<span><span class="co">#&gt; $ proportion_of_records_missing_days_supply_or_dates        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0, 1</span></span>
-<span><span class="co">#&gt; $ missing_or_null_quantity                                  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 2158, 312</span></span>
-<span><span class="co">#&gt; $ proportion_missing_or_null_quantity                       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1, 1</span></span>
-<span><span class="co">#&gt; $ missing_denominator_unit_concept_id                       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 0, 0</span></span>
-<span><span class="co">#&gt; $ proportion_of_records_missing_denominator_unit_concept_id <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0, 0</span></span>
-<span><span class="co">#&gt; $ missing_or_null_amount_value                              <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 0, 0</span></span>
-<span><span class="co">#&gt; $ proportion_of_records_missing_or_null_amount_value        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0, 0</span></span>
-<span><span class="co">#&gt; $ q05_quantity                                              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0, 0</span></span>
-<span><span class="co">#&gt; $ q10_quantity                                              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0, 0</span></span>
-<span><span class="co">#&gt; $ q15_quantity                                              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0, 0</span></span>
-<span><span class="co">#&gt; $ q20_quantity                                              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0, 0</span></span>
-<span><span class="co">#&gt; $ q25_quantity                                              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0, 0</span></span>
-<span><span class="co">#&gt; $ median_quantity                                           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0, 0</span></span>
-<span><span class="co">#&gt; $ q75_quantity                                              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0, 0</span></span>
-<span><span class="co">#&gt; $ q80_quantity                                              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0, 0</span></span>
-<span><span class="co">#&gt; $ q85_quantity                                              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0, 0</span></span>
-<span><span class="co">#&gt; $ q90_quantity                                              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0, 0</span></span>
-<span><span class="co">#&gt; $ q95_quantity                                              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0, 0</span></span>
-<span><span class="co">#&gt; $ q05_amount_value                                          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1, 1</span></span>
-<span><span class="co">#&gt; $ q10_amount_value                                          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1, 1</span></span>
-<span><span class="co">#&gt; $ q15_amount_value                                          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1, 1</span></span>
-<span><span class="co">#&gt; $ q20_amount_value                                          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1, 1</span></span>
-<span><span class="co">#&gt; $ q25_amount_value                                          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1, 1</span></span>
-<span><span class="co">#&gt; $ median_amount_value                                       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1, 1</span></span>
-<span><span class="co">#&gt; $ q75_amount_value                                          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1, 1</span></span>
-<span><span class="co">#&gt; $ q80_amount_value                                          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1, 1</span></span>
-<span><span class="co">#&gt; $ q85_amount_value                                          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1, 1</span></span>
-<span><span class="co">#&gt; $ q90_amount_value                                          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1, 1</span></span>
-<span><span class="co">#&gt; $ q95_amount_value                                          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1, 1</span></span>
-<span><span class="co">#&gt; $ result_obscured                                           <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> FALSE, FALSE</span></span></code></pre></div>
+<span><span class="co">#&gt; $ n_records                                                 <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ missing_days_supply_or_dates                              <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ proportion_of_records_missing_days_supply_or_dates        <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ missing_or_null_quantity                                  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ proportion_missing_or_null_quantity                       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ missing_denominator_unit_concept_id                       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ proportion_of_records_missing_denominator_unit_concept_id <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ missing_or_null_amount_value                              <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ proportion_of_records_missing_or_null_amount_value        <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ q05_quantity                                              <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ q10_quantity                                              <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ q15_quantity                                              <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ q20_quantity                                              <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ q25_quantity                                              <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ median_quantity                                           <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ q75_quantity                                              <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ q80_quantity                                              <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ q85_quantity                                              <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ q90_quantity                                              <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ q95_quantity                                              <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ q05_amount_value                                          <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ q10_amount_value                                          <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ q15_amount_value                                          <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ q20_amount_value                                          <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ q25_amount_value                                          <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ median_amount_value                                       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ q75_amount_value                                          <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ q80_amount_value                                          <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ q85_amount_value                                          <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ q90_amount_value                                          <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ q95_amount_value                                          <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
+<span><span class="co">#&gt; $ result_obscured                                           <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> TRUE, TRUE</span></span></code></pre></div>
 <table class="table">
 <colgroup>
 <col width="50%">
