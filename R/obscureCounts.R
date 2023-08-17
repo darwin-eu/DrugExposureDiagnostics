@@ -42,9 +42,9 @@ obscureCounts <- function(table,
     colNames <- setdiff(colnames(table), c("drug_concept_id", "drug",
                                            "ingredient_concept_id", "ingredient", "result_obscured"))
     checkColNames <- NULL
-    if (grepl("drugDailyDose|drugDaysSupply|drugQuantity", tableName))  {
+    if (grepl("drugDose|drugDaysSupply|drugQuantity", tableName))  {
       checkColNames <- colNames[!grepl("prop_", colNames)]
-    } else if (grepl("drugRoutes|drugSig|drugSourceConcepts|drugTypes", tableName)) {
+    } else if (grepl("drugRoutes|drugSig|drugSourceConcepts|drugTypes|drugExposureDuration|missingValues|diagnostics_summary", tableName)) {
       checkColNames <- c("n_records")
     } else if (grepl("conceptSummary", tableName)) {
       checkColNames <- colNames <- c("n_records")

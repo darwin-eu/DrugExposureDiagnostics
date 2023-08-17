@@ -1,6 +1,6 @@
 Package: DrugExposureDiagnostics
 Title: Diagnostics for OMOP Common Data Model Drug Records
-Version: 0.4.5
+Version: 0.4.6
 Authors@R: c(
     person("Ger", "Inberg", email = "g.inberg@erasmusmc.nl", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8993-8748")),
@@ -48,7 +48,13 @@ Suggests:
     tibble,
     DT,
     graphics,
-    SqlRender
+    SqlRender,
+    PaRe,
+    magick,
+    DiagrammeRsvg,
+    ggplot2,
+    cowplot,
+    plotly
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Language: en-US

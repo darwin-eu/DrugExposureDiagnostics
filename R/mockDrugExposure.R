@@ -120,8 +120,6 @@ mockDrugExposure <- function(drug_exposure = NULL,
   }
 
   if (is.null(drug_strength)) {
-
-
     ancestor_concept_id <- rep(1125315, each = 6)
     descendant_concept_id <-
       c(40162522, 1127078, 1127433, 40229134, 40231925, 19133768)
@@ -262,6 +260,21 @@ mockDrugExposure <- function(drug_exposure = NULL,
           dose_unit_source_value = dose_unit_source_value
         )
     }
+  #cdm_source
+  cdm_source <-
+    data.frame(
+      cdm_source_name = "DrugExposureMock",
+      cdm_source_abbreviation = "DEM",
+      cdm_holder = "ErasmusMC",
+      source_description = "DrugExposureMock",
+      source_documentation_reference = "",
+      cdm_etl_reference = "https://github.com/darwin-eu/DrugExposureDiagnostics",
+      source_release_date = "2022-08-12",
+      cdm_release_date = "2022-08-12",
+      cdm_version = "5.4",
+      cdm_version_concept_id = "756265",
+      vocabulary_version = "v5.0 22-JUN-22"
+  )
   # into in-memory database
   db <- DBI::dbConnect(duckdb::duckdb(), ":memory:")
 
@@ -294,9 +307,15 @@ mockDrugExposure <- function(drug_exposure = NULL,
                       overwrite = TRUE)
   })
 
+  DBI::dbWithTransaction(db, {
+    DBI::dbWriteTable(db, "cdm_source",
+                      cdm_source,
+                      overwrite = TRUE)
+  })
+
   cdm <- CDMConnector::cdm_from_con(db) %>%
     CDMConnector::cdm_select_tbl(c(concept_ancestor, concept_relationship,
-                                   concept, drug_strength, drug_exposure))
+                                   concept, drug_strength, drug_exposure, cdm_source))
 
   return(cdm)
 }
