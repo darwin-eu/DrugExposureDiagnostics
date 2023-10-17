@@ -8,10 +8,9 @@ executeChecks(
   cdm,
   ingredients = c(1125315),
   subsetToConceptId = NULL,
-  checks = c("missing", "exposureDuration", "type", "route", "sourceConcept",
-    "daysSupply", "verbatimEndDate", "dose", "sig", "quantity", "histogram"),
+  checks = c("missing", "exposureDuration", "quantity"),
   minCellCount = 5,
-  sample = 1e+06,
+  sample = 10000,
   tablePrefix = NULL,
   earliestStartDate = "2010-01-01",
   verbose = FALSE
@@ -26,12 +25,13 @@ executeChecks(
 to subset down to. If NULL, all concept IDs for an ingredient will be
 considered.}
 
-\item{checks}{the checks to be executed, by default everything}
+\item{checks}{the checks to be executed, by default the missing values, the
+exposure duration and the quantity.}
 
 \item{minCellCount}{minimum number of events to report- results
 lower than this will be obscured. If NULL all results will be reported.}
 
-\item{sample}{the number of samples, default 1 million}
+\item{sample}{the number of samples, default 10.000}
 
 \item{tablePrefix}{The stem for the permanent tables that will
 be created when running the diagnostics. Permanent tables will be created using

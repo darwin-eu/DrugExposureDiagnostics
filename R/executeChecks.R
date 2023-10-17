@@ -21,10 +21,11 @@
 #' @param subsetToConceptId vector of concept IDs of the ingredients
 #'  to subset down to. If NULL, all concept IDs for an ingredient will be
 #'  considered.
-#' @param checks the checks to be executed, by default everything
+#' @param checks the checks to be executed, by default the missing values, the
+#' exposure duration and the quantity.
 #' @param minCellCount minimum number of events to report- results
 #' lower than this will be obscured. If NULL all results will be reported.
-#' @param sample the number of samples, default 1 million
+#' @param sample the number of samples, default 10.000
 #' @param tablePrefix The stem for the permanent tables that will
 #' be created when running the diagnostics. Permanent tables will be created using
 #' this prefix, and any existing tables that start with this will be at risk of
@@ -50,11 +51,9 @@
 executeChecks <- function(cdm,
                           ingredients = c(1125315),
                           subsetToConceptId = NULL,
-                          checks = c("missing", "exposureDuration", "type", "route",
-                                     "sourceConcept", "daysSupply", "verbatimEndDate",
-                                     "dose", "sig", "quantity", "histogram"),
+                          checks = c("missing", "exposureDuration", "quantity"),
                           minCellCount = 5,
-                          sample = 1000000,
+                          sample = 10000,
                           tablePrefix = NULL,
                           earliestStartDate = "2010-01-01",
                           verbose = FALSE) {
@@ -93,10 +92,11 @@ executeChecks <- function(cdm,
 #' @param subsetToConceptId vector of concept IDs of the ingredients
 #'  to subset down to. If NULL, all concept IDs for an ingredient will be
 #'  considered.
-#' @param checks the checks to be executed, by default everything
+#' @param checks the checks to be executed, by default the missing values, the
+#' exposure duration and the quantity.
 #' @param minCellCount minimum number of events to report- results
 #' lower than this will be obscured. If NULL all results will be reported.
-#' @param sample the number of samples, default 1 million
+#' @param sample the number of samples, default 10.000
 #' @param tablePrefix The stem for the permanent tables that will
 #' be created when running the diagnostics. Permanent tables will be created using
 #' this prefix, and any existing tables that start with this will be at risk of
@@ -109,11 +109,9 @@ executeChecks <- function(cdm,
 executeChecksSingleIngredient <- function(cdm,
                                           ingredient = 1125315,
                                           subsetToConceptId = NULL,
-                                          checks = c("missing", "exposureDuration", "type", "route",
-                                                     "sourceConcept", "daysSupply", "verbatimEndDate",
-                                                     "dose", "sig", "quantity", "histogram"),
+                                          checks = c("missing", "exposureDuration", "quantity"),
                                           minCellCount = 5,
-                                          sample = 1000000,
+                                          sample = 10000,
                                           tablePrefix = NULL,
                                           earliestStartDate = "2010-01-01",
                                           verbose = FALSE) {
@@ -139,7 +137,7 @@ executeChecksSingleIngredient <- function(cdm,
     verbose = verbose,
     tablePrefix = tablePrefix
   )
-  if(!is.null(subsetToConceptId)){
+  if(!is.null(subsetToConceptId)) {
     cdm[["ingredient_concepts"]] <- cdm[["ingredient_concepts"]] %>%
     dplyr::filter(.data$concept_id %in%  .env$subsetToConceptId)
   }
@@ -171,7 +169,8 @@ executeChecksSingleIngredient <- function(cdm,
 
   conceptsUsed <- cdm[["ingredient_drug_records"]] %>%
     dplyr::group_by(.data$drug_concept_id) %>%
-    dplyr::summarise(n_records = as.integer(dplyr::n())) %>%
+    dplyr::summarise(n_records = as.integer(dplyr::n()),
+                     n_patients = as.integer(dplyr::n_distinct(.data$person_id))) %>%
     dplyr::inner_join(cdm[["ingredient_concepts"]],
                       by=c("drug_concept_id" = "concept_id")) %>%
     dplyr::rename("drug" = "concept_name") %>%
@@ -182,12 +181,14 @@ executeChecksSingleIngredient <- function(cdm,
     dplyr::relocate("denominator_unit", .after = "denominator_unit_concept_id") %>%
     dplyr::collect()
 
-  if (verbose == TRUE) {
-    start <- printDurationAndMessage("Progress: get ingredient overview", start)
+  drugIngredientOverview <- NULL
+  if ("ingredientOverview" %in% checks) {
+    if (verbose == TRUE) {
+      start <- printDurationAndMessage("Progress: get ingredient overview", start)
+    }
+    drugIngredientOverview <- getIngredientOverview(cdm, "ingredient_drug_records",
+                                                    "ingredient_drug_strength") %>% dplyr::collect()
   }
-  drugIngredientOverview <- getIngredientOverview(cdm, "ingredient_drug_records",
-                                                  "ingredient_drug_strength") %>% dplyr::collect()
-
 
   # sample
   # the ingredient overview is for all records
@@ -208,9 +209,15 @@ executeChecksSingleIngredient <- function(cdm,
         CDMConnector::computeQuery()
     }
   }
-  drugIngredientPresence <- getIngredientPresence(cdm, "ingredient_drug_records",
-                                                  "ingredient_drug_strength") %>% dplyr::collect()
 
+  drugIngredientPresence <- NULL
+  if ("ingredientPresence" %in% checks) {
+    if (verbose == TRUE) {
+      start <- printDurationAndMessage("Progress: get ingredient presence", start)
+    }
+    drugIngredientPresence <- getIngredientPresence(cdm, "ingredient_drug_records",
+                                                    "ingredient_drug_strength") %>% dplyr::collect()
+  }
   missingValuesOverall <- missingValuesByConcept <- NULL
   if ("missing" %in% checks) {
     if (verbose == TRUE) {
@@ -378,7 +385,12 @@ executeChecksSingleIngredient <- function(cdm,
                  "drugDurationHistogram" = drugDurationHistogram)
 
   # add summary table
-  result[["diagnostics_summary"]] <- summariseChecks(resultList = result)
+  if ("diagnosticsSummary" %in% checks) {
+    if (verbose == TRUE) {
+      start <- printDurationAndMessage("Progress: create diagnosticsSummary", start)
+    }
+    result[["diagnosticsSummary"]] <- summariseChecks(resultList = result)
+  }
 
   return(Filter(Negate(is.null), sapply(names(result),
                                         FUN = function(tableName) {

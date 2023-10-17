@@ -1,41 +1,4 @@
-test_that("check for drugDose|drugDaysSupply|drugQuantity", {
-  table <- tibble::tibble(
-    "drug_concept_id" = c("1", "2", "3", "4", "5", "6"),
-    "ingredient_concept_id" = c("1", "2", "3", "4", "5", "6"),
-    "n_negative_days" = c(10, 2, 100, 5, 0, 0),
-    "n_zero_days" = c(10, 2, 100, 5, 4, 0),
-    "prop_negative_days" = c(0.1, 0.2, 0.1, 0.5, 0.4, 0),
-    "prop_zero_days" = c(10, 2, 100, 5, 4, 0),
-    "min_drug_daily_dose" = c(100, 10, 11, 12, 4, 0),
-    "different_days_supply" = c(10, 5, 100, 5, 5, 0),
-    "match_days_supply" = c(10, 5, 100, 5, 6, 0),
-    "missing_days_supply_or_dates" = c(5, 99, 100, 5, 5, 0),
-    "prop_different_days_supply" = c(0.1, 0.2, 0.1, 0.5, 0.4, 0)
-  )
-
-  types <- c("drugDose", "drugDaysSupply", "drugQuantity")
-  lapply(types, FUN = function(type) {
-    result <- obscureCounts(table, type, minCellCount = 5, substitute = NA)
-
-    expect_equal(result$result_obscured, c(FALSE, TRUE, FALSE, FALSE, TRUE, FALSE))
-    expect_equal(result$n_negative_days, c(10, NA, 100, 5, NA, 0))
-    expect_equal(result$n_zero_days, c(10, NA, 100, 5, NA, 0))
-    expect_equal(result$prop_negative_days, c(0.1, NA, 0.1, 0.5, NA, 0))
-    expect_equal(result$prop_zero_days, c(10, NA, 100, 5, NA, 0))
-    expect_equal(result$min_drug_daily_dose, c(100, NA, 11, 12, NA, 0))
-    expect_equal(result$different_days_supply, c(10, NA, 100, 5, NA, 0))
-    expect_equal(result$match_days_supply, c(10, NA, 100, 5, NA, 0))
-    expect_equal(result$missing_days_supply_or_dates, c(5, NA, 100, 5, NA, 0))
-    expect_equal(result$prop_different_days_supply, c(0.1, NA, 0.1, 0.5, NA, 0))
-
-    expect_equal(typeof(result$result_obscured),"logical")
-
-    result <- obscureCounts(table, type, minCellCount = NULL)
-    expect_equal(result, table)
-  })
-})
-
-test_that("check for drugRoutes|drugSig|drugSourceConcepts|drugTypes|drugExposureDuration|missingValues|diagnostics_summary", {
+test_that("check for drugRoutes|drugSig|drugSourceConcepts|drugTypes|drugExposureDuration|missingValues|diagnosticsSummary|drugDose|drugDaysSupply", {
   table <- tibble::tibble(
     "drug_concept_id" = c("1", "2", "3", "4", "5", "6"),
     "ingredient_concept_id" = c("1", "2", "3", "4", "5", "6"),
@@ -46,7 +9,8 @@ test_that("check for drugRoutes|drugSig|drugSourceConcepts|drugTypes|drugExposur
     "n_records" = c(10, 10, 100, 5, 6, 0),
   )
 
-  types <- c("drugRoutes", "drugSig", "drugSourceConcepts", "drugTypes", "drugExposureDuration", "missingValues", "diagnostics_summary")
+  types <- c("drugRoutes", "drugSig", "drugSourceConcepts", "drugTypes", "drugExposureDuration",
+             "missingValues", "diagnosticsSummary", "drugDose", "drugDaysSupply")
   lapply(types, FUN = function(type) {
     result <- obscureCounts(table, type, minCellCount = 10, substitute = NA)
 

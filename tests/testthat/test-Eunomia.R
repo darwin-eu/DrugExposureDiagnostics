@@ -1,11 +1,11 @@
-test_that("execute all checks, default ingredient, verbose", {
+test_that("execute default checks, default ingredient, verbose", {
 
   cdm <- getEunomiaCdm()
 
   result <- executeChecks(cdm, verbose = TRUE)
 
   # checks
-  expect_equal(length(result), 27)
+  expect_equal(length(result), 7)
   expect_equal(nrow(result$conceptSummary), 2)
   expect_true(any(grepl("Acetaminophen", result$conceptSummary$drug)))
   # check that all colnames don't have any uppercase characters (this might not be supported on some databases)
@@ -22,8 +22,12 @@ test_that("execute all checks, default ingredient, verbose", {
 test_that("execute all checks, given ingredient", {
   cdm <- getEunomiaCdm(1125315)
 
-  result <- executeChecks(cdm, 1125315) #acetaminophen
-
+  result <- executeChecks(cdm = cdm,
+                          ingredients = 1125315, #acetaminophen
+                          checks = c("missing", "exposureDuration", "type", "route",
+                                     "sourceConcept", "daysSupply", "verbatimEndDate",
+                                     "dose", "sig", "quantity", "ingredientOverview",
+                                     "ingredientPresence", "histogram", "diagnosticsSummary"))
   # checks
   expect_equal(length(result), 27)
   expect_equal(nrow(result$conceptSummary), 2)
@@ -38,11 +42,10 @@ test_that("execute some checks, given ingredient", {
   result <- executeChecks(cdm = cdm, ingredients = 1125315, checks = c("missing", "verbatimEndDate")) #acetaminophen
 
   # checks
-  expect_equal(length(result), 8)
+  expect_equal(length(result), 5)
   expect_equal(names(result), c("conceptSummary", "missingValuesOverall",
                                 "missingValuesByConcept", "drugVerbatimEndDate",
-                                "drugVerbatimEndDateByConcept", "drugIngredientOverview",
-                                "drugIngredientPresence", "diagnostics_summary"))
+                                "drugVerbatimEndDateByConcept"))
   expect_equal(nrow(result$conceptSummary), 2)
   expect_true(all(grepl("Acetaminophen", result$conceptSummary$drug)))
 
@@ -72,7 +75,7 @@ test_that("each check", {
   cdm[["ingredient_concepts"]]<-concepts_db
 
   # get the relevant drug records
-  cdm[["ingredient_drug_records"]]<-getDrugRecords(cdm, 1125315, "ingredient_concepts")
+  cdm[["ingredient_drug_records"]] <- getDrugRecords(cdm, 1125315, "ingredient_concepts")
 
   # summarise missing
   getDrugMissings(cdm, "ingredient_drug_records", byConcept=TRUE)
@@ -149,7 +152,6 @@ test_that("sampling", {
   expect_true(sum(result$conceptSummary$n_records) > 50)
   # checks where sampling should have been implemented
   expect_true(max(result$missingValuesOverall$n_records_missing_value, na.rm = TRUE) <= 50)
-  expect_true(max(result$drugTypesByConcept$n_records, na.rm = TRUE) <= 50)
 
   expect_message(executeChecks(cdm = cdm, ingredients = 1125315, #acetaminophen
                                sample = 50, earliestStartDate = Sys.Date()))
@@ -162,13 +164,11 @@ test_that("sampling", {
 
 test_that("summary", {
   cdm <- getEunomiaCdm(1125315)
-  result <- executeChecks(cdm = cdm, ingredients = 1125315)
+  result <- executeChecks(cdm = cdm, ingredients = 1125315, checks = c("missing", "exposureDuration", "dose", "quantity", "diagnosticsSummary"))
 
   expect_equal(
-    names(result$diagnostics_summary),
-    c("ingredient", "ingredient_concept_id", "n_records",
-      "proportion_of_records_by_drug_type",
-      "proportion_of_records_by_route_type",
+    names(result$diagnosticsSummary),
+    c("ingredient", "ingredient_concept_id", "n_records", "n_patients",
       "proportion_of_records_with_dose_form",
       "proportion_of_records_missing_denominator_unit_concept_id",
       "median_amount_value_q05_q95",
@@ -212,7 +212,8 @@ test_that("obscuring results by minCellCount", {
                               ingredients = 1125315,
                               minCellCount = 1000)
 
-  expect_equal(result_all$conceptSummary$n_records, c(NA, 2158))
+  summary <- result_all$conceptSummary %>% dplyr::arrange(ingredient_concept_id, drug_concept_id)
+  expect_equal(summary$n_records, c(2158, NA))
 
   DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
 })

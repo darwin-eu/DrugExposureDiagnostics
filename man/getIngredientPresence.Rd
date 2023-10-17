@@ -22,6 +22,5 @@ getIngredientPresence(
 a table with the bit set
 }
 \description{
-Get a presence overview for the ingredient. The record count and patient count
-will be returned for a bit set.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 }

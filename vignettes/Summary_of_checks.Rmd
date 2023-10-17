@@ -24,12 +24,15 @@ library(dplyr)
 # acetaminophen concept id is 1125315
 acetaminophen <- 1125315
 cdm <- getEunomiaCdm(ingredientId = acetaminophen)
-acetaminophen_checks <- executeChecks(cdm = cdm, ingredients = acetaminophen)
+acetaminophen_checks <- executeChecks(cdm = cdm, 
+                                      ingredients = acetaminophen, 
+                                      checks = c("missing", "exposureDuration", "type", "route", "sourceConcept", "daysSupply", "verbatimEndDate", 
+                                                 "dose", "sig", "quantity", "ingredientOverview", "ingredientPresence", "histogram", "diagnosticsSummary"))
 ```
 
 ## Diagnostics summary
 ```{r}
-acetaminophen_checks$diagnostics_summary %>% 
+acetaminophen_checks$diagnosticsSummary %>% 
   glimpse()
 ```
 

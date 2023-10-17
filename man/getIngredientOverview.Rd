@@ -22,6 +22,5 @@ getIngredientOverview(
 a table with the stats
 }
 \description{
-Get a detailed ingredient overview. The record count and patient count
-will be returned for an unique combination of data elements.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 }

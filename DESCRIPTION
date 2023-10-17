@@ -1,6 +1,6 @@
 Package: DrugExposureDiagnostics
 Title: Diagnostics for OMOP Common Data Model Drug Records
-Version: 0.4.6
+Version: 0.4.7
 Authors@R: c(
     person("Ger", "Inberg", email = "g.inberg@erasmusmc.nl", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8993-8748")),
@@ -35,7 +35,8 @@ Imports:
     tidyr (>= 1.2.0),
     tidyselect (>= 1.2.0),
     checkmate (>= 2.0.0),
-    glue (>= 1.5.0)
+    glue (>= 1.5.0),
+    lifecycle (>= 1.0.3)
 Suggests: 
     testthat (>= 3.0.0),
     duckdb,

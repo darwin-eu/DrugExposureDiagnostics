@@ -21,16 +21,17 @@
 #' @return a table containing the diagnostics summary
 summariseChecks <- function(resultList) {
   # total by ingredient
-  diagnostics_summary <- resultList$conceptSummary %>%
+  diagnosticsSummary <- resultList$conceptSummary %>%
     dplyr::group_by(.data$ingredient, .data$ingredient_concept_id) %>%
     dplyr::summarise(
       n_records = sum(.data$n_records),
+      n_patients = sum(.data$n_patients),
       n_dose_form = sum(as.numeric(.data$dose_form)),
       .groups = "drop"
     )
 
   # proportion with rxnorm dose form per ingredient
-  diagnostics_summary <- diagnostics_summary %>%
+  diagnosticsSummary <- diagnosticsSummary %>%
     dplyr::mutate(n_dose_form = ifelse(is.na(.data$n_dose_form), 0, .data$n_dose_form)) %>%
     dplyr::mutate(proportion_of_records_with_dose_form =
                     glue::glue("{.data$n_dose_form} ({round(100 * .data$n_dose_form / .data$n_records, 1)}%)")) %>%
@@ -42,7 +43,7 @@ summariseChecks <- function(resultList) {
     routes <- resultList$drugRoutesOverall %>%
       dplyr::mutate(route_type_n = glue::glue("
         {.data$route_type} ({n_records}, {round(100 * .data$n_records / .env$totN, 1)}%)"))
-    diagnostics_summary$proportion_of_records_by_route_type <- paste(routes$route_type_n, collapse = ";")
+    diagnosticsSummary$proportion_of_records_by_route_type <- paste(routes$route_type_n, collapse = ";")
   }
 
   # drug type
@@ -51,12 +52,12 @@ summariseChecks <- function(resultList) {
     drugTypes <- resultList$drugTypesOverall %>%
       dplyr::mutate(drug_type_n = glue::glue("
         {.data$drug_type} ({n_records}, {round(100 * .data$n_records / .env$totN, 1)}%)"))
-    diagnostics_summary$proportion_of_records_by_drug_type <- paste(drugTypes$drug_type_n, collapse = ";")
+    diagnosticsSummary$proportion_of_records_by_drug_type <- paste(drugTypes$drug_type_n, collapse = ";")
   }
 
   # duration
   if (!is.null(resultList$drugExposureDurationOverall) && !is.null(resultList$drugDose)) {
-    diagnostics_summary <- diagnostics_summary %>% dplyr::left_join(
+    diagnosticsSummary <- diagnosticsSummary %>% dplyr::left_join(
       resultList$drugExposureDurationOverall %>%
         dplyr::left_join(
           resultList$drugDose %>%
@@ -82,8 +83,8 @@ summariseChecks <- function(resultList) {
   }
 
   # quantity
-  if (!is.null(resultList$drugQuantity)) {
-    diagnostics_summary <- diagnostics_summary %>% dplyr::left_join(
+  if (!is.null(resultList$drugQuantity) && !is.null(resultList$drugDose)) {
+    diagnosticsSummary <- diagnosticsSummary %>% dplyr::left_join(
       resultList$drugQuantity %>%
         dplyr::left_join(
           resultList$drugDose %>%
@@ -106,7 +107,7 @@ summariseChecks <- function(resultList) {
 
   if (!is.null(resultList$drugDose)) {
     # missing denominator
-    diagnostics_summary <- diagnostics_summary %>% dplyr::left_join(
+    diagnosticsSummary <- diagnosticsSummary %>% dplyr::left_join(
       resultList$drugDose %>%
         dplyr::select(
           "ingredient_concept_id",
@@ -121,7 +122,7 @@ summariseChecks <- function(resultList) {
     )
 
     # amount value
-    diagnostics_summary <- diagnostics_summary %>% dplyr::left_join(
+    diagnosticsSummary <- diagnosticsSummary %>% dplyr::left_join(
       resultList$drugDose %>%
         dplyr::mutate(median_amount_value_q05_q95 = glue::glue(paste(
         "{.data$median_amount_value} ({.data$q05_amount_value}-{.data$q95_amount_value})",
@@ -134,8 +135,8 @@ summariseChecks <- function(resultList) {
     )
   }
 
-  diagnostics_summary <- diagnostics_summary %>%
-    dplyr::select(tidyselect::any_of(c("ingredient", "ingredient_concept_id", "n_records",
+  diagnosticsSummary <- diagnosticsSummary %>%
+    dplyr::select(tidyselect::any_of(c("ingredient", "ingredient_concept_id", "n_records", "n_patients",
                                        "proportion_of_records_by_drug_type",
                                        "proportion_of_records_by_route_type",
                                        "proportion_of_records_with_dose_form",
@@ -144,5 +145,5 @@ summariseChecks <- function(resultList) {
                                        "median_quantity_q05_q95",
                                        "median_drug_exposure_days_q05_q95",
                                        "proportion_of_records_with_negative_drug_exposure_days")))
-  return(diagnostics_summary)
+  return(diagnosticsSummary)
 }

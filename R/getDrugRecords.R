@@ -52,7 +52,7 @@ getDrugRecords <- function(cdm,
       dplyr::select("concept_id","concept_name", "ingredient_concept_id", "ingredient"),
     by = c("drug_concept_id" = "concept_id")) %>%
     dplyr::filter(.data$ingredient_concept_id == .env$ingredient) %>%
-    dplyr::rename("drug"="concept_name")
+    dplyr::rename("drug" = "concept_name")
 
   # store result
   records <- computeDBQuery(table = records,

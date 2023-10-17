@@ -34,7 +34,10 @@ test_that("getIngredientOverview", {
   testDb <- getInputDb()
   result <- getIngredientOverview(testDb,
                                   drugRecordsTable = "drug_exposure",
-                                  drugStrengthTable = "drug_strength") %>% dplyr::collect()
+                                  drugStrengthTable = "drug_strength") %>%
+    dplyr::collect() %>%
+    dplyr::mutate(ingredient_concept_id = as.numeric(.data$ingredient_concept_id)) %>%
+    dplyr::arrange(.data$ingredient_concept_id, dplyr::desc(.data$n_records))
 
   expect_equal(nrow(result), 9)
   expect_equal(ncol(result), 9)
@@ -42,9 +45,7 @@ test_that("getIngredientOverview", {
                                    "drug_exposure_days", "days_supply", "quantity",
                                    "sig", "strength", "n_records",
                                    "n_people"))
-  expect_equal(result$strength, c("1.0 mg/mL", "10.0 mg", "1.0 mg/mL",
-                                  "1.0 mg/mL", "1.0 mg/mL", "10.0 mg",
-                                  "1.0 mg/mL", "1.0 mg/mL", "1.0 mg/mL"))
+  expect_equal(result$ingredient_concept_id, c(1, 1, 1, 2, 2, 3, 4, 4, 4))
   expect_equal(result$n_records, c(3, 1, 1, 2, 1, 1, 1, 1, 1))
   expect_equal(result$n_people, c(2, 1, 1, 1, 1, 1, 1, 1, 1))
 })
@@ -63,7 +64,10 @@ test_that("getIngredientsPresence", {
   testDb <- getInputDb()
   result <- getIngredientPresence(testDb,
                                   drugRecordsTable = "drug_exposure",
-                                  drugStrengthTable = "drug_strength") %>% dplyr::collect()
+                                  drugStrengthTable = "drug_strength") %>%
+    dplyr::collect() %>%
+    dplyr::mutate(ingredient_concept_id = as.numeric(.data$ingredient_concept_id)) %>%
+    dplyr::arrange(.data$ingredient_concept_id, dplyr::desc(.data$n_records))
 
   expect_equal(nrow(result), 6)
   expect_equal(ncol(result), 10)
@@ -71,8 +75,8 @@ test_that("getIngredientsPresence", {
                                    "drug_exposure_end_date_specified", "strength_specified", "sig_specified",
                                    "drug_exposure_days_specified", "n_records", "n_people"))
   expect_equal(result$strength_specified, rep("Yes", 6))
-  expect_equal(result$n_records, c(4, 2, 1, 3, 1, 1))
-  expect_equal(result$n_people, c(2, 1, 1, 2, 1, 1))
+  expect_equal(result$n_records, c(4, 1, 3, 1, 2, 1))
+  expect_equal(result$n_people, c(2, 1, 2, 1, 1, 1))
 })
 
 test_that("getIngredientsPresence error cases", {

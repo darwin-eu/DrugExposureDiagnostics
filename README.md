@@ -78,7 +78,7 @@ names(all_checks)
 #> [17] "drugDoseByConcept"             "drugSig"                      
 #> [19] "drugSigByConcept"              "drugQuantity"                 
 #> [21] "drugQuantityByConcept"         "drugIngredientOverview"       
-#> [23] "drugIngredientPresence"        "diagnostics_summary"
+#> [23] "drugIngredientPresence"        "diagnosticsSummary"
 ```
 
 The first item contains information on the concept ids that are used in

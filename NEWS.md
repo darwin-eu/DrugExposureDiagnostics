@@ -1,5 +1,10 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 0.4.7
+* Set the default checks to: "missing", "exposureDuration" and "quantity"
+* Reduce sample size to 10.000
+* Make compatible with duckdb v0.9
+
 # DrugExposureDiagnostics 0.4.6
 * Fixed bug in obscureCounts
 * Add PaRe report vignette

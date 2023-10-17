@@ -17,6 +17,8 @@
 #' Get a detailed ingredient overview. The record count and patient count
 #' will be returned for an unique combination of data elements.
 #'
+#' `r lifecycle::badge("deprecated")`
+#'
 #' @param cdm CDMConnector reference object
 #' @param drugRecordsTable drug exposure table
 #' @param drugStrengthTable drug strength table
@@ -25,6 +27,9 @@
 getIngredientOverview <- function(cdm,
                                   drugRecordsTable = "drug_exposure",
                                   drugStrengthTable = "drug_strength") {
+
+  lifecycle::deprecate_warn(when = "0.4.7",
+                            what = "getIngredientOverview()")
 
   errorMessage <- checkmate::makeAssertCollection()
   checkDbType(cdm = cdm, messageStore = errorMessage)
@@ -58,6 +63,8 @@ getIngredientOverview <- function(cdm,
 #' Get a presence overview for the ingredient. The record count and patient count
 #' will be returned for a bit set.
 #'
+#' `r lifecycle::badge("deprecated")`
+#'
 #' @param cdm CDMConnector reference object
 #' @param drugRecordsTable drug exposure table
 #' @param drugStrengthTable drug strength table
@@ -66,6 +73,9 @@ getIngredientOverview <- function(cdm,
 getIngredientPresence <- function(cdm,
                                   drugRecordsTable = "drug_exposure",
                                   drugStrengthTable = "drug_strength") {
+
+  lifecycle::deprecate_warn(when = "0.4.7",
+                            what = "getIngredientPresence()")
 
   errorMessage <- checkmate::makeAssertCollection()
   checkDbType(cdm = cdm, messageStore = errorMessage)
