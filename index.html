@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">DrugExposureDiagnostics</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,7 +43,6 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="articles/Introduction_to_DrugExposureDiagnostics.html">Introduction To DrugExposureDiagnostics</a>
     <a class="dropdown-item" href="articles/Summary_of_checks.html">Summary of checks</a>
-    <a class="dropdown-item" href="articles/PareReport.html">PaRe Report: DrugExposureDiagnostics [0.4.6]</a>
   </div>
 </li>
 <li class="nav-item">
@@ -94,7 +93,7 @@
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">DrugExposureDiagnostics</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">CDMConnector</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://darwin-eu.github.io/CDMConnector/" class="external-link">CDMConnector</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/getEunomiaCdm.html">getEunomiaCdm</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -119,7 +118,7 @@
 <span><span class="co">#&gt; [17] "drugDoseByConcept"             "drugSig"                      </span></span>
 <span><span class="co">#&gt; [19] "drugSigByConcept"              "drugQuantity"                 </span></span>
 <span><span class="co">#&gt; [21] "drugQuantityByConcept"         "drugIngredientOverview"       </span></span>
-<span><span class="co">#&gt; [23] "drugIngredientPresence"        "diagnostics_summary"</span></span></code></pre></div>
+<span><span class="co">#&gt; [23] "drugIngredientPresence"        "diagnosticsSummary"</span></span></code></pre></div>
 <p>The first item contains information on the concept ids that are used in the database for a given ingredient.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">all_checks</span><span class="op">$</span><span class="va">conceptSummary</span><span class="op">)</span></span>
