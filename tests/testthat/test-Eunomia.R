@@ -27,7 +27,8 @@ test_that("execute all checks, given ingredient", {
                           checks = c("missing", "exposureDuration", "type", "route",
                                      "sourceConcept", "daysSupply", "verbatimEndDate",
                                      "dose", "sig", "quantity", "ingredientOverview",
-                                     "ingredientPresence", "histogram", "diagnosticsSummary"))
+                                     "ingredientPresence", "histogram", "diagnosticsSummary",
+                                     "ingredientPresence","ingredientOverview"))
   # checks
   expect_equal(length(result), 27)
   expect_equal(nrow(result$conceptSummary), 2)
@@ -214,6 +215,7 @@ test_that("obscuring results by minCellCount", {
 
   summary <- result_all$conceptSummary %>% dplyr::arrange(ingredient_concept_id, drug_concept_id)
   expect_equal(summary$n_records, c(2158, NA))
+  expect_equal(summary$n_patients, c(1428, NA))
 
   DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
 })

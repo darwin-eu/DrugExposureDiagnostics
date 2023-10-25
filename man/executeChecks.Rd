@@ -2,7 +2,7 @@
 % Please edit documentation in R/executeChecks.R
 \name{executeChecks}
 \alias{executeChecks}
-\title{Execute all checks on Drug Exposure.}
+\title{Execute given checks on Drug Exposure.}
 \usage{
 executeChecks(
   cdm,
@@ -47,7 +47,7 @@ used throughout.}
 named list with results
 }
 \description{
-Execute all checks on Drug Exposure.
+Execute given checks on Drug Exposure.
 }
 \examples{
 \dontrun{

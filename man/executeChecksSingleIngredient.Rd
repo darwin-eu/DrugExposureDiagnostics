@@ -2,7 +2,7 @@
 % Please edit documentation in R/executeChecks.R
 \name{executeChecksSingleIngredient}
 \alias{executeChecksSingleIngredient}
-\title{Execute all checks on Drug Exposure for a single ingredient.}
+\title{Execute given checks on Drug Exposure for a single ingredient.}
 \usage{
 executeChecksSingleIngredient(
   cdm,
@@ -47,5 +47,5 @@ used throughout.}
 named list with results
 }
 \description{
-Execute all checks on Drug Exposure for a single ingredient.
+Execute given checks on Drug Exposure for a single ingredient.
 }

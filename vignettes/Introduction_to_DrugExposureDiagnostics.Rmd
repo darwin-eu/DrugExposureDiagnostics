@@ -62,7 +62,7 @@ executeChecks(cdm,
               checks = c("missing", "exposureDuration", "type", "route", "sourceConcept", "daysSupply", "verbatimEndDate", 
                          "dose", "sig", "quantity", "ingredientOverview", "ingredientPresence", "histogram", "diagnosticsSummary"), 
               minCellCount = 5,
-              sample = 1000000,
+              sample = 10000,
               verbose = FALSE
 )
 ```
@@ -70,7 +70,8 @@ executeChecks(cdm,
 The`cdm` is the database reference of the OMOP CDM using the `CDMConnector` package.    
 The `ingredients` is a list of ingredients of interests, by default it is 1125315 for acetaminophen. 
 The `subsetToConceptId` is a vector of drug concept ID's to subset down to.
-`checks` allows to select the checks to be executed, by default, all the checks will be run.   
+`checks` allows to select the checks to be executed, by default the missing values, the
+exposure duration and the quantity checks will be run.   
 `sample` is the number of samples, by default, 10.000 drug record samples will be used.  
 The `minCellCount` is minimum number of events to report, numbers lower than this will be obscured.    
 

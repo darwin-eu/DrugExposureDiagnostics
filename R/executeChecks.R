@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' Execute all checks on Drug Exposure.
+#' Execute given checks on Drug Exposure.
 #'
 #' @param cdm CDMConnector reference object
 #' @param ingredients vector of ingredients, by default: acetaminophen
@@ -85,7 +85,7 @@ executeChecks <- function(cdm,
   return(resultList)
 }
 
-#' Execute all checks on Drug Exposure for a single ingredient.
+#' Execute given checks on Drug Exposure for a single ingredient.
 #'
 #' @param cdm CDMConnector reference object
 #' @param ingredient ingredient, by default: acetaminophen
