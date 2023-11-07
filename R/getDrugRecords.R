@@ -36,6 +36,7 @@ getDrugRecords <- function(cdm,
                            verbose = FALSE) {
   errorMessage <- checkmate::makeAssertCollection()
   checkDbType(cdm = cdm, messageStore = errorMessage)
+  checkmate::assertNumeric(ingredient, add = errorMessage)
   checkTableExists(
     cdm = cdm, tableName = includedConceptsTable,
     messageStore = errorMessage

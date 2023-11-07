@@ -1,5 +1,8 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 1.0.1
+* Fix unit test
+
 # DrugExposureDiagnostics 1.0.0
 * Obscure patient counts in concept/diagnostics summary
 * Update documentation regarding default checks

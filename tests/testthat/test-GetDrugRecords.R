@@ -46,7 +46,7 @@ getTestData <- function(ingredientId) {
 }
 
 test_that("getDrugRecords", {
-  ingredientId <- "1125315"
+  ingredientId <- 1125315
   cdm <- getTestData(ingredientId)
   result <- getDrugRecords(cdm = cdm, ingredient = ingredientId, includedConceptsTable = "ingredient_concepts") %>%
     dplyr::collect()
@@ -63,7 +63,7 @@ test_that("getDrugRecords", {
                                    "ingredient"))
 
   # non exising ingredient should deliver no results
-  result <- getDrugRecords(cdm = cdm, ingredient = "123456", includedConceptsTable = "ingredient_concepts") %>%
+  result <- getDrugRecords(cdm = cdm, ingredient = 123456, includedConceptsTable = "ingredient_concepts") %>%
     dplyr::collect()
   expect_equal(nrow(result), 0)
 })
