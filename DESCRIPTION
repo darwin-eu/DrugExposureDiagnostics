@@ -57,5 +57,7 @@ Suggests:
     cowplot,
     plotly
 Config/testthat/edition: 3
+URL: https://darwin-eu.github.io/DrugExposureDiagnostics/, https://github.com/darwin-eu/DrugExposureDiagnostics
+BugReports: https://github.com/darwin-eu/DrugExposureDiagnostics/issues
 VignetteBuilder: knitr
 Language: en-US
