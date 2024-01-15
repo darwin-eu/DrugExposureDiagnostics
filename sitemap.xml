@@ -7,10 +7,10 @@
     <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/articles/Introduction_to_DrugExposureDiagnostics.html</loc>
+    <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/articles/IntroductionToDrugExposureDiagnostics.html</loc>
   </url>
   <url>
-    <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/articles/Summary_of_checks.html</loc>
+    <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/articles/SummaryOfChecks.html</loc>
   </url>
   <url>
     <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/articles/index.html</loc>
@@ -44,6 +44,9 @@
   </url>
   <url>
     <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/checkLogical.html</loc>
+  </url>
+  <url>
+    <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/checkSampleMinCellCount.html</loc>
   </url>
   <url>
     <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/checkTableExists.html</loc>
@@ -119,9 +122,6 @@
   </url>
   <url>
     <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/summariseChecks.html</loc>
-  </url>
-  <url>
-    <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/summariseDaysSupply.html</loc>
   </url>
   <url>
     <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/summariseDrugExposureDuration.html</loc>
