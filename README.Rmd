@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# DrugExposureDiagnostics <img src='man/figures/DrugExposureDiagnostics.png' align="right" height="139"/>
+# DrugExposureDiagnostics <img src='man/figures/DrugExposureDiagnostics.png' align="right" width="139"/>
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/DrugExposureDiagnostics)](https://CRAN.R-project.org/package=DrugExposureDiagnostics)
