@@ -17,15 +17,17 @@
 #' Get a summary of the daily drug dose
 #'
 #' @param cdm CDMConnector reference object
-#' @param drugRecordsTable drug exposure table
+#' @param drugRecordsTable modified drug exposure table
 #' @param drugStrengthTable drug strength table
-#' @param byConcept whether to get result by concept
+#' @param byConcept whether to get result by drug concept
+#' @param sampleSize the sample size given in execute checks
 #'
 #' @return a table with the stats about the daily dose
 checkDrugDose <- function(cdm,
                              drugRecordsTable = "ingredient_drug_records",
                              drugStrengthTable = "drug_strength",
-                             byConcept = TRUE) {
+                             byConcept = TRUE,
+                             sampleSize = sampleSize) {
 
   errorMessage <- checkmate::makeAssertCollection()
   checkDbType(cdm = cdm, messageStore = errorMessage)
@@ -62,6 +64,7 @@ checkDrugDose <- function(cdm,
   records <- records %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
     dplyr::summarise(n_records = as.integer(dplyr::n()),
+                     n_sample = .env$sampleSize,
                      missing_days_supply_or_dates = sum(.data$days_supply == 0 | is.na(.data$drug_exposure_start_date) | is.na(.data$drug_exposure_end_date)),
                      proportion_of_records_missing_days_supply_or_dates = .data$missing_days_supply_or_dates / dplyr::n(),
                      missing_or_null_quantity = sum(.data$quantity == 0 | is.na(.data$quantity)),

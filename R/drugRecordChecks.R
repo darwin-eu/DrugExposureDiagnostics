@@ -17,13 +17,15 @@
 #' Check missings in drug exposure records
 #'
 #' @param cdm CDMConnector reference object
-#' @param drugRecordsTable drugRecordsTable
-#' @param byConcept byConcept
+#' @param drugRecordsTable modified drug exposure table
+#' @param byConcept by individual drug Concept
+#' @param sampleSize the sample size given in execute checks
 #'
 #' @return a table with a summary of missing records
 getDrugMissings <- function(cdm,
-                            drugRecordsTable = "drug_exposure",
-                            byConcept = TRUE) {
+                            drugRecordsTable = "ingredient_drug_records",
+                            byConcept = TRUE,
+                            sampleSize = 10000) {
 
   # checks
   errorMessage <- checkmate::makeAssertCollection()
@@ -48,56 +50,75 @@ getDrugMissings <- function(cdm,
   summMissings <- records %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
     dplyr::summarise(
-      total_by_concept = as.integer(dplyr::n()),
+      n_records = as.integer(dplyr::n()),
+      n_sample = .env$sampleSize,
       n_missing_drug_exposure_start_date =
-        sum(dplyr::case_when(is.na(.data$drug_exposure_start_date) ~ 1, TRUE ~ 0), na.rm = T),
+        sum(dplyr::case_when(
+          is.na(.data$drug_exposure_start_date) ~ 1, TRUE ~ 0), na.rm = T),
       n_missing_drug_exposure_end_date =
-        sum(dplyr::case_when(is.na(.data$drug_exposure_end_date) ~ 1, TRUE ~ 0), na.rm = T),
+        sum(dplyr::case_when(
+          is.na(.data$drug_exposure_end_date) ~ 1, TRUE ~ 0), na.rm = T),
       n_missing_verbatim_end_date =
-        sum(dplyr::case_when(is.na(.data$verbatim_end_date) ~ 1, TRUE ~ 0), na.rm = T),
+        sum(dplyr::case_when(
+          is.na(.data$verbatim_end_date) ~ 1, TRUE ~ 0), na.rm = T),
       n_missing_drug_type_concept_id =
-        sum(dplyr::case_when(is.na(.data$drug_type_concept_id) ~ 1, TRUE ~ 0), na.rm = T),
+        sum(dplyr::case_when(
+          is.na(.data$drug_type_concept_id) ~ 1, TRUE ~ 0), na.rm = T),
       n_missing_stop_reason =
-        sum(dplyr::case_when(is.na(.data$stop_reason) ~ 1, TRUE ~ 0), na.rm = T),
+        sum(dplyr::case_when(
+          is.na(.data$stop_reason) ~ 1, TRUE ~ 0), na.rm = T),
       n_missing_refills =
-        sum(dplyr::case_when(is.na(.data$refills) ~ 1, TRUE ~ 0), na.rm = T),
+        sum(dplyr::case_when(
+          is.na(.data$refills) ~ 1, TRUE ~ 0), na.rm = T),
       n_missing_quantity =
-        sum(dplyr::case_when(is.na(.data$quantity) ~ 1, TRUE ~ 0), na.rm = T),
+        sum(dplyr::case_when(
+          is.na(.data$quantity) ~ 1, TRUE ~ 0), na.rm = T),
       n_missing_days_supply =
-        sum(dplyr::case_when(is.na(.data$days_supply) ~ 1, TRUE ~ 0), na.rm = T),
+        sum(dplyr::case_when(
+          is.na(.data$days_supply) ~ 1, TRUE ~ 0), na.rm = T),
       n_missing_sig =
-        sum(dplyr::case_when(is.na(.data$sig) ~ 1, TRUE ~ 0), na.rm = T),
+        sum(dplyr::case_when(
+          is.na(.data$sig) ~ 1, TRUE ~ 0), na.rm = T),
       n_missing_route_concept_id =
-        sum(dplyr::case_when(is.na(.data$route_concept_id) ~ 1, TRUE ~ 0), na.rm = T),
+        sum(dplyr::case_when(
+          is.na(.data$route_concept_id) ~ 1, TRUE ~ 0), na.rm = T),
       n_missing_lot_number =
-        sum(dplyr::case_when(is.na(.data$lot_number) ~ 1, TRUE ~ 0), na.rm = T),
+        sum(dplyr::case_when(
+          is.na(.data$lot_number) ~ 1, TRUE ~ 0), na.rm = T),
       n_missing_provider_id =
-        sum(dplyr::case_when(is.na(.data$provider_id) ~ 1, TRUE ~ 0), na.rm = T),
+        sum(dplyr::case_when(
+          is.na(.data$provider_id) ~ 1, TRUE ~ 0), na.rm = T),
       n_missing_visit_occurrence_id =
-        sum(dplyr::case_when(is.na(.data$visit_occurrence_id) ~ 1, TRUE ~ 0), na.rm = T),
+        sum(dplyr::case_when(
+          is.na(.data$visit_occurrence_id) ~ 1, TRUE ~ 0), na.rm = T),
       n_missing_visit_detail_id =
-        sum(dplyr::case_when(is.na(.data$visit_detail_id) ~ 1, TRUE ~ 0), na.rm = T),
+        sum(dplyr::case_when(
+          is.na(.data$visit_detail_id) ~ 1, TRUE ~ 0), na.rm = T),
       n_missing_drug_source_value =
-        sum(dplyr::case_when(is.na(.data$drug_source_value) ~ 1, TRUE ~ 0), na.rm = T),
+        sum(dplyr::case_when(
+          is.na(.data$drug_source_value) ~ 1, TRUE ~ 0), na.rm = T),
       n_missing_drug_source_concept_id =
-        sum(dplyr::case_when(is.na(.data$drug_source_concept_id) ~ 1, TRUE ~ 0), na.rm = T),
+        sum(dplyr::case_when(
+          is.na(.data$drug_source_concept_id) ~ 1, TRUE ~ 0), na.rm = T),
       n_missing_route_source_value =
-        sum(dplyr::case_when(is.na(.data$route_source_value) ~ 1, TRUE ~ 0), na.rm = T),
+        sum(dplyr::case_when(
+          is.na(.data$route_source_value) ~ 1, TRUE ~ 0), na.rm = T),
       n_missing_dose_unit_source_value =
-        sum(dplyr::case_when(is.na(.data$dose_unit_source_value) ~ 1, TRUE ~ 0), na.rm = T)
+        sum(dplyr::case_when(
+          is.na(.data$dose_unit_source_value) ~ 1, TRUE ~ 0), na.rm = T)
     ) %>%
     dplyr::collect() %>%
     tidyr::pivot_longer(!tidyselect::any_of(c("drug_concept_id", "drug",
                                               "ingredient_concept_id",
-                                              "ingredient","total_by_concept")),
+                                              "ingredient","n_records","n_sample")),
                         names_to = "variable",
                         values_to = "n_records_missing_value")
 
   # add prop
   summMissings <- summMissings %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
-    dplyr::relocate("total_by_concept", .after = "variable") %>%
-    dplyr::rename("n_records" = "total_by_concept") %>%
+    dplyr::relocate("n_records", .after = "variable") %>%
+    dplyr::relocate("n_sample", .after = "n_records") %>%
     dplyr::mutate(n_records_not_missing_value = .data$n_records - .data$n_records_missing_value) %>%
     dplyr::mutate(proportion_records_missing_value = .data$n_records_missing_value / .data$n_records) %>%
     dplyr::relocate("n_records_missing_value", .after = "n_records_not_missing_value")
@@ -110,13 +131,15 @@ getDrugMissings <- function(cdm,
 #' Get drug exposure record types
 #'
 #' @param cdm CDMConnector reference object
-#' @param drugRecordsTable drugRecordsTable
-#' @param byConcept byConcept
+#' @param drugRecordsTable modified drug exposure table
+#' @param byConcept by individual drug Concept
+#' @param sampleSize the sample size given in execute checks
 #'
 #' @return a table with the drug exposure record types
 getDrugTypes <- function(cdm,
                          drugRecordsTable = "drug_exposure",
-                         byConcept = TRUE) {
+                         byConcept = TRUE,
+                         sampleSize = 10000) {
 
   # checks
   errorMessage <- checkmate::makeAssertCollection()
@@ -136,7 +159,8 @@ getDrugTypes <- function(cdm,
 
   summ <- cdm[[drugRecordsTable]] %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
-    dplyr::summarise(n_records = as.integer(dplyr::n())) %>%
+    dplyr::summarise(n_records = as.integer(dplyr::n()),
+                     n_sample = .env$sampleSize) %>%
     CDMConnector::computeQuery() %>%
     dplyr::left_join(cdm$concept %>%
                        dplyr::rename("drug_type_concept_id" = "concept_id",
@@ -156,13 +180,15 @@ getDrugTypes <- function(cdm,
 #' Get drug exposure route types
 #'
 #' @param cdm CDMConnector reference object
-#' @param drugRecordsTable drugRecordsTable
-#' @param byConcept byConcept
+#' @param drugRecordsTable modified drug exposure table
+#' @param byConcept by individual drug Concept
+#' @param sampleSize the sample size given in execute checks
 #'
 #' @return a table with the drug exposure route types
 getDrugRoutes <- function(cdm,
                           drugRecordsTable = "drug_exposure",
-                          byConcept = TRUE) {
+                          byConcept = TRUE,
+                          sampleSize = 10000) {
 
   # checks
   errorMessage <- checkmate::makeAssertCollection()
@@ -182,7 +208,8 @@ getDrugRoutes <- function(cdm,
 
   summ <- cdm[[drugRecordsTable]] %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
-    dplyr::summarise(n_records = as.integer(dplyr::n())) %>%
+    dplyr::summarise(n_records = as.integer(dplyr::n()),
+                     n_sample = .env$sampleSize) %>%
     CDMConnector::computeQuery() %>%
     dplyr::left_join(cdm$concept %>%
                        dplyr::rename("route_concept_id" = "concept_id",
@@ -202,13 +229,15 @@ getDrugRoutes <- function(cdm,
 #' Check drug exposure source types
 #'
 #' @param cdm CDMConnector reference object
-#' @param drugRecordsTable drugRecordsTable
-#' @param byConcept byConcept
+#' @param drugRecordsTable modified drug exposure table
+#' @param byConcept by individual drug Concept
+#' @param sampleSize the sample size given in execute checks
 #'
 #' @return a table with the drug source concepts
 getDrugSourceConcepts <- function(cdm,
                                   drugRecordsTable = "drug_exposure",
-                                  byConcept = TRUE) {
+                                  byConcept = TRUE,
+                                  sampleSize = 10000) {
 
   # checks
   errorMessage <- checkmate::makeAssertCollection()
@@ -228,7 +257,8 @@ getDrugSourceConcepts <- function(cdm,
 
 summ <- cdm[[drugRecordsTable]] %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
-    dplyr::summarise(n_records = as.integer(dplyr::n())) %>%
+    dplyr::summarise(n_records = as.integer(dplyr::n()),
+                     n_sample = .env$sampleSize) %>%
     CDMConnector::computeQuery() %>%
     dplyr::left_join(cdm$concept %>%
                        dplyr::rename("drug_source_concept_id" = "concept_id",
@@ -248,13 +278,15 @@ summ <- cdm[[drugRecordsTable]] %>%
 #' Summarise drug exposure record durations
 #'
 #' @param cdm CDMConnector reference object
-#' @param drugRecordsTable drugRecordsTable
-#' @param byConcept byConcept
+#' @param drugRecordsTable modified drug exposure table
+#' @param byConcept by individual drug Concept
+#' @param sampleSize the sample size given in execute checks
 #'
 #' @return a table with the drug exposure record durations
 summariseDrugExposureDuration <- function(cdm,
-                                          drugRecordsTable = "drug_exposure",
-                                          byConcept = TRUE) {
+                                          drugRecordsTable = "ingredient_drug_records",
+                                          byConcept = TRUE,
+                                          sampleSize = 10000) {
 
   # checks
   errorMessage <- checkmate::makeAssertCollection()
@@ -278,7 +310,8 @@ summariseDrugExposureDuration <- function(cdm,
 
   recordDays <- records %>%
     dplyr::select(
-      "drug_concept_id", "drug",
+      "drug_concept_id",
+      "drug",
       "ingredient_concept_id",
       "ingredient",
       "drug_exposure_start_date",
@@ -296,7 +329,8 @@ summariseDrugExposureDuration <- function(cdm,
   summ <- recordDays %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
     dplyr::summarise(
-      n_records = dplyr::n(),
+      n_records = as.integer(dplyr::n()),
+      n_sample = .env$sampleSize,
       n_non_negative_days = sum(.data$drug_exposure_days >= 0, na.rm = T),
       n_negative_days = sum(.data$drug_exposure_days < 0, na.rm = T),
       proportion_negative_days = sum(.data$drug_exposure_days < 0, na.rm = T) / dplyr::n(),

@@ -4,14 +4,21 @@
 \alias{summariseQuantity}
 \title{Summarise the quantity column of the drug_exposure table}
 \usage{
-summariseQuantity(cdm, drugRecordsTable = "drug_exposure", byConcept = TRUE)
+summariseQuantity(
+  cdm,
+  drugRecordsTable = "ingredient_drug_records",
+  byConcept = TRUE,
+  sampleSize = sampleSize
+)
 }
 \arguments{
 \item{cdm}{CDMConnector reference object}
 
-\item{drugRecordsTable}{drug exposure table}
+\item{drugRecordsTable}{modified drug exposure table}
 
-\item{byConcept}{whether to get result by concept}
+\item{byConcept}{whether to get result by drug concept}
+
+\item{sampleSize}{the sample size given in execute checks}
 }
 \value{
 a table with the summarized quantity result

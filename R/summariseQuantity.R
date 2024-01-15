@@ -18,13 +18,15 @@
 #' Summarise the quantity column of the drug_exposure table
 #'
 #' @param cdm CDMConnector reference object
-#' @param drugRecordsTable drug exposure table
-#' @param byConcept whether to get result by concept
+#' @param drugRecordsTable modified drug exposure table
+#' @param byConcept whether to get result by drug concept
+#' @param sampleSize the sample size given in execute checks
 #'
 #' @return a table with the summarized quantity result
 summariseQuantity <- function(cdm,
-                              drugRecordsTable = "drug_exposure",
-                              byConcept = TRUE){
+                              drugRecordsTable = "ingredient_drug_records",
+                              byConcept = TRUE,
+                              sampleSize = sampleSize){
   errorMessage <- checkmate::makeAssertCollection()
   checkDbType(cdm = cdm, messageStore = errorMessage)
   checkTableExists(
@@ -45,7 +47,8 @@ summariseQuantity <- function(cdm,
 
   recordQuantity <- records %>%
     dplyr::select(
-      "drug_concept_id","drug",
+      "drug_concept_id",
+      "drug",
       "ingredient_concept_id",
       "ingredient",
       "quantity"
@@ -56,6 +59,8 @@ summariseQuantity <- function(cdm,
   summ <- recordQuantity %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
     dplyr::summarise(
+      n_records = as.integer(dplyr::n()),
+      n_sample = .env$sampleSize,
       minimum_drug_exposure_quantity =  min(.data$quantity, na.rm = T),
       q05_drug_exposure_quantity = stats::quantile(
         .data$quantity,

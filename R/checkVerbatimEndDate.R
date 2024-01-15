@@ -17,13 +17,15 @@
 #' Check the verbatim_end_date field
 #'
 #' @param cdm CDMConnector reference object
-#' @param drugRecordsTable drug exposure table
-#' @param byConcept whether to get result by concept
+#' @param drugRecordsTable modified drug exposure table
+#' @param byConcept whether to get result by drug concept
+#' @param sampleSize the sample size given in execute checks
 #'
 #' @return a table with the stats about the verbatim_end_date
 checkVerbatimEndDate <- function(cdm,
-                                 drugRecordsTable = "drug_exposure",
-                                 byConcept = TRUE) {
+                                 drugRecordsTable = "ingredient_drug_records",
+                                 byConcept = TRUE,
+                                 sampleSize = 10000) {
 
   errorMessage <- checkmate::makeAssertCollection()
   checkDbType(cdm = cdm, messageStore = errorMessage)
@@ -33,7 +35,8 @@ checkVerbatimEndDate <- function(cdm,
   checkmate::reportAssertions(collection = errorMessage)
 
   if (isTRUE(byConcept)) {
-    grouping <- c("drug_concept_id", "drug",
+    grouping <- c("drug_concept_id",
+                  "drug",
                   "ingredient_concept_id",
                   "ingredient")
   } else {
@@ -49,10 +52,20 @@ checkVerbatimEndDate <- function(cdm,
       minimum_verbatim_end_date = min(.data$verbatim_end_date, na.rm = T),
       maximum_verbatim_end_date = max(.data$verbatim_end_date, na.rm = T),
       n_records = as.integer(dplyr::n()),
-      n_missing_verbatim_end_date = sum(dplyr::case_when(is.na(.data$verbatim_end_date) ~ 1, TRUE ~ 0), na.rm = T),
-      n_not_missing_verbatim_end_date = as.integer(dplyr::n() - sum(dplyr::case_when(is.na(.data$verbatim_end_date) ~ 1, TRUE ~ 0), na.rm = T)),
-      n_verbatim_end_date_equal_to_drug_exposure_end_date = as.integer(dplyr::n() -
-        sum(dplyr::case_when(.data$drug_exposure_end_date != .data$verbatim_end_date ~ 1, TRUE ~ 0), na.rm = T)),
-      n_verbatim_end_date_and_drug_exposure_end_date_differ =
-        sum(dplyr::case_when(.data$drug_exposure_end_date != .data$verbatim_end_date ~ 1, TRUE ~ 0), na.rm = T))
+      n_sample = .env$sampleSize,
+      n_missing_verbatim_end_date = sum(dplyr::case_when(
+        is.na(.data$verbatim_end_date) ~ 1,
+        !is.na(.data$verbatim_end_date) ~ 0), na.rm = T),
+      n_not_missing_verbatim_end_date = sum(dplyr::case_when(
+        !is.na(.data$verbatim_end_date) ~ 1,
+        is.na(.data$verbatim_end_date) ~ 0), na.rm = T),
+      n_verbatim_end_date_equal_to_drug_exposure_end_date = sum(dplyr::case_when(
+          .data$drug_exposure_end_date == .data$verbatim_end_date ~ 1,
+          .data$drug_exposure_end_date != .data$verbatim_end_date ~ 0,
+          is.na(.data$drug_exposure_end_date) | is.na(.data$verbatim_end_date) ~ 0), na.rm = T),
+      n_verbatim_end_date_and_drug_exposure_end_date_differ = sum(dplyr::case_when(
+        .data$drug_exposure_end_date != .data$verbatim_end_date ~ 1,
+        .data$drug_exposure_end_date == .data$verbatim_end_date ~ 0,
+        is.na(.data$drug_exposure_end_date) | is.na(.data$verbatim_end_date) ~ 0), na.rm = T)
+      )
 }

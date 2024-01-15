@@ -4,14 +4,21 @@
 \alias{checkDaysSupply}
 \title{Check if Days_supply is the same as datediff(drug_exp_start_date,drug_exp_end_date)}
 \usage{
-checkDaysSupply(cdm, drugRecordsTable = "drug_exposure", byConcept = TRUE)
+checkDaysSupply(
+  cdm,
+  drugRecordsTable = "ingredient_drug_records",
+  byConcept = TRUE,
+  sampleSize = 10000
+)
 }
 \arguments{
 \item{cdm}{CDMConnector reference object}
 
-\item{drugRecordsTable}{drug exposure table}
+\item{drugRecordsTable}{a modified version of the drug exposure table}
 
-\item{byConcept}{whether to get result by concept}
+\item{byConcept}{whether to get result by drug concept}
+
+\item{sampleSize}{the sample size given in execute checks}
 }
 \value{
 a table with the stats of days supply compared to start and end date

@@ -25,9 +25,9 @@ getInputDb <- function() {
     numerator_value = c(1, 1, 1, 1),
     numerator_unit = c("mg", "mg", "mg", "mg"))
 
-  cdm <- mockDrugExposure(drug_exposure = drugExposure,
+  mockDrugExposure(drug_exposure = drugExposure,
                           drug_strength = drugStrength)
-  return(cdm)
+
 }
 
 test_that("getIngredientOverview", {
@@ -48,6 +48,8 @@ test_that("getIngredientOverview", {
   expect_equal(result$ingredient_concept_id, c(1, 1, 1, 2, 2, 3, 4, 4, 4))
   expect_equal(result$n_records, c(3, 1, 1, 2, 1, 1, 1, 1, 1))
   expect_equal(result$n_people, c(2, 1, 1, 1, 1, 1, 1, 1, 1))
+
+  DBI::dbDisconnect(attr(testDb, "dbcon"), shutdown = TRUE)
 })
 
 test_that("getIngredientOverview error cases", {
@@ -58,6 +60,8 @@ test_that("getIngredientOverview error cases", {
   expect_error(getIngredientPresence(cdm = testDb,
                                      drugRecordsTable = "drug_exposure",
                                      drugStrengthTable = "test"))
+
+  DBI::dbDisconnect(attr(testDb, "dbcon"), shutdown = TRUE)
 })
 
 test_that("getIngredientsPresence", {
@@ -77,6 +81,8 @@ test_that("getIngredientsPresence", {
   expect_equal(result$strength_specified, rep("Yes", 6))
   expect_equal(result$n_records, c(4, 1, 3, 1, 2, 1))
   expect_equal(result$n_people, c(2, 1, 2, 1, 1, 1))
+
+  DBI::dbDisconnect(attr(testDb, "dbcon"), shutdown = TRUE)
 })
 
 test_that("getIngredientsPresence error cases", {
@@ -87,4 +93,6 @@ test_that("getIngredientsPresence error cases", {
   expect_error(getIngredientPresence(cdm = testDb,
                                      drugRecordsTable = "drug_exposure",
                                      drugStrengthTable = "test"))
+
+  DBI::dbDisconnect(attr(testDb, "dbcon"), shutdown = TRUE)
 })

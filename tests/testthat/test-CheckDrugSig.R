@@ -1,40 +1,45 @@
 getTestData <- function() {
-  drug_exposure <- tibble::tibble(
-    drug_exposure_id = c("1", "2", "3", "4", "5", "6", "7"),
-    drug_concept_id = c("1", "1", "2", "2", "3", "1", "2"),
-    drug = c("x", "x", "xx", "xx", "xxx", "x", "xx"),
-    ingredient_concept_id = c("1", "1", "2", "2", "3", "2", "1"),
-    ingredient = c("a", "a", "b", "b", "c", "b", "a"),
-    person_id = c("1", "2", "3", "4", "5", "6", "7"),
-    sig = c("sig1", "sig2", "sig3", "sig1", NA, "sig1", "sig2"))
+  ingredient_drug_records <- tibble::tibble(
+    drug_exposure_id = c("1", "2", "3", "4", "5", "6"),
+    person_id = c("1", "2", "3", "4", "5", "6"),
+    drug_concept_id = c("1", "4", "2", "2", "3", "5"),
+    drug = c("x", "iv", "xx", "xx", "xxx", "v"),
+    ingredient_concept_id = c("1", "1", "2", "2", "3", "4"),
+    ingredient = c("a", "a", "b", "b", "c", "d"),
+    sig = c("sig1", "sig1", "sig1", NA, NA, "sig2")
+  )
 
-  mockDrugExposure(drug_exposure = drug_exposure)
+  mockDrugExposure(ingredient_drug_records = ingredient_drug_records)
 }
 
 test_that("checkDrugSig overall", {
   testData <- getTestData()
-  result <- checkDrugSig(testData, byConcept = FALSE) %>%
+  result <- checkDrugSig(testData, "ingredient_drug_records",byConcept = FALSE, sampleSize = 100) %>%
     dplyr::collect() %>%
     dplyr::mutate(ingredient_concept_id = as.numeric(.data$ingredient_concept_id)) %>%
-    dplyr::arrange(.data$ingredient_concept_id, dplyr::desc(.data$n_records))
+    dplyr::arrange(.data$ingredient_concept_id, dplyr::desc(.data$n_records), .data$sig)
 
   expect_equal(nrow(result), 5)
   expect_equal(ncol(result), 4)
-  expect_equal(result$ingredient_concept_id, c(1, 1, 2, 2, 3))
-  expect_equal(result$sig, c("sig2", "sig1", "sig1", "sig3", NA))
-  expect_equal(result$n_records, c(2, 1, 2, 1, 1))
+  expect_equal(result$ingredient_concept_id, c(1, 2, 2, 3, 4))
+  expect_equal(result$sig, c("sig1", "sig1", NA, NA, "sig2"))
+  expect_equal(result$n_records, c(2, 1, 1, 1, 1))
+
+  DBI::dbDisconnect(attr(testData, "dbcon"), shutdown = TRUE)
 })
 
 test_that("checkDrugSig byConcept", {
   testData <- getTestData()
-  result <- checkDrugSig(testData, byConcept = TRUE) %>%
+  result <- checkDrugSig(testData, "ingredient_drug_records", byConcept = TRUE, sampleSize = 100) %>%
     dplyr::collect() %>%
     dplyr::mutate(ingredient_concept_id = as.numeric(.data$ingredient_concept_id)) %>%
-    dplyr::arrange(.data$ingredient_concept_id, dplyr::desc(.data$n_records))
+    dplyr::arrange(.data$ingredient_concept_id, dplyr::desc(.data$n_records), .data$sig)
 
-  expect_equal(nrow(result), 7)
+  expect_equal(nrow(result), 6)
   expect_equal(ncol(result), 6)
-  expect_equal(result$ingredient_concept_id, c(1, 1, 1, 2, 2, 2, 3))
-  expect_equal(setdiff(result$sig, c("sig1", "sig2", "sig2", "sig1", "sig1", "sig3", NA)), character(0))
-  expect_equal(result$n_records, c(1, 1, 1, 1, 1, 1, 1))
+  expect_equal(result$ingredient_concept_id, c(1, 1, 2, 2, 3, 4))
+  expect_equal(result$sig, c("sig1","sig1","sig1", NA, NA, "sig2"))
+  expect_equal(result$n_records, c(1, 1, 1, 1, 1, 1))
+
+  DBI::dbDisconnect(attr(testData, "dbcon"), shutdown = TRUE)
 })

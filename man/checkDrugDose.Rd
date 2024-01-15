@@ -8,17 +8,20 @@ checkDrugDose(
   cdm,
   drugRecordsTable = "ingredient_drug_records",
   drugStrengthTable = "drug_strength",
-  byConcept = TRUE
+  byConcept = TRUE,
+  sampleSize = sampleSize
 )
 }
 \arguments{
 \item{cdm}{CDMConnector reference object}
 
-\item{drugRecordsTable}{drug exposure table}
+\item{drugRecordsTable}{modified drug exposure table}
 
 \item{drugStrengthTable}{drug strength table}
 
-\item{byConcept}{whether to get result by concept}
+\item{byConcept}{whether to get result by drug concept}
+
+\item{sampleSize}{the sample size given in execute checks}
 }
 \value{
 a table with the stats about the daily dose

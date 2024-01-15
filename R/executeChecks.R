@@ -33,6 +33,7 @@
 #' used throughout.
 #' @param earliestStartDate the earliest date from which a record can be included
 #' @param verbose verbose, default FALSE
+#' @param byConcept boolean argument whether to return results by Concept or overall only
 #'
 #' @return named list with results
 #' @export
@@ -56,13 +57,15 @@ executeChecks <- function(cdm,
                           sample = 10000,
                           tablePrefix = NULL,
                           earliestStartDate = "2010-01-01",
-                          verbose = FALSE) {
+                          verbose = FALSE,
+                          byConcept = TRUE) {
 
   errorMessage <- checkmate::makeAssertCollection()
   checkDbType(cdm = cdm, type = "cdm_reference", messageStore = errorMessage)
   checkmate::assertNumeric(ingredients, min.len = 1, add = errorMessage)
   checkmate::assertTRUE(is.numeric(minCellCount) || is.null(minCellCount), add = errorMessage)
   checkmate::assertNumeric(sample, len = 1, add = errorMessage)
+  checkSampleMinCellCount(sample, minCellCount, messageStore = errorMessage)
   checkmate::assertCharacter(tablePrefix, len = 1, add = errorMessage, null.ok = TRUE)
   checkmate::assertDate(as.Date(earliestStartDate), add = errorMessage, null.ok = FALSE)
   checkLogical(verbose, messageStore = errorMessage)
@@ -76,10 +79,11 @@ executeChecks <- function(cdm,
                                                      subsetToConceptId = subsetToConceptId,
                                                      checks = checks,
                                                      minCellCount = minCellCount,
-                                                     sample = sample,
+                                                     sampleSize = sample,
                                                      tablePrefix = tablePrefix,
                                                      earliestStartDate = earliestStartDate,
-                                                     verbose = verbose)
+                                                     verbose = verbose,
+                                                     byConcept = byConcept)
   }
   resultList <- do.call(Map, c(f = rbind, resultList))
   return(resultList)
@@ -96,7 +100,7 @@ executeChecks <- function(cdm,
 #' exposure duration and the quantity.
 #' @param minCellCount minimum number of events to report- results
 #' lower than this will be obscured. If NULL all results will be reported.
-#' @param sample the number of samples, default 10.000
+#' @param sampleSize the number of samples, default 10.000
 #' @param tablePrefix The stem for the permanent tables that will
 #' be created when running the diagnostics. Permanent tables will be created using
 #' this prefix, and any existing tables that start with this will be at risk of
@@ -104,6 +108,7 @@ executeChecks <- function(cdm,
 #' used throughout.
 #' @param earliestStartDate the earliest date from which a record can be included
 #' @param verbose verbose, default FALSE
+#' @param byConcept boolean argument whether to return restults by Concept or overall only
 #'
 #' @return named list with results
 executeChecksSingleIngredient <- function(cdm,
@@ -111,19 +116,22 @@ executeChecksSingleIngredient <- function(cdm,
                                           subsetToConceptId = NULL,
                                           checks = c("missing", "exposureDuration", "quantity"),
                                           minCellCount = 5,
-                                          sample = 10000,
+                                          sampleSize = 10000,
                                           tablePrefix = NULL,
                                           earliestStartDate = "2010-01-01",
-                                          verbose = FALSE) {
+                                          verbose = FALSE,
+                                          byConcept = FALSE) {
 
   errorMessage <- checkmate::makeAssertCollection()
   checkDbType(cdm = cdm, type = "cdm_reference", messageStore = errorMessage)
   checkIsIngredient(cdm = cdm, conceptId = ingredient, messageStore = errorMessage)
   checkmate::assertTRUE(is.numeric(minCellCount) || is.null(minCellCount), add = errorMessage)
-  checkmate::assertNumeric(sample, len = 1, add = errorMessage)
+  checkmate::assertNumeric(sampleSize, len = 1, add = errorMessage)
+  checkSampleMinCellCount(sampleSize, minCellCount, messageStore = errorMessage)
   checkmate::assertCharacter(tablePrefix, len = 1, add = errorMessage, null.ok = TRUE)
   checkmate::assertDate(as.Date(earliestStartDate), add = errorMessage, null.ok = FALSE)
   checkLogical(verbose, messageStore = errorMessage)
+  checkLogical(byConcept, messageStore = errorMessage)
   checkmate::reportAssertions(collection = errorMessage)
 
   if (verbose == TRUE) {
@@ -193,19 +201,19 @@ executeChecksSingleIngredient <- function(cdm,
   # sample
   # the ingredient overview is for all records
   # all other checks for sampled records
-  if (!is.null(sample)) {
+  if (!is.null(sampleSize)) {
     if (verbose == TRUE) {
       start <- printDurationAndMessage("Progress: sampling drug records", start)
     }
-    if (dplyr::pull(dplyr::tally(dplyr::filter(cdm[["ingredient_drug_records"]], .data$drug_exposure_start_date > .env$earliestStartDate)), .data$n) < sample) {
-      message("population after earliestStartDate smaller than sample, ignoring date for sampling")
-      cdm[["ingredient_drug_records"]] <- cdm[["ingredient_drug_records"]] %>%
-        dplyr::slice_sample(n = sample) %>%
-        CDMConnector::computeQuery()
-    } else{
+    if (dplyr::pull(dplyr::tally(dplyr::filter(cdm[["ingredient_drug_records"]], .data$drug_exposure_start_date > .env$earliestStartDate)), .data$n) < sampleSize) {
+      message("population after earliestStartDate smaller than sample")
       cdm[["ingredient_drug_records"]] <- cdm[["ingredient_drug_records"]] %>%
         dplyr::filter(.data$drug_exposure_start_date > .env$earliestStartDate) %>%
-        dplyr::slice_sample(n = sample) %>%
+        CDMConnector::computeQuery()
+    } else {
+      cdm[["ingredient_drug_records"]] <- cdm[["ingredient_drug_records"]] %>%
+        dplyr::filter(.data$drug_exposure_start_date > .env$earliestStartDate) %>%
+        dplyr::slice_sample(n = sampleSize) %>%
         CDMConnector::computeQuery()
     }
   }
@@ -225,9 +233,11 @@ executeChecksSingleIngredient <- function(cdm,
     }
 
     missingValuesOverall <- getDrugMissings(cdm, "ingredient_drug_records",
-                                           byConcept = FALSE) %>% dplyr::collect()
+                                           byConcept = FALSE, sampleSize = sampleSize) %>% dplyr::collect()
+    if (isTRUE(byConcept)) {
     missingValuesByConcept <- getDrugMissings(cdm, "ingredient_drug_records",
-                                             byConcept = TRUE) %>% dplyr::collect()
+                                             byConcept = byConcept, sampleSize = sampleSize) %>% dplyr::collect()
+    }
   }
 
   drugExposureDurationOverall <- drugExposureDurationByConcept <- NULL
@@ -238,10 +248,12 @@ executeChecksSingleIngredient <- function(cdm,
 
     drugExposureDurationOverall <- summariseDrugExposureDuration(cdm,
                                                                  "ingredient_drug_records",
-                                                                 byConcept = FALSE)  %>% dplyr::collect()
+                                                                 byConcept = FALSE, sampleSize = sampleSize)  %>% dplyr::collect()
+    if (isTRUE(byConcept)) {
     drugExposureDurationByConcept <- summariseDrugExposureDuration(cdm,
                                                                    "ingredient_drug_records",
-                                                                   byConcept = TRUE) %>% dplyr::collect()
+                                                                   byConcept = byConcept, sampleSize = sampleSize) %>% dplyr::collect()
+    }
   }
 
   drugTypesOverall <- drugTypesByConcept <- NULL
@@ -251,9 +263,11 @@ executeChecksSingleIngredient <- function(cdm,
     }
 
     drugTypesOverall <- getDrugTypes(cdm, "ingredient_drug_records",
-                                     byConcept = FALSE) %>% dplyr::collect()
+                                     byConcept = FALSE, sampleSize = sampleSize) %>% dplyr::collect()
+    if (isTRUE(byConcept)) {
     drugTypesByConcept <- getDrugTypes(cdm, "ingredient_drug_records",
-                                       byConcept = TRUE) %>% dplyr::collect()
+                                       byConcept = byConcept, sampleSize = sampleSize) %>% dplyr::collect()
+    }
   }
 
   drugRoutesOverall <- drugRoutesByConcept <- NULL
@@ -263,9 +277,11 @@ executeChecksSingleIngredient <- function(cdm,
     }
 
     drugRoutesOverall <- getDrugRoutes(cdm, "ingredient_drug_records",
-                                       byConcept = FALSE) %>% dplyr::collect()
+                                       byConcept = FALSE, sampleSize = sampleSize) %>% dplyr::collect()
+    if (isTRUE(byConcept)) {
     drugRoutesByConcept <- getDrugRoutes(cdm, "ingredient_drug_records",
-                                         byConcept = TRUE) %>% dplyr::collect()
+                                         byConcept = byConcept, sampleSize = sampleSize) %>% dplyr::collect()
+    }
   }
 
   drugSourceConceptsOverall <- drugSourceConceptsByConcept <- NULL
@@ -275,9 +291,11 @@ executeChecksSingleIngredient <- function(cdm,
     }
 
     drugSourceConceptsOverall <- getDrugSourceConcepts(cdm, "ingredient_drug_records",
-                                                       byConcept = FALSE) %>% dplyr::collect()
+                                                       byConcept = FALSE, sampleSize = sampleSize) %>% dplyr::collect()
+    if (isTRUE(byConcept)) {
     drugSourceConceptsByConcept <- getDrugSourceConcepts(cdm, "ingredient_drug_records",
-                                                         byConcept = TRUE) %>% dplyr::collect()
+                                                         byConcept = byConcept, sampleSize = sampleSize) %>% dplyr::collect()
+    }
   }
 
   drugDaysSupply <- drugDaysSupplyByConcept <- NULL
@@ -286,8 +304,10 @@ executeChecksSingleIngredient <- function(cdm,
       start <- printDurationAndMessage("Progress: check drugDaysSupply", start)
     }
 
-    drugDaysSupply <- checkDaysSupply(cdm, "ingredient_drug_records", byConcept = FALSE) %>% dplyr::collect()
-    drugDaysSupplyByConcept <- checkDaysSupply(cdm, "ingredient_drug_records", byConcept = TRUE) %>% dplyr::collect()
+    drugDaysSupply <- checkDaysSupply(cdm, "ingredient_drug_records", byConcept = FALSE, sampleSize = sampleSize) %>% dplyr::collect()
+    if (isTRUE(byConcept)) {
+    drugDaysSupplyByConcept <- checkDaysSupply(cdm, "ingredient_drug_records", byConcept = byConcept, sampleSize = sampleSize) %>% dplyr::collect()
+    }
   }
 
   drugVerbatimEndDate <- drugVerbatimEndDateByConcept <- NULL
@@ -296,8 +316,10 @@ executeChecksSingleIngredient <- function(cdm,
       start <- printDurationAndMessage("Progress: check drugVerbatimEndDate", start)
     }
 
-    drugVerbatimEndDate <- checkVerbatimEndDate(cdm, "ingredient_drug_records", byConcept = FALSE) %>% dplyr::collect()
-    drugVerbatimEndDateByConcept <- checkVerbatimEndDate(cdm, "ingredient_drug_records", byConcept = TRUE) %>% dplyr::collect()
+    drugVerbatimEndDate <- checkVerbatimEndDate(cdm, "ingredient_drug_records", byConcept = FALSE, sampleSize = sampleSize) %>% dplyr::collect()
+    if (isTRUE(byConcept)) {
+    drugVerbatimEndDateByConcept <- checkVerbatimEndDate(cdm, "ingredient_drug_records", byConcept = byConcept, sampleSize = sampleSize) %>% dplyr::collect()
+    }
   }
 
   drugDose <- drugDoseByConcept <- NULL
@@ -307,10 +329,11 @@ executeChecksSingleIngredient <- function(cdm,
     }
 
     drugDose <- checkDrugDose(cdm, "ingredient_drug_records",
-                              "drug_strength", byConcept = FALSE) %>% dplyr::collect()
-
+                              "drug_strength", byConcept = FALSE, sampleSize = sampleSize) %>% dplyr::collect()
+    if (isTRUE(byConcept)) {
     drugDoseByConcept <- checkDrugDose(cdm, "ingredient_drug_records",
-                                       "drug_strength", byConcept = TRUE) %>% dplyr::collect()
+                                       "drug_strength", byConcept = byConcept, sampleSize = sampleSize) %>% dplyr::collect()
+    }
   }
 
   drugSig <- drugSigByConcept <- NULL
@@ -319,8 +342,10 @@ executeChecksSingleIngredient <- function(cdm,
       start <- printDurationAndMessage("Progress: check drugSig", start)
     }
 
-    drugSig <- checkDrugSig(cdm, "ingredient_drug_records", byConcept = FALSE) %>% dplyr::collect()
-    drugSigByConcept <- checkDrugSig(cdm, "ingredient_drug_records", byConcept = TRUE) %>% dplyr::collect()
+    drugSig <- checkDrugSig(cdm, "ingredient_drug_records", byConcept = FALSE, sampleSize = sampleSize) %>% dplyr::collect()
+    if (isTRUE(byConcept)) {
+    drugSigByConcept <- checkDrugSig(cdm, "ingredient_drug_records", byConcept = byConcept, sampleSize = sampleSize) %>% dplyr::collect()
+    }
   }
 
   drugQuantity <- drugQuantityByConcept <- NULL
@@ -329,8 +354,10 @@ executeChecksSingleIngredient <- function(cdm,
       start <- printDurationAndMessage("Progress: check drugQuantity", start)
     }
 
-    drugQuantity <- summariseQuantity(cdm, "ingredient_drug_records", byConcept = FALSE) %>% dplyr::collect()
-    drugQuantityByConcept <- summariseQuantity(cdm, "ingredient_drug_records", byConcept = TRUE) %>% dplyr::collect()
+    drugQuantity <- summariseQuantity(cdm, "ingredient_drug_records", byConcept = FALSE, sampleSize = sampleSize) %>% dplyr::collect()
+    if (isTRUE(byConcept)) {
+    drugQuantityByConcept <- summariseQuantity(cdm, "ingredient_drug_records", byConcept = byConcept, sampleSize = sampleSize) %>% dplyr::collect()
+    }
   }
 
   drugDaysSupplyHistogram <- drugQuantityHistogram <- drugDurationHistogram <- NULL

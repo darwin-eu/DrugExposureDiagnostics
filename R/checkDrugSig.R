@@ -18,13 +18,15 @@
 #' written by the provider.
 #'
 #' @param cdm CDMConnector reference object
-#' @param drugRecordsTable drug exposure table
+#' @param drugRecordsTable modified drug exposure table
 #' @param byConcept whether to get result by drug concept
+#' @param sampleSize the sample size given in execute checks
 #'
 #' @return a table with a summary of the sig values
 checkDrugSig <- function(cdm,
-                         drugRecordsTable = "drug_exposure",
-                         byConcept = TRUE)
+                         drugRecordsTable = "ingredient_drug_records",
+                         byConcept = TRUE,
+                         sampleSize = 10000)
 {
   errorMessage <- checkmate::makeAssertCollection()
   checkDbType(cdm = cdm, messageStore = errorMessage)
@@ -36,7 +38,8 @@ checkDrugSig <- function(cdm,
 
   records <- cdm[[drugRecordsTable]] %>%
     dplyr::select(
-      "drug_concept_id", "drug",
+      "drug_concept_id",
+      "drug",
       "ingredient_concept_id",
       "ingredient",
       "sig")
@@ -52,7 +55,8 @@ checkDrugSig <- function(cdm,
 
   records <- records %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
-    dplyr::summarise(n_records = as.integer(dplyr::n())) %>%
+    dplyr::summarise(n_records = as.integer(dplyr::n()),
+                     n_sample = .env$sampleSize) %>%
     dplyr::select(tidyselect::any_of(
       c("drug_concept_id", "drug",
         "ingredient_concept_id",

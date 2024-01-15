@@ -4,14 +4,21 @@
 \alias{getDrugTypes}
 \title{Get drug exposure record types}
 \usage{
-getDrugTypes(cdm, drugRecordsTable = "drug_exposure", byConcept = TRUE)
+getDrugTypes(
+  cdm,
+  drugRecordsTable = "drug_exposure",
+  byConcept = TRUE,
+  sampleSize = 10000
+)
 }
 \arguments{
 \item{cdm}{CDMConnector reference object}
 
-\item{drugRecordsTable}{drugRecordsTable}
+\item{drugRecordsTable}{modified drug exposure table}
 
-\item{byConcept}{byConcept}
+\item{byConcept}{by individual drug Concept}
+
+\item{sampleSize}{the sample size given in execute checks}
 }
 \value{
 a table with the drug exposure record types

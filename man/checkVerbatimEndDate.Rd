@@ -4,14 +4,21 @@
 \alias{checkVerbatimEndDate}
 \title{Check the verbatim_end_date field}
 \usage{
-checkVerbatimEndDate(cdm, drugRecordsTable = "drug_exposure", byConcept = TRUE)
+checkVerbatimEndDate(
+  cdm,
+  drugRecordsTable = "ingredient_drug_records",
+  byConcept = TRUE,
+  sampleSize = 10000
+)
 }
 \arguments{
 \item{cdm}{CDMConnector reference object}
 
-\item{drugRecordsTable}{drug exposure table}
+\item{drugRecordsTable}{modified drug exposure table}
 
-\item{byConcept}{whether to get result by concept}
+\item{byConcept}{whether to get result by drug concept}
+
+\item{sampleSize}{the sample size given in execute checks}
 }
 \value{
 a table with the stats about the verbatim_end_date

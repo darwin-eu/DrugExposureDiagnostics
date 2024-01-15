@@ -4,14 +4,21 @@
 \alias{getDrugMissings}
 \title{Check missings in drug exposure records}
 \usage{
-getDrugMissings(cdm, drugRecordsTable = "drug_exposure", byConcept = TRUE)
+getDrugMissings(
+  cdm,
+  drugRecordsTable = "ingredient_drug_records",
+  byConcept = TRUE,
+  sampleSize = 10000
+)
 }
 \arguments{
 \item{cdm}{CDMConnector reference object}
 
-\item{drugRecordsTable}{drugRecordsTable}
+\item{drugRecordsTable}{modified drug exposure table}
 
-\item{byConcept}{byConcept}
+\item{byConcept}{by individual drug Concept}
+
+\item{sampleSize}{the sample size given in execute checks}
 }
 \value{
 a table with a summary of missing records

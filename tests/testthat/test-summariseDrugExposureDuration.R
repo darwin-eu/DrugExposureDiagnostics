@@ -1,5 +1,5 @@
 getTestData <- function() {
-  drug_exposure <- tibble::tibble(
+  ingredient_drug_records <- tibble::tibble(
     drug_exposure_id = c("1", "2", "3", "4", "5"),
     drug_concept_id = c("1", "1", "2", "2", "3"),
     drug = c("x", "x", "xx", "xx", "xxx"),
@@ -34,23 +34,30 @@ getTestData <- function() {
     refills = rep(1, 5),
     sig = rep("", 5))
 
-  mockDrugExposure(drug_exposure = drug_exposure)
+  mockDrugExposure(ingredient_drug_records = ingredient_drug_records)
+
 }
 
-
-test_that("summariseDrugExposureDuration test", {
+test_that("summariseDrugExposureDuration test overall", {
   testData <- getTestData()
-  result <- summariseDrugExposureDuration(testData, "drug_exposure", byConcept = FALSE)
+  result <- summariseDrugExposureDuration(testData, "ingredient_drug_records", byConcept = FALSE)
 
   expect_equal(nrow(result), 2)
-  expect_equal(ncol(result), 15)
-  expect_equal(colnames(result), c("ingredient_concept_id", "ingredient", "n_records", "n_non_negative_days", "n_negative_days",
+  expect_equal(ncol(result), 16)
+  expect_equal(colnames(result), c("ingredient_concept_id", "ingredient", "n_records", "n_sample", "n_non_negative_days", "n_negative_days",
                                    "proportion_negative_days", "minimum_drug_exposure_days", "q05_drug_exposure_days",
                                    "q10_drug_exposure_days", "q25_drug_exposure_days", "median_drug_exposure_days",
                                    "q75_drug_exposure_days", "q90_drug_exposure_days", "q95_drug_exposure_days",
                                    "maximum_drug_exposure_days"))
 
-  resultByconcept <- summariseDrugExposureDuration(testData, "drug_exposure", byConcept = TRUE)
+  DBI::dbDisconnect(attr(testData, "dbcon"), shutdown = TRUE)
+})
+
+  test_that("summariseDrugExposureDuration test by concept", {
+  testData <- getTestData()
+  resultByconcept <- summariseDrugExposureDuration(testData,"ingredient_drug_records", byConcept = TRUE)
   expect_equal(nrow(resultByconcept), 3)
   expect_equal(resultByconcept$n_records, c(2,2,1))
+
+  DBI::dbDisconnect(attr(testData, "dbcon"), shutdown = TRUE)
 })

@@ -13,7 +13,8 @@ executeChecks(
   sample = 10000,
   tablePrefix = NULL,
   earliestStartDate = "2010-01-01",
-  verbose = FALSE
+  verbose = FALSE,
+  byConcept = TRUE
 )
 }
 \arguments{
@@ -42,6 +43,8 @@ used throughout.}
 \item{earliestStartDate}{the earliest date from which a record can be included}
 
 \item{verbose}{verbose, default FALSE}
+
+\item{byConcept}{boolean argument whether to return results by Concept or overall only}
 }
 \value{
 named list with results

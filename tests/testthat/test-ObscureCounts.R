@@ -1,4 +1,4 @@
-test_that("check for drugRoutes|drugSig|drugSourceConcepts|drugTypes|drugExposureDuration|missingValues|drugDose|drugDaysSupply", {
+test_that("check for drugRoutes|drugSig|drugVerbatimEndDate|drugQuantity|drugSourceConcepts|drugTypes|drugExposureDuration|missingValues|drugDose|drugDaysSupply", {
   table <- tibble::tibble(
     "drug_concept_id" = c("1", "2", "3", "4", "5", "6"),
     "ingredient_concept_id" = c("1", "2", "3", "4", "5", "6"),
@@ -7,10 +7,11 @@ test_that("check for drugRoutes|drugSig|drugSourceConcepts|drugTypes|drugExposur
     "proportion_of_records_by_drug_type" = c(0.1, 0.1, 0.2, 0.5, 0.6, 0),
     "n_negative_days" = c(10, 12, 100, 5, 10, 10),
     "n_records" = c(10, 10, 100, 5, 6, 0),
+    "n_sample" = c(100, 3, 100,100,100000,1000000),
     "n_patients" = c(10, 10, 100, 5, 2, 0)
   )
 
-  types <- c("drugRoutes", "drugSig", "drugSourceConcepts", "drugTypes", "drugExposureDuration",
+  types <- c("drugRoutes", "drugSig", "drugVerbatimEndDate", "drugQuantity", "drugSourceConcepts", "drugTypes", "drugExposureDuration",
              "missingValues", "drugDose", "drugDaysSupply")
   lapply(types, FUN = function(type) {
     result <- obscureCounts(table, type, minCellCount = 10, substitute = NA)
@@ -19,6 +20,7 @@ test_that("check for drugRoutes|drugSig|drugSourceConcepts|drugTypes|drugExposur
     expect_equal(result$n_negative_days, c(10, 12, 100, NA, NA, 10))
     expect_equal(result$proportion_of_records_by_drug_type, c(0.1, 0.1, 0.2, NA, NA, 0))
     expect_equal(result$n_records, c(10, 10, 100, NA, NA, 0))
+    expect_equal(result$n_sample, c(100, 3, 100,NA, NA,1000000))
     expect_equal(result$n_patients, c(10, 10, 100, NA, NA, 0))
     expect_equal(typeof(result$result_obscured),"logical")
 
@@ -53,33 +55,6 @@ test_that("check for conceptSummary|diagnosticsSummary", {
   })
 })
 
-test_that("check for drugsMissing", {
-  table <- tibble::tibble(
-    "drug_concept_id" = c("1", "2", "3", "4", "5", "6"),
-    "variable" = c("1", "2", "3", "4", "5", "6"),
-    "count_missing" = c(1, 10, 100, 5, 6, 0),
-    "proportion_missing" = c(0.1, 0.1, 0.1, 0.5, 0.6, 0),
-    "count" = c(6, 10, 100, 5, 6, 0),
-    "count_not_null" = c(9, 10, 100, 5, 6, 0),
-    "count_not_equal" = c(12, 10, 1, 5, 6, 0)
-  )
-
-  types <- c("drugsMissing", "drugVerbatimEndDate")
-  lapply(types, FUN = function(type) {
-    result <- obscureCounts(table, type, minCellCount = 5, substitute = NA)
-
-    expect_equal(result$result_obscured, c(TRUE, FALSE, TRUE, FALSE, FALSE, FALSE))
-    expect_equal(result$count_missing, c(NA, 10, NA, 5, 6, 0))
-    expect_equal(result$proportion_missing, c(NA, 0.1, NA, 0.5, 0.6, 0))
-    expect_equal(result$count, c(NA, 10, NA, 5, 6, 0))
-    expect_equal(result$count_not_null, c(NA, 10, NA, 5, 6, 0))
-    expect_equal(result$count_not_equal, c(NA, 10, NA, 5, 6, 0))
-    expect_equal(typeof(result$result_obscured),"logical")
-
-    result <- obscureCounts(table, type, minCellCount = NULL)
-    expect_equal(result, table)
-  })
-})
 
 test_that("check for drugIngredientOverview", {
   table <- tibble::tibble(

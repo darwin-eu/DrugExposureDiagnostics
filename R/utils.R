@@ -29,6 +29,21 @@ checkDbType <- function(cdm, type = "cdm_reference", messageStore) {
   }
 }
 
+#' Check that the sample is bigger than the mincellcount
+#'
+#' @param sampleSize sample size for sampling
+#' @param minCellCount minimum cell count below which to obsure results
+#' @param messageStore checkmate collection
+#'
+checkSampleMinCellCount <- function(sampleSize, minCellCount, messageStore) {
+  sample_bigger_minCellCount <- sampleSize > minCellCount
+  checkmate::assertTRUE(sample_bigger_minCellCount, add = messageStore)
+  if (!isTRUE(sample_bigger_minCellCount)) {
+    messageStore$push("Sample size needs to be bigger than minimum cell count")
+    }
+  }
+
+
 #' Check if given object is a boolean.
 #'
 #' @param input the input

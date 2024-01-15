@@ -1,13 +1,14 @@
 ---
-title: "Summary of checks"
+title: "Summary Of Checks"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Summary_of_checks}
+  %\VignetteIndexEntry{SummaryOfChecks}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
+options(rmarkdown.html_vignette.check_title = FALSE)
 knitr::opts_chunk$set(
   warning = FALSE,
   message = FALSE,

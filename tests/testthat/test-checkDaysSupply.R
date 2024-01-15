@@ -1,76 +1,71 @@
-test_that("check if it can detect missing", {
-  drug_exposure <- tibble::tibble(
-    drug_exposure_id = c("1", "2", "3", "4", "5"),
-    drug_concept_id = c("1", "1", "2", "2", "3"),
-    drug = c("a", "a", "b", "b", "c"),
-    ingredient_concept_id = c("1", "1", "2", "2", "3"),
-    ingredient = c("a", "a", "b", "b", "c"),
-    person_id = c("1", "2", "3", "4", "5"),
-    drug_exposure_start_date = c(
-      as.Date("2010-01-01"), as.Date("2011-01-01"),
-      as.Date("2012-01-01"), NA,
-      as.Date("2013-01-01")),
-    drug_exposure_end_date = c(
-      as.Date("2011-01-01"), NA,
-      as.Date("2013-01-01"), as.Date("2010-01-01"),
-      as.Date("2014-01-01")),
-    days_supply = c(NA,365,366,365,366))
-  #correct one should be c(na,na,366,na,365)
-  #expect output: different_days_supply: 0,0,1
-  #expect output: missing_days_supply_or_dates: 2,1,0
-  #expect output: match_days_supply: 0,1,0
+getInputDb <- function() {
+   ingredient_drug_records <- tibble::tibble(
+     drug_exposure_id = c("1", "2", "3", "4", "5", "6", "7"),
+     person_id = c("1", "2", "3", "4", "5", "6", "7"),
+     drug_concept_id = c("1", "4", "2", "2", "3", "1", "2"),
+     drug = c("x", "iv", "xx", "xx", "xxx", "iv", "v"),
+     ingredient_concept_id = c("1", "1", "2", "2", "3", "4", "4"),
+     ingredient = c("a", "a", "b", "b", "c", "d", "d"),
+    drug_exposure_start_date = as.Date(c("2016-01-01","2017-01-01","2018-01-01","2019-01-01","2020-01-01","2021-01-01","2022-01-01")),
+    drug_exposure_end_date = as.Date(c("2016-01-02","2017-01-03","2018-01-04","2019-01-05","2020-01-06","2021-01-07","2022-01-08")),
+    days_supply = c(1,3,NA,4,5,6,7)
+  )
 
-  testData <- mockDrugExposure(drug_exposure = drug_exposure)
+  mockDrugExposure(ingredient_drug_records = ingredient_drug_records)
 
-  result <- checkDaysSupply(testData, byConcept = TRUE)
+}
 
-  expect_true(identical(as.integer(result$n_different_days_supply_and_drug_dates), as.integer(list(0,0,1))))
 
-  expect_true(identical(as.integer(result$n_missing_days_supply_or_drug_dates), as.integer(c(2,1,0))))
+test_that("check days supply overall", {
+  testData <- getInputDb()
 
-  expect_true(identical(as.integer(result$n_days_supply_match_drug_dates), as.integer(c(0,1,0))))
+  result <- checkDaysSupply(testData, "ingredient_drug_records", byConcept = FALSE, sampleSize = 100)
 
-  totalLength <- dim(testData$drug_exposure %>% dplyr::collect())[1]
+
+  expect_equal(result$n_different_days_supply_and_drug_dates, c(1,0,0,0))
+
+  expect_equal(result$n_days_supply_match_drug_dates, c(1,1,1,2))
+
+  expect_equal(result$n_missing_days_supply, c(0,1,0,0))
+
+  totalLength <- dim(testData$ingredient_drug_records %>% dplyr::collect())[1]
 
   expect_true(sum(result$n_different_days_supply_and_drug_dates, result$n_days_supply_match_drug_dates,
-                  result$n_missing_days_supply_or_drug_dates) == totalLength)
+                  result$n_missing_days_supply) == totalLength)
 
-  expect_true(sum(result[result$drug_concept_id == 1, ]$n_different_days_supply_and_drug_dates,
-                  result[result$drug_concept_id == 1, ]$n_days_supply_match_drug_dates,
-                  result[result$drug_concept_id == 1, ]$proportion_missing_days_supply_or_drug_dates) == 1)
+  expect_equal(result$minimum_drug_exposure_days_supply, c(1,4,5,6))
+  expect_equal(result$n_records, c(2,2,1,2))
+  expect_equal(ncol(result), 21)
+  expect_equal(result$n_people, c(2,2,1,2))
 
-  expect_true(sum(result[result$drug_concept_id == 2, ]$proportion_different_days_supply_and_drug_dates,
-                  result[result$drug_concept_id == 2, ]$proportion_days_supply_match_drug_dates,
-                  result[result$drug_concept_id == 2, ]$proportion_missing_days_supply_or_drug_dates) == 1)
-
-  expect_true(sum(result[result$drug_concept_id == 3, ]$proportion_different_days_supply_and_drug_dates,
-                  result[result$drug_concept_id == 3, ]$proportion_days_supply_match_drug_dates,
-                  result[result$drug_concept_id == 3, ]$proportion_missing_days_supply_or_drug_dates) == 1)
-
+  DBI::dbDisconnect(attr(testData, "dbcon"), shutdown = TRUE)
 })
 
-test_that("check if summarise days_supply works", {
-  drug_exposure <- tibble::tibble(
-    drug_exposure_id = c("1", "2", "3", "4", "5", "5"),
-    drug_concept_id = c("1", "1", "2", "2", "3", "4"),
-    drug = c("a", "a", "b", "b", "c", "d"),
-    person_id = c("1", "2", "3", "4", "5", "5"),
-    drug_exposure_start_date = c(
-      as.Date("2010-01-01"), as.Date("2011-01-01"),
-      as.Date("2012-01-01"), NA,
-      as.Date("2013-01-01"),as.Date("2014-01-01")),
-    drug_exposure_end_date = c(
-      as.Date("2011-01-01"), NA,
-      as.Date("2013-01-01"), as.Date("2010-01-01"),
-      as.Date("2014-01-01"), as.Date("2015-01-04")),
-    days_supply = c(NA,365,366,365,366, 368))
 
-  testData <- mockDrugExposure(drug_exposure = drug_exposure)
+test_that("check days supply by Concept", {
+  testData <- getInputDb()
 
-  result <- summariseDaysSupply(testData)
+  result <- checkDaysSupply(testData, "ingredient_drug_records", byConcept = TRUE, sampleSize = 100)
 
-  expect_equal(result$minimum_drug_exposure_days_supply, 365)
-  expect_equal(result$n_records, 6)
-  expect_equal(ncol(result), 12)
-  expect_equal(result$n_people, 5)
+  expect_equal(result$n_different_days_supply_and_drug_dates, c(0,0,0,0,0,1))
+
+  expect_equal(result$n_days_supply_match_drug_dates, c(1,1,1,1,1,0))
+
+  expect_equal(result$n_missing_days_supply, c(0,0,0,1,0,0))
+
+  totalLength <- dim(testData$ingredient_drug_records %>% dplyr::collect())[1]
+
+  expect_true(sum(result$n_different_days_supply_and_drug_dates, result$n_days_supply_match_drug_dates,
+                  result$n_missing_days_supply) == totalLength)
+
+  expect_equal(result$minimum_drug_exposure_days_supply, c(6,1,7,4,5,3))
+  expect_equal(result$n_records, c(1,1,1,2,1,1))
+  expect_equal(ncol(result), 23)
+  expect_equal(result$n_people, c(1,1,1,2,1,1))
+
+  DBI::dbDisconnect(attr(testData, "dbcon"), shutdown = TRUE)
 })
+
+
+
+

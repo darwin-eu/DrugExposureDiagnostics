@@ -30,7 +30,7 @@
 #' @return a table containing drug strength records
 getDrugStrength <- function(cdm,
                             ingredient,
-                            includedConceptsTable,
+                            includedConceptsTable = "ingredient_concepts",
                             drugStrengthTable = "drug_strength",
                             tablePrefix = NULL,
                             verbose = FALSE) {

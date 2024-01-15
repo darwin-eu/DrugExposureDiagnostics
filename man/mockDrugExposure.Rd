@@ -10,7 +10,9 @@ mockDrugExposure(
   concept_relationship = NULL,
   concept = NULL,
   drug_strength = NULL,
+  ingredient_drug_records = NULL,
   drug_exposure_size = 100,
+  unique_drug_records = 80,
   patient_size = 50,
   amount_val = c(1, 2, 3),
   den_val = c(1, 10, 100),
@@ -30,7 +32,11 @@ mockDrugExposure(
 
 \item{drug_strength}{drug strength table}
 
+\item{ingredient_drug_records}{modified drug exposure table having drug name}
+
 \item{drug_exposure_size}{the sample size of the drug exposure table}
+
+\item{unique_drug_records}{number of unique drug records}
 
 \item{patient_size}{the number of unique patients in the drug exposure table}
 

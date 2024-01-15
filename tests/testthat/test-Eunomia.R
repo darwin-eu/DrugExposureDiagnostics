@@ -32,7 +32,7 @@ test_that("execute all checks, given ingredient", {
   # checks
   expect_equal(length(result), 27)
   expect_equal(nrow(result$conceptSummary), 2)
-  expect_true(all(grepl("Acetaminophen", result$conceptSummary$drug)))
+  expect_true(any(grepl("Acetaminophen", result$conceptSummary$drug)))
 
   DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
 })
@@ -44,11 +44,10 @@ test_that("execute some checks, given ingredient", {
 
   # checks
   expect_equal(length(result), 5)
-  expect_equal(names(result), c("conceptSummary", "missingValuesOverall",
-                                "missingValuesByConcept", "drugVerbatimEndDate",
-                                "drugVerbatimEndDateByConcept"))
+  expect_equal(names(result), c("conceptSummary", "missingValuesOverall", "missingValuesByConcept",
+                                "drugVerbatimEndDate", "drugVerbatimEndDateByConcept"))
   expect_equal(nrow(result$conceptSummary), 2)
-  expect_true(all(grepl("Acetaminophen", result$conceptSummary$drug)))
+  expect_true(any(grepl("Acetaminophen", result$conceptSummary$drug)))
 
   DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
 })

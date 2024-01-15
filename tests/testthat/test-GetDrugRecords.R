@@ -66,6 +66,8 @@ test_that("getDrugRecords", {
   result <- getDrugRecords(cdm = cdm, ingredient = 123456, includedConceptsTable = "ingredient_concepts") %>%
     dplyr::collect()
   expect_equal(nrow(result), 0)
+
+  DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
 })
 
 test_that("getDrugRecords invalid inputs", {
@@ -74,4 +76,6 @@ test_that("getDrugRecords invalid inputs", {
   expect_error(getDrugRecords(cdm = NULL, ingredient = ingredientId, includedConceptsTable = "ingredient_concepts"))
   expect_error(getDrugRecords(cdm = cdm, ingredient = NULL, includedConceptsTable = "ingredient_concepts"))
   expect_error(getDrugRecords(cdm = cdm, ingredient = ingredientId, includedConceptsTable = "ingredient_concepts_none"))
-})
+
+  DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
+  })

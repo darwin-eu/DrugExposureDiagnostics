@@ -1,5 +1,5 @@
 getTestData <- function() {
-  drug_exposure <- tibble::tibble(
+  ingredient_drug_records <- tibble::tibble(
     drug_exposure_id = c("1", "2", "3", "4", "5"),
     drug_concept_id = c("1", "1", "2", "2", "3"),
     drug = c("x", "x", "x", "x", "x"),
@@ -34,35 +34,42 @@ getTestData <- function() {
     refills = rep(1, 5),
     sig = rep("", 5))
 
-  mockDrugExposure(drug_exposure = drug_exposure)
+  mockDrugExposure(ingredient_drug_records = ingredient_drug_records)
+
 }
 
 test_that("getDrugMissings overall", {
   testData <- getTestData()
-  result <- getDrugMissings(testData, "drug_exposure", byConcept = FALSE)
+  result <- getDrugMissings(testData, "ingredient_drug_records", byConcept = FALSE,
+                            sampleSize = 100)
 
   expect_equal(nrow(result), 18)
-  expect_equal(ncol(result), 7)
+  expect_equal(ncol(result), 8)
   expect_equal(colnames(result), c("ingredient_concept_id", "ingredient", "variable",
-                                   "n_records",  "n_records_not_missing_value",
+                                   "n_records", "n_sample", "n_records_not_missing_value",
                                    "n_records_missing_value", "proportion_records_missing_value"))
   missingDaysSupply <- result %>% dplyr::filter(variable == "n_missing_days_supply")
   expect_equal(missingDaysSupply %>% dplyr::pull(n_records_missing_value), 4)
   expect_equal(missingDaysSupply %>% dplyr::pull(proportion_records_missing_value), 0.8)
+
+  DBI::dbDisconnect(attr(testData, "dbcon"), shutdown = TRUE)
 })
 
 test_that("getDrugMissings byConcept", {
   testData <- getTestData()
-  result <- getDrugMissings(testData, "drug_exposure", byConcept = TRUE)
+  result <- getDrugMissings(testData, "ingredient_drug_records", byConcept = TRUE,
+                            sampleSize = 100)
 
   expect_equal(nrow(result), 54)
-  expect_equal(ncol(result), 9)
+  expect_equal(ncol(result), 10)
   expect_equal(colnames(result), c("drug_concept_id", "drug",
                                    "ingredient_concept_id", "ingredient", "variable",
-                                   "n_records",  "n_records_not_missing_value",
+                                   "n_records", "n_sample", "n_records_not_missing_value",
                                    "n_records_missing_value", "proportion_records_missing_value"))
   missingDaysSupply <- result %>% dplyr::filter(variable == "n_missing_days_supply")
   expect_equal(missingDaysSupply %>% dplyr::pull(n_records_missing_value), c(2, 2, 0))
   expect_equal(missingDaysSupply %>% dplyr::pull(proportion_records_missing_value), c(1, 1, 0))
+
+  DBI::dbDisconnect(attr(testData, "dbcon"), shutdown = TRUE)
 })
 

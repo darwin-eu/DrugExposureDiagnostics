@@ -7,7 +7,7 @@
 getDrugStrength(
   cdm,
   ingredient,
-  includedConceptsTable,
+  includedConceptsTable = "ingredient_concepts",
   drugStrengthTable = "drug_strength",
   tablePrefix = NULL,
   verbose = FALSE

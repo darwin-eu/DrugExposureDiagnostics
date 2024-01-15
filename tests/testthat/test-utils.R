@@ -70,4 +70,7 @@ test_that("checkIsIngredient", {
   checkIsIngredient(cdm = cdm, conceptId = 19133768, messageStore = messageStore)
   expect_true(!messageStore$isEmpty())
   expect_equal(messageStore$getMessages()[2], "- ingredient concept (19133768) does not have concept_class_id of Ingredient")
-})
+
+
+  DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
+  })

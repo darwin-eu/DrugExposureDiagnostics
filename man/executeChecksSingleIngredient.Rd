@@ -10,10 +10,11 @@ executeChecksSingleIngredient(
   subsetToConceptId = NULL,
   checks = c("missing", "exposureDuration", "quantity"),
   minCellCount = 5,
-  sample = 10000,
+  sampleSize = 10000,
   tablePrefix = NULL,
   earliestStartDate = "2010-01-01",
-  verbose = FALSE
+  verbose = FALSE,
+  byConcept = FALSE
 )
 }
 \arguments{
@@ -31,7 +32,7 @@ exposure duration and the quantity.}
 \item{minCellCount}{minimum number of events to report- results
 lower than this will be obscured. If NULL all results will be reported.}
 
-\item{sample}{the number of samples, default 10.000}
+\item{sampleSize}{the number of samples, default 10.000}
 
 \item{tablePrefix}{The stem for the permanent tables that will
 be created when running the diagnostics. Permanent tables will be created using
@@ -42,6 +43,8 @@ used throughout.}
 \item{earliestStartDate}{the earliest date from which a record can be included}
 
 \item{verbose}{verbose, default FALSE}
+
+\item{byConcept}{boolean argument whether to return restults by Concept or overall only}
 }
 \value{
 named list with results

@@ -13,8 +13,8 @@ getInputDb <- function() {
     days_supply = c(11, 11, 11, 11, 12, 2, 100,6, 11, 10, 34, 10),
     quantity = c(100, 20, 10, 50, 0, 10, 100, 20, 10, 50, 0, 10))
 
-  cdm <- mockDrugExposure(drug_exposure = drugExposure)
-  return(cdm)
+   mockDrugExposure(drug_exposure = drugExposure)
+
 }
 
 test_that("test histogram plotting", {
@@ -25,7 +25,9 @@ test_that("test histogram plotting", {
   resultQuantity <- createHistogram(cdm, "drug_exposure", type = "quantity")
   expect_equal(resultQuantity$counts, c(8,0,2,0,2))
   resultDuration <- createHistogram(cdm, "drug_exposure", type = "duration")
- })
+
+  DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
+  })
 
 test_that("test save load fucntionality for histograms", {
   cdm <- getInputDb()
@@ -33,6 +35,8 @@ test_that("test save load fucntionality for histograms", {
   df <- hist2DataFrame(resultDaysSupply)
   reloadedHist <- dataFrame2Hist(df)
   expect_equal(resultDaysSupply, reloadedHist)
+
+  DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
 })
 
 test_that("test NA input", {
@@ -40,5 +44,7 @@ test_that("test NA input", {
   cdm$drug_exposure <- cdm$drug_exposure %>% dplyr::mutate(days_supply = NA)
   resultDaysSupply <- createHistogram(cdm, "drug_exposure", type = "days_supply")
   expect_equal(resultDaysSupply, NULL)
+
+  DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
 })
 

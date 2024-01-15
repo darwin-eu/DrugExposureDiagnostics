@@ -2,12 +2,13 @@
 title: "Introduction To DrugExposureDiagnostics"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction_to_DrugExposureDiagnostics}
+  %\VignetteIndexEntry{IntroductionToDrugExposureDiagnostics}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r , include = FALSE}
+options(rmarkdown.html_vignette.check_title = FALSE)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>")
@@ -63,7 +64,8 @@ executeChecks(cdm,
                          "dose", "sig", "quantity", "ingredientOverview", "ingredientPresence", "histogram", "diagnosticsSummary"), 
               minCellCount = 5,
               sample = 10000,
-              verbose = FALSE
+              verbose = FALSE,
+              byConcept = TRUE
 )
 ```
 

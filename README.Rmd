@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# DrugExposureDiagnostics
+# DrugExposureDiagnostics <img src='man/figures/DrugExposureDiagnostics.png' align="right" height="139"/>
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/DrugExposureDiagnostics)](https://CRAN.R-project.org/package=DrugExposureDiagnostics)
@@ -59,7 +59,10 @@ Let´s look at the ingredient acetaminophen (https://athena.ohdsi.org/search-ter
 We can run all the checks available in ´DrugExposureDiagnostics´ using the ´executeChecks´ function. 
 
 ```{r}
-all_checks <- executeChecks(cdm, 1125315, minCellCount = NULL)
+all_checks <- executeChecks(cdm = cdm, 
+                            ingredients = 1125315, 
+                            checks = c("missing", "exposureDuration", "type", "route", "sourceConcept", "daysSupply", "verbatimEndDate", 
+                                       "dose", "sig", "quantity", "ingredientOverview", "ingredientPresence", "histogram", "diagnosticsSummary"))
 ```
 
 The output is a list which contains the following set of tibbles:

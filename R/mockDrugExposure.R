@@ -21,6 +21,8 @@
 #' @param concept_relationship concept_relationship table
 #' @param concept concept table
 #' @param drug_strength drug strength table
+#' @param ingredient_drug_records modified drug exposure table having drug name
+#' @param unique_drug_records number of unique drug records
 #' @param drug_exposure_size the sample size of the drug exposure table
 #' @param patient_size the number of unique patients in the drug exposure table
 #' @param amount_val vector of possible numeric amount value for the drug in the drug strength table
@@ -36,7 +38,9 @@ mockDrugExposure <- function(drug_exposure = NULL,
                              concept_relationship = NULL,
                              concept = NULL,
                              drug_strength = NULL,
+                             ingredient_drug_records = NULL,
                              drug_exposure_size = 100,
+                             unique_drug_records = 80,
                              patient_size = 50,
                              amount_val = c(1, 2, 3),
                              den_val = c(1, 10, 100),
@@ -174,6 +178,20 @@ mockDrugExposure <- function(drug_exposure = NULL,
       )
   }
 
+  # ingredient_drug_records PLACEHOLDER
+  set.seed(seed)
+  concept_id <-
+  if (is.null(ingredient_drug_records)) {
+    drug_exposure_id <- as.character(seq(1:unique_drug_records))
+
+  # putting into drug_exposure table
+  ingredient_drug_records <-
+    data.frame(
+      drug_exposure_id = drug_exposure_id
+    )
+
+  }
+
 
   #drug_exposure
   set.seed(seed)
@@ -275,47 +293,47 @@ mockDrugExposure <- function(drug_exposure = NULL,
       cdm_version_concept_id = "756265",
       vocabulary_version = "v5.0 22-JUN-22"
   )
+
+
   # into in-memory database
   db <- DBI::dbConnect(duckdb::duckdb(), ":memory:")
 
-  DBI::dbWithTransaction(db, {
     DBI::dbWriteTable(db, "concept_ancestor",
                       concept_ancestor,
                       overwrite = TRUE)
-  })
-  DBI::dbWithTransaction(db, {
+
     DBI::dbWriteTable(db, "concept_relationship",
                       concept_relationship,
                       overwrite = TRUE)
-  })
-  DBI::dbWithTransaction(db, {
+
     DBI::dbWriteTable(db,
                       "concept",
                       concept,
                       overwrite = TRUE)
-  })
 
-  DBI::dbWithTransaction(db, {
     DBI::dbWriteTable(db, "drug_strength",
                       drug_strength,
                       overwrite = TRUE)
-  })
 
-  DBI::dbWithTransaction(db, {
     DBI::dbWriteTable(db, "drug_exposure",
                       drug_exposure,
                       overwrite = TRUE)
-  })
 
-  DBI::dbWithTransaction(db, {
     DBI::dbWriteTable(db, "cdm_source",
                       cdm_source,
                       overwrite = TRUE)
-  })
+
+    DBI::dbWriteTable(db, "ingredient_drug_records",
+                      ingredient_drug_records,
+                      overwrite = TRUE)
 
   cdm <- CDMConnector::cdm_from_con(db) %>%
     CDMConnector::cdm_select_tbl(c(concept_ancestor, concept_relationship,
                                    concept, drug_strength, drug_exposure, cdm_source))
+
+  write_schema = "main"
+
+  cdm$ingredient_drug_records <- dplyr::tbl(db, CDMConnector::inSchema(write_schema, "ingredient_drug_records"))
 
   return(cdm)
 }

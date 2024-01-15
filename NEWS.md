@@ -1,5 +1,9 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 1.0.2
+* Add hex sticker
+* Add argument byConcept to executeChecks
+
 # DrugExposureDiagnostics 1.0.1
 * Fix unit test
 

@@ -5,14 +5,21 @@
 \title{Check the drug sig field; this is the verbatim instruction for the drug as
 written by the provider.}
 \usage{
-checkDrugSig(cdm, drugRecordsTable = "drug_exposure", byConcept = TRUE)
+checkDrugSig(
+  cdm,
+  drugRecordsTable = "ingredient_drug_records",
+  byConcept = TRUE,
+  sampleSize = 10000
+)
 }
 \arguments{
 \item{cdm}{CDMConnector reference object}
 
-\item{drugRecordsTable}{drug exposure table}
+\item{drugRecordsTable}{modified drug exposure table}
 
 \item{byConcept}{whether to get result by drug concept}
+
+\item{sampleSize}{the sample size given in execute checks}
 }
 \value{
 a table with a summary of the sig values
