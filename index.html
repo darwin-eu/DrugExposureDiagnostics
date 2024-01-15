@@ -61,7 +61,7 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="drugexposurediagnostics-">DrugExposureDiagnostics <img src="reference/figures/DrugExposureDiagnostics.png" align="right" height="139"><a class="anchor" aria-label="anchor" href="#drugexposurediagnostics-"></a>
+<div class="page-header"><h1 id="drugexposurediagnostics-">DrugExposureDiagnostics <img src="reference/figures/DrugExposureDiagnostics.png" align="right" width="139"><a class="anchor" aria-label="anchor" href="#drugexposurediagnostics-"></a>
 </h1></div>
 <!-- badges: start -->
 
@@ -124,33 +124,38 @@
 <p>The output is a list which contains the following set of tibbles:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">all_checks</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "conceptSummary"              "missingValuesOverall"       </span></span>
-<span><span class="co">#&gt;  [3] "drugExposureDurationOverall" "drugTypesOverall"           </span></span>
-<span><span class="co">#&gt;  [5] "drugRoutesOverall"           "drugSourceConceptsOverall"  </span></span>
-<span><span class="co">#&gt;  [7] "drugDaysSupply"              "drugVerbatimEndDate"        </span></span>
-<span><span class="co">#&gt;  [9] "drugDose"                    "drugSig"                    </span></span>
-<span><span class="co">#&gt; [11] "drugQuantity"                "drugIngredientOverview"     </span></span>
-<span><span class="co">#&gt; [13] "drugIngredientPresence"      "drugDaysSupplyHistogram"    </span></span>
-<span><span class="co">#&gt; [15] "drugQuantityHistogram"       "drugDurationHistogram"      </span></span>
-<span><span class="co">#&gt; [17] "diagnosticsSummary"</span></span></code></pre></div>
+<span><span class="co">#&gt;  [1] "conceptSummary"                "missingValuesOverall"         </span></span>
+<span><span class="co">#&gt;  [3] "missingValuesByConcept"        "drugExposureDurationOverall"  </span></span>
+<span><span class="co">#&gt;  [5] "drugExposureDurationByConcept" "drugTypesOverall"             </span></span>
+<span><span class="co">#&gt;  [7] "drugTypesByConcept"            "drugRoutesOverall"            </span></span>
+<span><span class="co">#&gt;  [9] "drugRoutesByConcept"           "drugSourceConceptsOverall"    </span></span>
+<span><span class="co">#&gt; [11] "drugSourceConceptsByConcept"   "drugDaysSupply"               </span></span>
+<span><span class="co">#&gt; [13] "drugDaysSupplyByConcept"       "drugVerbatimEndDate"          </span></span>
+<span><span class="co">#&gt; [15] "drugVerbatimEndDateByConcept"  "drugDose"                     </span></span>
+<span><span class="co">#&gt; [17] "drugDoseByConcept"             "drugSig"                      </span></span>
+<span><span class="co">#&gt; [19] "drugSigByConcept"              "drugQuantity"                 </span></span>
+<span><span class="co">#&gt; [21] "drugQuantityByConcept"         "drugIngredientOverview"       </span></span>
+<span><span class="co">#&gt; [23] "drugIngredientPresence"        "drugDaysSupplyHistogram"      </span></span>
+<span><span class="co">#&gt; [25] "drugQuantityHistogram"         "drugDurationHistogram"        </span></span>
+<span><span class="co">#&gt; [27] "diagnosticsSummary"</span></span></code></pre></div>
 <p>The first item contains information on the concept ids that are used in the database for a given ingredient.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">all_checks</span><span class="op">$</span><span class="va">conceptSummary</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 2</span></span>
 <span><span class="co">#&gt; Columns: 26</span></span>
 <span><span class="co">#&gt; Rowwise: </span></span>
-<span><span class="co">#&gt; $ drug_concept_id             &lt;int&gt; 40162522, 1127078</span></span>
-<span><span class="co">#&gt; $ drug                        &lt;chr&gt; "Acetaminophen 325 MG / Hydrocodone Bitart…</span></span>
+<span><span class="co">#&gt; $ drug_concept_id             &lt;int&gt; 1127078, 40162522</span></span>
+<span><span class="co">#&gt; $ drug                        &lt;chr&gt; "Acetaminophen 160 MG Oral Tablet", "Aceta…</span></span>
 <span><span class="co">#&gt; $ ingredient_concept_id       &lt;dbl&gt; 1125315, 1125315</span></span>
 <span><span class="co">#&gt; $ ingredient                  &lt;chr&gt; "Acetaminophen", "Acetaminophen"</span></span>
-<span><span class="co">#&gt; $ n_records                   &lt;int&gt; 312, 2158</span></span>
-<span><span class="co">#&gt; $ n_patients                  &lt;int&gt; 312, 1428</span></span>
+<span><span class="co">#&gt; $ n_records                   &lt;int&gt; 2158, 312</span></span>
+<span><span class="co">#&gt; $ n_patients                  &lt;int&gt; 1428, 312</span></span>
 <span><span class="co">#&gt; $ domain_id                   &lt;chr&gt; "Drug", "Drug"</span></span>
 <span><span class="co">#&gt; $ vocabulary_id               &lt;chr&gt; "RxNorm", "RxNorm"</span></span>
 <span><span class="co">#&gt; $ concept_class_id            &lt;chr&gt; "Clinical Drug", "Clinical Drug"</span></span>
 <span><span class="co">#&gt; $ standard_concept            &lt;chr&gt; "S", "S"</span></span>
-<span><span class="co">#&gt; $ concept_code                &lt;chr&gt; "857005", "282464"</span></span>
-<span><span class="co">#&gt; $ valid_start_date            &lt;date&gt; 2009-08-02, 1970-01-01</span></span>
+<span><span class="co">#&gt; $ concept_code                &lt;chr&gt; "282464", "857005"</span></span>
+<span><span class="co">#&gt; $ valid_start_date            &lt;date&gt; 1970-01-01, 2009-08-02</span></span>
 <span><span class="co">#&gt; $ valid_end_date              &lt;date&gt; 2099-12-31, 2099-12-31</span></span>
 <span><span class="co">#&gt; $ invalid_reason              &lt;chr&gt; NA, NA</span></span>
 <span><span class="co">#&gt; $ amount_value                &lt;dbl&gt; 1, 1</span></span>
@@ -171,8 +176,8 @@
 <span><span class="co">#&gt; # Rowwise: </span></span>
 <span><span class="co">#&gt;   drug_concept_id drug                                                          </span></span>
 <span><span class="co">#&gt;             &lt;int&gt; &lt;chr&gt;                                                         </span></span>
-<span><span class="co">#&gt; 1        40162522 Acetaminophen 325 MG / Hydrocodone Bitartrate 7.5 MG Oral Tab…</span></span>
-<span><span class="co">#&gt; 2         1127078 Acetaminophen 160 MG Oral Tablet</span></span></code></pre></div>
+<span><span class="co">#&gt; 1         1127078 Acetaminophen 160 MG Oral Tablet                              </span></span>
+<span><span class="co">#&gt; 2        40162522 Acetaminophen 325 MG / Hydrocodone Bitartrate 7.5 MG Oral Tab…</span></span></code></pre></div>
 <p>Other tibbles then contain information from the various checks performed.</p>
 <p>For example, we can see a summary of missingness for the ingredient-related records in the drug exposure table, both overall and by concept.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -203,7 +208,31 @@
 <span><span class="co">#&gt; #   n_records_missing_value &lt;dbl&gt;, proportion_records_missing_value &lt;dbl&gt;,</span></span>
 <span><span class="co">#&gt; #   result_obscured &lt;lgl&gt;</span></span>
 <span><span class="va">all_checks</span><span class="op">$</span><span class="va">missingValuesByConcept</span></span>
-<span><span class="co">#&gt; NULL</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 18 × 11</span></span>
+<span><span class="co">#&gt; # Rowwise:  drug_concept_id, drug, ingredient_concept_id, ingredient</span></span>
+<span><span class="co">#&gt;    drug_concept_id drug      ingredient_concept_id ingredient variable n_records</span></span>
+<span><span class="co">#&gt;              &lt;int&gt; &lt;chr&gt;                     &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;        &lt;int&gt;</span></span>
+<span><span class="co">#&gt;  1        40162522 Acetamin…               1125315 Acetamino… n_missi…        59</span></span>
+<span><span class="co">#&gt;  2        40162522 Acetamin…               1125315 Acetamino… n_missi…        59</span></span>
+<span><span class="co">#&gt;  3        40162522 Acetamin…               1125315 Acetamino… n_missi…        59</span></span>
+<span><span class="co">#&gt;  4        40162522 Acetamin…               1125315 Acetamino… n_missi…        59</span></span>
+<span><span class="co">#&gt;  5        40162522 Acetamin…               1125315 Acetamino… n_missi…        59</span></span>
+<span><span class="co">#&gt;  6        40162522 Acetamin…               1125315 Acetamino… n_missi…        59</span></span>
+<span><span class="co">#&gt;  7        40162522 Acetamin…               1125315 Acetamino… n_missi…        59</span></span>
+<span><span class="co">#&gt;  8        40162522 Acetamin…               1125315 Acetamino… n_missi…        59</span></span>
+<span><span class="co">#&gt;  9        40162522 Acetamin…               1125315 Acetamino… n_missi…        59</span></span>
+<span><span class="co">#&gt; 10        40162522 Acetamin…               1125315 Acetamino… n_missi…        59</span></span>
+<span><span class="co">#&gt; 11        40162522 Acetamin…               1125315 Acetamino… n_missi…        59</span></span>
+<span><span class="co">#&gt; 12        40162522 Acetamin…               1125315 Acetamino… n_missi…        59</span></span>
+<span><span class="co">#&gt; 13        40162522 Acetamin…               1125315 Acetamino… n_missi…        59</span></span>
+<span><span class="co">#&gt; 14        40162522 Acetamin…               1125315 Acetamino… n_missi…        59</span></span>
+<span><span class="co">#&gt; 15        40162522 Acetamin…               1125315 Acetamino… n_missi…        59</span></span>
+<span><span class="co">#&gt; 16        40162522 Acetamin…               1125315 Acetamino… n_missi…        59</span></span>
+<span><span class="co">#&gt; 17        40162522 Acetamin…               1125315 Acetamino… n_missi…        59</span></span>
+<span><span class="co">#&gt; 18        40162522 Acetamin…               1125315 Acetamino… n_missi…        59</span></span>
+<span><span class="co">#&gt; # ℹ 5 more variables: n_sample &lt;dbl&gt;, n_records_not_missing_value &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   n_records_missing_value &lt;dbl&gt;, proportion_records_missing_value &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   result_obscured &lt;lgl&gt;</span></span></code></pre></div>
 <p>Or we can also see a summary of drug exposure duration (drug_exposure_end_date - drug_exposure_end_date + 1), again overall or by concept.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">all_checks</span><span class="op">$</span><span class="va">drugExposureDurationOverall</span></span>
@@ -219,7 +248,18 @@
 <span><span class="co">#&gt; #   q90_drug_exposure_days &lt;dbl&gt;, q95_drug_exposure_days &lt;dbl&gt;,</span></span>
 <span><span class="co">#&gt; #   maximum_drug_exposure_days &lt;dbl&gt;, result_obscured &lt;lgl&gt;</span></span>
 <span><span class="va">all_checks</span><span class="op">$</span><span class="va">drugExposureDurationByConcept</span></span>
-<span><span class="co">#&gt; NULL</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 1 × 19</span></span>
+<span><span class="co">#&gt; # Rowwise:  drug_concept_id, drug, ingredient_concept_id</span></span>
+<span><span class="co">#&gt;   drug_concept_id drug       ingredient_concept_id ingredient n_records n_sample</span></span>
+<span><span class="co">#&gt;             &lt;int&gt; &lt;chr&gt;                      &lt;dbl&gt; &lt;chr&gt;          &lt;int&gt;    &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1        40162522 Acetamino…               1125315 Acetamino…        59    10000</span></span>
+<span><span class="co">#&gt; # ℹ 13 more variables: n_non_negative_days &lt;int&gt;, n_negative_days &lt;int&gt;,</span></span>
+<span><span class="co">#&gt; #   proportion_negative_days &lt;dbl&gt;, minimum_drug_exposure_days &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   q05_drug_exposure_days &lt;dbl&gt;, q10_drug_exposure_days &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   q25_drug_exposure_days &lt;dbl&gt;, median_drug_exposure_days &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   q75_drug_exposure_days &lt;dbl&gt;, q90_drug_exposure_days &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   q95_drug_exposure_days &lt;dbl&gt;, maximum_drug_exposure_days &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   result_obscured &lt;lgl&gt;</span></span></code></pre></div>
 <p>For further information on the checks performed please see the package vignettes.</p>
 <p>After running the checks we can write the CSVs to disk using the <code>writeResultToDisk</code> function.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
