@@ -2,6 +2,7 @@ getInputDb <- function() {
   drugExposure <- tibble::tibble(
     drug_exposure_id = c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"),
     drug_concept_id = c("1", "2", "3", "4", "5", "6", "1", "2", "3", "4", "5", "6"),
+    drug_type_concept_id = c("1", "2", "3", "4", "5", "6", "1", "2", "3", "4", "5", "6"),
     ingredient_concept_id = c("1", "2", "3", "4", "5", "6", "1", "2", "3", "4", "5", "6"),
     ingredient = c("a", "b", "c", "d", "e", "f", "a", "b", "c", "d", "e", "f"),
     person_id = rep(c("1", "2", "3", "4", "5", "6"), 2),

@@ -64,7 +64,7 @@ executeChecks <- function(cdm,
   checkDbType(cdm = cdm, type = "cdm_reference", messageStore = errorMessage)
   checkmate::assertNumeric(ingredients, min.len = 1, add = errorMessage)
   checkmate::assertTRUE(is.numeric(minCellCount) || is.null(minCellCount), add = errorMessage)
-  checkmate::assertNumeric(sample, len = 1, add = errorMessage)
+  checkmate::assertNumeric(sample, len = 1, add = errorMessage, null.ok = TRUE)
   checkSampleMinCellCount(sample, minCellCount, messageStore = errorMessage)
   checkmate::assertCharacter(tablePrefix, len = 1, add = errorMessage, null.ok = TRUE)
   checkmate::assertDate(as.Date(earliestStartDate), add = errorMessage, null.ok = FALSE)
@@ -126,7 +126,7 @@ executeChecksSingleIngredient <- function(cdm,
   checkDbType(cdm = cdm, type = "cdm_reference", messageStore = errorMessage)
   checkIsIngredient(cdm = cdm, conceptId = ingredient, messageStore = errorMessage)
   checkmate::assertTRUE(is.numeric(minCellCount) || is.null(minCellCount), add = errorMessage)
-  checkmate::assertNumeric(sampleSize, len = 1, add = errorMessage)
+  checkmate::assertNumeric(sampleSize, len = 1, add = errorMessage, null.ok = TRUE)
   checkSampleMinCellCount(sampleSize, minCellCount, messageStore = errorMessage)
   checkmate::assertCharacter(tablePrefix, len = 1, add = errorMessage, null.ok = TRUE)
   checkmate::assertDate(as.Date(earliestStartDate), add = errorMessage, null.ok = FALSE)
@@ -147,7 +147,8 @@ executeChecksSingleIngredient <- function(cdm,
   )
   if(!is.null(subsetToConceptId)) {
     cdm[["ingredient_concepts"]] <- cdm[["ingredient_concepts"]] %>%
-    dplyr::filter(.data$concept_id %in%  .env$subsetToConceptId)
+      dplyr::filter(.data$concept_id %in%  .env$subsetToConceptId) %>%
+      CDMConnector::computeQuery()
   }
 
   if (verbose == TRUE) {
@@ -189,15 +190,6 @@ executeChecksSingleIngredient <- function(cdm,
     dplyr::relocate("denominator_unit", .after = "denominator_unit_concept_id") %>%
     dplyr::collect()
 
-  drugIngredientOverview <- NULL
-  if ("ingredientOverview" %in% checks) {
-    if (verbose == TRUE) {
-      start <- printDurationAndMessage("Progress: get ingredient overview", start)
-    }
-    drugIngredientOverview <- getIngredientOverview(cdm, "ingredient_drug_records",
-                                                    "ingredient_drug_strength") %>% dplyr::collect()
-  }
-
   # sample
   # the ingredient overview is for all records
   # all other checks for sampled records
@@ -218,14 +210,6 @@ executeChecksSingleIngredient <- function(cdm,
     }
   }
 
-  drugIngredientPresence <- NULL
-  if ("ingredientPresence" %in% checks) {
-    if (verbose == TRUE) {
-      start <- printDurationAndMessage("Progress: get ingredient presence", start)
-    }
-    drugIngredientPresence <- getIngredientPresence(cdm, "ingredient_drug_records",
-                                                    "ingredient_drug_strength") %>% dplyr::collect()
-  }
   missingValuesOverall <- missingValuesByConcept <- NULL
   if ("missing" %in% checks) {
     if (verbose == TRUE) {
@@ -405,8 +389,6 @@ executeChecksSingleIngredient <- function(cdm,
                  "drugSigByConcept" = drugSigByConcept,
                  "drugQuantity" = drugQuantity,
                  "drugQuantityByConcept" = drugQuantityByConcept,
-                 "drugIngredientOverview" = drugIngredientOverview,
-                 "drugIngredientPresence" = drugIngredientPresence,
                  "drugDaysSupplyHistogram" = drugDaysSupplyHistogram,
                  "drugQuantityHistogram" = drugQuantityHistogram,
                  "drugDurationHistogram" = drugDurationHistogram)

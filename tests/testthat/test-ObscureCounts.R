@@ -54,35 +54,3 @@ test_that("check for conceptSummary|diagnosticsSummary", {
     expect_equal(typeof(result$result_obscured),"logical")
   })
 })
-
-
-test_that("check for drugIngredientOverview", {
-  table <- tibble::tibble(
-    "ingredient_concept_id" = c("1", "2", "3", "4", "5", "6"),
-    "ingredient" = c("test1", "test2", "test3", "test4", "test5", "test6"),
-    "n_records" = c(9, 10, 100, 5, 6, 0),
-    "n_people" = c(8, 10, 1, 5, 6, 0)
-  )
-
-  # drugIngredientOverview
-  result <- obscureCounts(table, "drugIngredientOverview", minCellCount = 5, substitute = NA)
-  expect_equal(result$result_obscured, c(FALSE, FALSE, TRUE, FALSE, FALSE, FALSE))
-  expect_equal(result$ingredient, c("test1", "test2", "test3", "test4", "test5", "test6"))
-  expect_equal(result$n_records, c(9, 10, NA, 5, 6, 0))
-  expect_equal(result$n_people, c(8, 10, NA, 5, 6, 0))
-  expect_equal(typeof(result$result_obscured),"logical")
-
-  result <- obscureCounts(table, "drugIngredientOverview", minCellCount = NULL)
-  expect_equal(result, table)
-
-  # drugIngredientPresence
-  result <- obscureCounts(table, "drugIngredientPresence", minCellCount = 5, substitute = NA)
-  expect_equal(result$result_obscured, c(FALSE, FALSE, TRUE, FALSE, FALSE, FALSE))
-  expect_equal(result$ingredient, c("test1", "test2", "test3", "test4", "test5", "test6"))
-  expect_equal(result$n_records, c(9, 10, NA, 5, 6, 0))
-  expect_equal(result$n_people, c(8, 10, NA, 5, 6, 0))
-  expect_equal(typeof(result$result_obscured),"logical")
-
-  result <- obscureCounts(table, "drugIngredientPresence", minCellCount = NULL)
-  expect_equal(result, table)
-})

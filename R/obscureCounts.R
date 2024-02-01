@@ -46,9 +46,7 @@ obscureCounts <- function(table,
       checkColNames <- c("n_records")
     } else if (grepl("diagnosticsSummary|conceptSummary", tableName)) {
       checkColNames <- colNames <- c("n_records", "n_patients")
-   } else if (grepl("drugIngredientOverview|drugIngredientPresence", tableName)) {
-      checkColNames <- colNames[grepl("n_people", colNames)]
-    }
+   }
 
     # if any count col is less than minCellCount and larger than zero, replace colNames with substitute
     if (!is.null(checkColNames)) {

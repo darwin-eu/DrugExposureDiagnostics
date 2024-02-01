@@ -8,6 +8,15 @@
 \description{
 Ingredient specific diagnostics for drug exposure records in the Observational Medical Outcomes Partnership (OMOP) common data model.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://darwin-eu.github.io/DrugExposureDiagnostics/}
+  \item \url{https://github.com/darwin-eu/DrugExposureDiagnostics}
+  \item Report bugs at \url{https://github.com/darwin-eu/DrugExposureDiagnostics/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Ger Inberg \email{g.inberg@erasmusmc.nl} (\href{https://orcid.org/0000-0001-8993-8748}{ORCID})
 

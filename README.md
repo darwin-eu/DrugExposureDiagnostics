@@ -60,22 +60,8 @@ the ´executeChecks´ function.
 all_checks <- executeChecks(cdm = cdm, 
                             ingredients = 1125315, 
                             checks = c("missing", "exposureDuration", "type", "route", "sourceConcept", "daysSupply", "verbatimEndDate", 
-                                       "dose", "sig", "quantity", "ingredientOverview", "ingredientPresence", "histogram", "diagnosticsSummary"))
-#> Warning: `getIngredientOverview()` was deprecated in DrugExposureDiagnostics 0.4.7.
-#> ℹ The deprecated feature was likely used in the DrugExposureDiagnostics
-#>   package.
-#>   Please report the issue to the authors.
-#> This warning is displayed once every 8 hours.
-#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-#> generated.
+                                       "dose", "sig", "quantity", "histogram", "diagnosticsSummary"))
 #> population after earliestStartDate smaller than sample
-#> Warning: `getIngredientPresence()` was deprecated in DrugExposureDiagnostics 0.4.7.
-#> ℹ The deprecated feature was likely used in the DrugExposureDiagnostics
-#>   package.
-#>   Please report the issue to the authors.
-#> This warning is displayed once every 8 hours.
-#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-#> generated.
 #> Joining with `by = join_by(ingredient_concept_id)`
 #> Joining with `by = join_by(ingredient_concept_id)`
 ```
@@ -94,10 +80,9 @@ names(all_checks)
 #> [15] "drugVerbatimEndDateByConcept"  "drugDose"                     
 #> [17] "drugDoseByConcept"             "drugSig"                      
 #> [19] "drugSigByConcept"              "drugQuantity"                 
-#> [21] "drugQuantityByConcept"         "drugIngredientOverview"       
-#> [23] "drugIngredientPresence"        "drugDaysSupplyHistogram"      
-#> [25] "drugQuantityHistogram"         "drugDurationHistogram"        
-#> [27] "diagnosticsSummary"
+#> [21] "drugQuantityByConcept"         "drugDaysSupplyHistogram"      
+#> [23] "drugQuantityHistogram"         "drugDurationHistogram"        
+#> [25] "diagnosticsSummary"
 ```
 
 The first item contains information on the concept ids that are used in
@@ -108,18 +93,18 @@ glimpse(all_checks$conceptSummary)
 #> Rows: 2
 #> Columns: 26
 #> Rowwise: 
-#> $ drug_concept_id             <int> 1127078, 40162522
-#> $ drug                        <chr> "Acetaminophen 160 MG Oral Tablet", "Aceta…
+#> $ drug_concept_id             <int> 40162522, 1127078
+#> $ drug                        <chr> "Acetaminophen 325 MG / Hydrocodone Bitart…
 #> $ ingredient_concept_id       <dbl> 1125315, 1125315
 #> $ ingredient                  <chr> "Acetaminophen", "Acetaminophen"
-#> $ n_records                   <int> 2158, 312
-#> $ n_patients                  <int> 1428, 312
+#> $ n_records                   <int> 312, 2158
+#> $ n_patients                  <int> 312, 1428
 #> $ domain_id                   <chr> "Drug", "Drug"
 #> $ vocabulary_id               <chr> "RxNorm", "RxNorm"
 #> $ concept_class_id            <chr> "Clinical Drug", "Clinical Drug"
 #> $ standard_concept            <chr> "S", "S"
-#> $ concept_code                <chr> "282464", "857005"
-#> $ valid_start_date            <date> 1970-01-01, 2009-08-02
+#> $ concept_code                <chr> "857005", "282464"
+#> $ valid_start_date            <date> 2009-08-02, 1970-01-01
 #> $ valid_end_date              <date> 2099-12-31, 2099-12-31
 #> $ invalid_reason              <chr> NA, NA
 #> $ amount_value                <dbl> 1, 1
@@ -140,8 +125,8 @@ all_checks$conceptSummary %>%
 #> # Rowwise: 
 #>   drug_concept_id drug                                                          
 #>             <int> <chr>                                                         
-#> 1         1127078 Acetaminophen 160 MG Oral Tablet                              
-#> 2        40162522 Acetaminophen 325 MG / Hydrocodone Bitartrate 7.5 MG Oral Tab…
+#> 1        40162522 Acetaminophen 325 MG / Hydrocodone Bitartrate 7.5 MG Oral Tab…
+#> 2         1127078 Acetaminophen 160 MG Oral Tablet
 ```
 
 Other tibbles then contain information from the various checks

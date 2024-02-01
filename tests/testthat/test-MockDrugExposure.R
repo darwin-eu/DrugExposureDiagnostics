@@ -131,6 +131,9 @@ test_that("check working example with drug_strength", {
 test_that("check working example with drug drug_exposure", {
   drug_exposure <- tibble::tibble(
     drug_exposure_id = "1",
+    person_id = c("1"),
+    drug_concept_id = c("1"),
+    drug_type_concept_id = c("1"),
     drug_exposure_start_date = c(
       as.Date("2010-02-05")
     ),

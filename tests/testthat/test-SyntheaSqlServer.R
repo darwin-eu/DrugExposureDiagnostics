@@ -16,7 +16,7 @@ test_that("test methods against test server", {
   result <- executeChecks(cdm = cdm, ingredients = c(1125315), verbose = TRUE) #acetaminophen
 
   # checks
-  expect_equal(length(result), 27)
+  expect_equal(length(result), 25)
   expect_true(all(grepl("acetaminophen", result$ingredientConcepts$concept_name)))
 
   DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)

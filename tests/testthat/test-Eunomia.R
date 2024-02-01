@@ -26,11 +26,9 @@ test_that("execute all checks, given ingredient", {
                           ingredients = 1125315, #acetaminophen
                           checks = c("missing", "exposureDuration", "type", "route",
                                      "sourceConcept", "daysSupply", "verbatimEndDate",
-                                     "dose", "sig", "quantity", "ingredientOverview",
-                                     "ingredientPresence", "histogram", "diagnosticsSummary",
-                                     "ingredientPresence","ingredientOverview"))
+                                     "dose", "sig", "quantity", "histogram", "diagnosticsSummary"))
   # checks
-  expect_equal(length(result), 27)
+  expect_equal(length(result), 25)
   expect_equal(nrow(result$conceptSummary), 2)
   expect_true(any(grepl("Acetaminophen", result$conceptSummary$drug)))
 

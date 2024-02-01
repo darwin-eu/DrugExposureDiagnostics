@@ -34,10 +34,13 @@ getTestData <- function(ingredientId) {
   concept = dplyr::tibble(
     concept_id = c(as.numeric(ingredientId), 40162522, 1127078, 1127433, 40229134, 19133768),
     concept_name = c("ingredient1", "drug2", "drug3", "drug4", "drug5", "milligram"),
+    concept_code = c(161, 313782, 833036, 1049221, 1043400, 857005),
     domain_id = paste0("Drug", seq(6)),
     vocabulary_id = c(rep("RxNorm", 5), "Unit"),
     standard_concept = "S",
-    concept_class_id = rep("Ingredient", 6)
+    concept_class_id = rep("Ingredient", 6),
+    valid_start_date = c(rep(as.Date("1970-01-01"), 6)),
+    valid_end_date = c(rep(as.Date("2099-12-31"), 6)),
   )
 
   cdm <- mockDrugExposure(drug_exposure = drug_exposure, concept = concept)

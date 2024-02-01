@@ -28,7 +28,7 @@ cdm <- getEunomiaCdm(ingredientId = acetaminophen)
 acetaminophen_checks <- executeChecks(cdm = cdm, 
                                       ingredients = acetaminophen, 
                                       checks = c("missing", "exposureDuration", "type", "route", "sourceConcept", "daysSupply", "verbatimEndDate", 
-                                                 "dose", "sig", "quantity", "ingredientOverview", "ingredientPresence", "histogram", "diagnosticsSummary"))
+                                                 "dose", "sig", "quantity", "histogram", "diagnosticsSummary"))
 ```
 
 ## Diagnostics summary
@@ -321,44 +321,4 @@ q75_drug_exposure_quantity | 75th quantile for drug exposure quantity. |
 q90_drug_exposure_quantity | 90th quantile for drug exposure quantity. |     
 q95_drug_exposure_quantity | 95th quantile for drug exposure quantity. |         
 maximum_drug_exposure_quantity | Maximum drug exposure quantity. |  
-result_obscured | TRUE if count has been suppressed due to being below the minimum cell count, otherwise FALSE. |
-
-
-## Drug ingredient overview
-
-```{r}
-acetaminophen_checks$drugIngredientOverview %>% 
-  glimpse()
-```
-| Column  | Description |
-:------------- | :------------- |
-ingredient  | Name of drug ingredient for which the checks have been performed. |
-ingredient_concept_id | Concept ID of ingredient. |
-drug_exposure_days | Drug exposure days |
-days_supply| Days supply |         
-quantity   | Recorded quantity |         
-sig   | Recorded sig |        
-strength   | Recorded strength |      
-n_records | Number of records for ingredient.  |
-n_people   | Number of people with a record. |     
-result_obscured | TRUE if count has been suppressed due to being below the minimum cell count, otherwise FALSE. |
-
-## Drug ingredient presence
-
-```{r}
-acetaminophen_checks$drugIngredientPresence %>% 
-  glimpse()
-```
-| Column  | Description |
-:------------- | :------------- |
-ingredient  | Name of drug ingredient for which the checks have been performed. |
-ingredient_concept_id | Concept ID of ingredient. |
-days_supply_specified | Whether days supply is available |
-quantity_specified | Whether quantity is available |             
-drug_exposure_end_date_specified | Whether drug exposure dates are available |         
-strength_specified | Whether drug strength is available |        
-sig_specified | Whether SIG was recorded |      
-drug_exposure_days_specified  | Whether drug exposure days are available |   
-n_records | Number of records for drug concept.  |
-n_people   | Number of people with a record. |     
 result_obscured | TRUE if count has been suppressed due to being below the minimum cell count, otherwise FALSE. |

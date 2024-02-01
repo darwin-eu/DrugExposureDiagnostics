@@ -1,5 +1,11 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 1.0.3
+* Compatibility with latest CDMConnector
+* Fix sample bug
+* Remove deprecated functions
+* Add links in DESCRIPTION
+
 # DrugExposureDiagnostics 1.0.2
 * Add hex sticker
 * Add argument byConcept to executeChecks

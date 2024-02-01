@@ -62,7 +62,7 @@ We can run all the checks available in ´DrugExposureDiagnostics´ using the ´e
 all_checks <- executeChecks(cdm = cdm, 
                             ingredients = 1125315, 
                             checks = c("missing", "exposureDuration", "type", "route", "sourceConcept", "daysSupply", "verbatimEndDate", 
-                                       "dose", "sig", "quantity", "ingredientOverview", "ingredientPresence", "histogram", "diagnosticsSummary"))
+                                       "dose", "sig", "quantity", "histogram", "diagnosticsSummary"))
 ```
 
 The output is a list which contains the following set of tibbles:

@@ -114,7 +114,9 @@ mockDrugExposure <- function(drug_exposure = NULL,
     concept_relationship <-
       data.frame(concept_id_1 = concept$concept_id[1],
                  concept_id_2 = 9999,
-                 relationship_id = "RxNorm has dose form")
+                 relationship_id = "RxNorm has dose form",
+                 valid_start_date = as.Date("1970-01-01"),
+                 valid_end_date = as.Date("2099-12-31"))
     # add to concept
     concept <- concept %>%
       dplyr::bind_rows(
@@ -298,40 +300,66 @@ mockDrugExposure <- function(drug_exposure = NULL,
   # into in-memory database
   db <- DBI::dbConnect(duckdb::duckdb(), ":memory:")
 
-    DBI::dbWriteTable(db, "concept_ancestor",
-                      concept_ancestor,
-                      overwrite = TRUE)
+  numberIndividuals <- 1
+  DBI::dbWriteTable(db, "person",
+                    dplyr::tibble(
+                      person_id = numeric(),
+                      gender_concept_id = numeric(),
+                      year_of_birth = numeric(),
+                      day_of_birth = numeric(),
+                      birth_datetime = as.Date(NA),
+                      race_concept_id = as.numeric(NA),
+                      ethnicity_concept_id = as.numeric(NA),
+                      location_id = as.numeric(NA),
+                      provider_id = as.numeric(NA),
+                      care_site_id = as.numeric(NA)
+                    ),
+                    overwrite = TRUE)
 
-    DBI::dbWriteTable(db, "concept_relationship",
-                      concept_relationship,
-                      overwrite = TRUE)
+  DBI::dbWriteTable(db, "observation_period",
+                    dplyr::tibble(
+                      observation_period_id = numeric(),
+                      person_id = numeric(),
+                      observation_period_start_date = as.Date(x = integer(0), origin = "1970-01-01"),
+                      observation_period_end_date = as.Date(x = integer(0), origin = "1970-01-01"),
+                      period_type_concept_id = numeric()
+                    ),
+                    overwrite = TRUE)
 
-    DBI::dbWriteTable(db,
-                      "concept",
-                      concept,
-                      overwrite = TRUE)
 
-    DBI::dbWriteTable(db, "drug_strength",
-                      drug_strength,
-                      overwrite = TRUE)
+  DBI::dbWriteTable(db, "concept_ancestor",
+                    concept_ancestor,
+                    overwrite = TRUE)
 
-    DBI::dbWriteTable(db, "drug_exposure",
-                      drug_exposure,
-                      overwrite = TRUE)
+  DBI::dbWriteTable(db, "concept_relationship",
+                    concept_relationship,
+                    overwrite = TRUE)
 
-    DBI::dbWriteTable(db, "cdm_source",
-                      cdm_source,
-                      overwrite = TRUE)
+  DBI::dbWriteTable(db,
+                    "concept",
+                    concept,
+                    overwrite = TRUE)
 
-    DBI::dbWriteTable(db, "ingredient_drug_records",
-                      ingredient_drug_records,
-                      overwrite = TRUE)
+  DBI::dbWriteTable(db, "drug_strength",
+                    drug_strength,
+                    overwrite = TRUE)
 
-  cdm <- CDMConnector::cdm_from_con(db) %>%
-    CDMConnector::cdm_select_tbl(c(concept_ancestor, concept_relationship,
-                                   concept, drug_strength, drug_exposure, cdm_source))
+  DBI::dbWriteTable(db, "drug_exposure",
+                    drug_exposure,
+                    overwrite = TRUE)
+
+  DBI::dbWriteTable(db, "cdm_source",
+                    cdm_source,
+                    overwrite = TRUE)
+
+  DBI::dbWriteTable(db, "ingredient_drug_records",
+                    ingredient_drug_records,
+                    overwrite = TRUE)
 
   write_schema = "main"
+  cdm <- CDMConnector::cdm_from_con(db, cdm_schema = "main", write_schema = write_schema) %>%
+      CDMConnector::cdm_select_tbl(c(concept_ancestor, concept_relationship,
+                                   concept, drug_strength, drug_exposure, cdm_source))
 
   cdm$ingredient_drug_records <- dplyr::tbl(db, CDMConnector::inSchema(write_schema, "ingredient_drug_records"))
 
