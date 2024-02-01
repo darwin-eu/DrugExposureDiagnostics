@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">DrugExposureDiagnostics</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,7 +53,14 @@
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
 </form>
 
-      <ul class="navbar-nav"></ul>
+      <ul class="navbar-nav">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/darwin-eu/DrugExposureDiagnostics/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 
     
@@ -68,7 +75,7 @@
       <img src="" class="logo" alt=""><h1>Summary Of Checks</h1>
             
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/darwin-eu/DrugExposureDiagnostics/blob/HEAD/vignettes/SummaryOfChecks.Rmd" class="external-link"><code>vignettes/SummaryOfChecks.Rmd</code></a></small>
       <div class="d-none name"><code>SummaryOfChecks.Rmd</code></div>
     </div>
 
@@ -78,7 +85,7 @@
 <h2 id="run-checks">Run checks<a class="anchor" aria-label="anchor" href="#run-checks"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">DrugExposureDiagnostics</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://darwin-eu.github.io/DrugExposureDiagnostics/">DrugExposureDiagnostics</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># acetaminophen concept id is 1125315</span></span>
@@ -87,7 +94,7 @@
 <span><span class="va">acetaminophen_checks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/executeChecks.html">executeChecks</a></span><span class="op">(</span>cdm <span class="op">=</span> <span class="va">cdm</span>, </span>
 <span>                                      ingredients <span class="op">=</span> <span class="va">acetaminophen</span>, </span>
 <span>                                      checks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"missing"</span>, <span class="st">"exposureDuration"</span>, <span class="st">"type"</span>, <span class="st">"route"</span>, <span class="st">"sourceConcept"</span>, <span class="st">"daysSupply"</span>, <span class="st">"verbatimEndDate"</span>, </span>
-<span>                                                 <span class="st">"dose"</span>, <span class="st">"sig"</span>, <span class="st">"quantity"</span>, <span class="st">"ingredientOverview"</span>, <span class="st">"ingredientPresence"</span>, <span class="st">"histogram"</span>, <span class="st">"diagnosticsSummary"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>                                                 <span class="st">"dose"</span>, <span class="st">"sig"</span>, <span class="st">"quantity"</span>, <span class="st">"histogram"</span>, <span class="st">"diagnosticsSummary"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="diagnostics-summary">Diagnostics summary<a class="anchor" aria-label="anchor" href="#diagnostics-summary"></a>
@@ -199,18 +206,18 @@ the minimum cell count, otherwise FALSE.</td>
 <span><span class="co">#&gt; Rows: 2</span></span>
 <span><span class="co">#&gt; Columns: 26</span></span>
 <span><span class="co">#&gt; Rowwise: </span></span>
-<span><span class="co">#&gt; $ drug_concept_id             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 1127078, 40162522</span></span>
-<span><span class="co">#&gt; $ drug                        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Acetaminophen 160 MG Oral Tablet", "Aceta…</span></span>
+<span><span class="co">#&gt; $ drug_concept_id             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 40162522, 1127078</span></span>
+<span><span class="co">#&gt; $ drug                        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Acetaminophen 325 MG / Hydrocodone Bitart…</span></span>
 <span><span class="co">#&gt; $ ingredient_concept_id       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1125315, 1125315</span></span>
 <span><span class="co">#&gt; $ ingredient                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Acetaminophen", "Acetaminophen"</span></span>
-<span><span class="co">#&gt; $ n_records                   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 2158, 312</span></span>
-<span><span class="co">#&gt; $ n_patients                  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 1428, 312</span></span>
+<span><span class="co">#&gt; $ n_records                   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 312, 2158</span></span>
+<span><span class="co">#&gt; $ n_patients                  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 312, 1428</span></span>
 <span><span class="co">#&gt; $ domain_id                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Drug", "Drug"</span></span>
 <span><span class="co">#&gt; $ vocabulary_id               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "RxNorm", "RxNorm"</span></span>
 <span><span class="co">#&gt; $ concept_class_id            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Clinical Drug", "Clinical Drug"</span></span>
 <span><span class="co">#&gt; $ standard_concept            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "S", "S"</span></span>
-<span><span class="co">#&gt; $ concept_code                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "282464", "857005"</span></span>
-<span><span class="co">#&gt; $ valid_start_date            <span style="color: #949494; font-style: italic;">&lt;date&gt;</span> 1970-01-01, 2009-08-02</span></span>
+<span><span class="co">#&gt; $ concept_code                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "857005", "282464"</span></span>
+<span><span class="co">#&gt; $ valid_start_date            <span style="color: #949494; font-style: italic;">&lt;date&gt;</span> 2009-08-02, 1970-01-01</span></span>
 <span><span class="co">#&gt; $ valid_end_date              <span style="color: #949494; font-style: italic;">&lt;date&gt;</span> 2099-12-31, 2099-12-31</span></span>
 <span><span class="co">#&gt; $ invalid_reason              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> NA, NA</span></span>
 <span><span class="co">#&gt; $ amount_value                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1, 1</span></span>
@@ -1297,159 +1304,6 @@ performed.</td>
 <td align="left">Maximum drug exposure quantity.</td>
 </tr>
 <tr class="even">
-<td align="left">result_obscured</td>
-<td align="left">TRUE if count has been suppressed due to being below
-the minimum cell count, otherwise FALSE.</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level2">
-<h2 id="drug-ingredient-overview">Drug ingredient overview<a class="anchor" aria-label="anchor" href="#drug-ingredient-overview"></a>
-</h2>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">acetaminophen_checks</span><span class="op">$</span><span class="va">drugIngredientOverview</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Rows: 20</span></span>
-<span><span class="co">#&gt; Columns: 10</span></span>
-<span><span class="co">#&gt; Rowwise: </span></span>
-<span><span class="co">#&gt; $ ingredient_concept_id <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1125315, 1125315, 1125315, 1125315, 1125315, 112…</span></span>
-<span><span class="co">#&gt; $ ingredient            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Acetaminophen", "Acetaminophen", "Acetaminophen…</span></span>
-<span><span class="co">#&gt; $ drug_exposure_days    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> NA, NA, NA, NA, 29, 15, 22, NA, NA, 61, 38, 31, …</span></span>
-<span><span class="co">#&gt; $ days_supply           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> NA, NA, NA, NA, 28, 14, 21, NA, NA, 60, 37, 30, …</span></span>
-<span><span class="co">#&gt; $ quantity              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> NA, NA, NA, NA, 0, 0, 0, NA, NA, 0, 0, 0, 0, NA,…</span></span>
-<span><span class="co">#&gt; $ sig                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
-<span><span class="co">#&gt; $ strength              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
-<span><span class="co">#&gt; $ n_records             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> NA, NA, NA, NA, 103, 1360, 218, NA, NA, 96, 11, …</span></span>
-<span><span class="co">#&gt; $ n_people              <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> NA, NA, NA, NA, 98, 1043, 209, NA, NA, 96, 11, 1…</span></span>
-<span><span class="co">#&gt; $ result_obscured       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, TRU…</span></span></code></pre></div>
-<table class="table">
-<colgroup>
-<col width="50%">
-<col width="50%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Column</th>
-<th align="left">Description</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">ingredient</td>
-<td align="left">Name of drug ingredient for which the checks have been
-performed.</td>
-</tr>
-<tr class="even">
-<td align="left">ingredient_concept_id</td>
-<td align="left">Concept ID of ingredient.</td>
-</tr>
-<tr class="odd">
-<td align="left">drug_exposure_days</td>
-<td align="left">Drug exposure days</td>
-</tr>
-<tr class="even">
-<td align="left">days_supply</td>
-<td align="left">Days supply</td>
-</tr>
-<tr class="odd">
-<td align="left">quantity</td>
-<td align="left">Recorded quantity</td>
-</tr>
-<tr class="even">
-<td align="left">sig</td>
-<td align="left">Recorded sig</td>
-</tr>
-<tr class="odd">
-<td align="left">strength</td>
-<td align="left">Recorded strength</td>
-</tr>
-<tr class="even">
-<td align="left">n_records</td>
-<td align="left">Number of records for ingredient.</td>
-</tr>
-<tr class="odd">
-<td align="left">n_people</td>
-<td align="left">Number of people with a record.</td>
-</tr>
-<tr class="even">
-<td align="left">result_obscured</td>
-<td align="left">TRUE if count has been suppressed due to being below
-the minimum cell count, otherwise FALSE.</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level2">
-<h2 id="drug-ingredient-presence">Drug ingredient presence<a class="anchor" aria-label="anchor" href="#drug-ingredient-presence"></a>
-</h2>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">acetaminophen_checks</span><span class="op">$</span><span class="va">drugIngredientPresence</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Rows: 1</span></span>
-<span><span class="co">#&gt; Columns: 11</span></span>
-<span><span class="co">#&gt; Rowwise: </span></span>
-<span><span class="co">#&gt; $ ingredient_concept_id            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1125315</span></span>
-<span><span class="co">#&gt; $ ingredient                       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Acetaminophen"</span></span>
-<span><span class="co">#&gt; $ days_supply_specified            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "No"</span></span>
-<span><span class="co">#&gt; $ quantity_specified               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "No"</span></span>
-<span><span class="co">#&gt; $ drug_exposure_end_date_specified <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Yes"</span></span>
-<span><span class="co">#&gt; $ strength_specified               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "No"</span></span>
-<span><span class="co">#&gt; $ sig_specified                    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "No"</span></span>
-<span><span class="co">#&gt; $ drug_exposure_days_specified     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Yes"</span></span>
-<span><span class="co">#&gt; $ n_records                        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 59</span></span>
-<span><span class="co">#&gt; $ n_people                         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 59</span></span>
-<span><span class="co">#&gt; $ result_obscured                  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> FALSE</span></span></code></pre></div>
-<table class="table">
-<colgroup>
-<col width="50%">
-<col width="50%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Column</th>
-<th align="left">Description</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">ingredient</td>
-<td align="left">Name of drug ingredient for which the checks have been
-performed.</td>
-</tr>
-<tr class="even">
-<td align="left">ingredient_concept_id</td>
-<td align="left">Concept ID of ingredient.</td>
-</tr>
-<tr class="odd">
-<td align="left">days_supply_specified</td>
-<td align="left">Whether days supply is available</td>
-</tr>
-<tr class="even">
-<td align="left">quantity_specified</td>
-<td align="left">Whether quantity is available</td>
-</tr>
-<tr class="odd">
-<td align="left">drug_exposure_end_date_specified</td>
-<td align="left">Whether drug exposure dates are available</td>
-</tr>
-<tr class="even">
-<td align="left">strength_specified</td>
-<td align="left">Whether drug strength is available</td>
-</tr>
-<tr class="odd">
-<td align="left">sig_specified</td>
-<td align="left">Whether SIG was recorded</td>
-</tr>
-<tr class="even">
-<td align="left">drug_exposure_days_specified</td>
-<td align="left">Whether drug exposure days are available</td>
-</tr>
-<tr class="odd">
-<td align="left">n_records</td>
-<td align="left">Number of records for drug concept.</td>
-</tr>
-<tr class="even">
-<td align="left">n_people</td>
-<td align="left">Number of people with a record.</td>
-</tr>
-<tr class="odd">
 <td align="left">result_obscured</td>
 <td align="left">TRUE if count has been suppressed due to being below
 the minimum cell count, otherwise FALSE.</td>
