@@ -56,44 +56,43 @@ In the DrugExposureDiagnostics package, all the diagnostics are conducted on ing
 
 We can run all available checks at the same time using the ´executeChecks()´ function. This will return a list which contains the results of each check.
 
-```{r eval=FALSE}
-executeChecks(cdm,
-              ingredients = c(1125315),
-              subsetToConceptId = NULL,
-              checks = c("missing", "exposureDuration", "type", "route", "sourceConcept", "daysSupply", "verbatimEndDate", 
-                         "dose", "sig", "quantity", "histogram", "diagnosticsSummary"), 
-              minCellCount = 5,
-              sample = 10000,
-              verbose = FALSE,
-              byConcept = TRUE
-)
+```{r executeChecks}
+all_checks <- executeChecks(cdm,
+                            ingredients = c(1125315),
+                            subsetToConceptId = NULL,
+                            checks = c("missing", "exposureDuration", "type", "route", "sourceConcept", "daysSupply", "verbatimEndDate", 
+                                       "dose", "sig", "quantity", "histogram", "diagnosticsSummary"), 
+                            minCellCount = 5,
+                            sample = 10000,
+                            tablePrefix = NULL,
+                            earliestStartDate = "2010-01-01",
+                            verbose = FALSE,
+                            byConcept = TRUE)
 ```
 
 The`cdm` is the database reference of the OMOP CDM using the `CDMConnector` package.    
 The `ingredients` is a list of ingredients of interests, by default it is 1125315 for acetaminophen. 
-The `subsetToConceptId` is a vector of drug concept ID's to subset down to.
+The `subsetToConceptId` vector of concept IDs of the ingredients to filter. If a concept ID is positive it will be included, 
+a negative one will be excluded. If NULL, all concept IDs for an ingredient will be considered.
 `checks` allows to select the checks to be executed, by default the missing values, the
-exposure duration and the quantity checks will be run.   
+exposure duration and the quantity checks will be run.
+The `minCellCount` is minimum number of events to report, numbers lower than this will be obscured.
 `sample` is the number of samples, by default, 10.000 drug record samples will be used.  
-The `minCellCount` is minimum number of events to report, numbers lower than this will be obscured.    
-
-
-```{r executeChecks}
-all_checks<-executeChecks(cdm, ingredients = 1125315)
-
-```
+The `tablePrefix` is an optional value for database tables that will be created during executeChecks.
+`earliestStartDate` is the earliest data from which drug records will be included.
+`verbose` is a parameter that enables the printing of messages to the console.
+`byConcept` is a boolean that determines if only overall results should be returned or also by drug concept.
 
 We can then check what results available from ´executeChecks()´ by
 ```{r}
 names(all_checks)
 ```
 
-Let's take a look at the results. `ingredientConcepts` contains information on the concept ids that are used in the database for a given ingredient. So in the case of acetaminophen, the following drugs contain the acetaminophen as an ingredient. 
-
+Let's take a look at the results. `conceptSummary` contains information on the concept ids that are used in the database for a given ingredient. So in the case of acetaminophen, the following drugs contain the acetaminophen as an ingredient. 
 
 
 ```{r,  message=FALSE, warning=FALSE }  
-datatable(all_checks$ingredientConcepts,
+datatable(all_checks$conceptSummary,
   rownames = FALSE
 )
 ```

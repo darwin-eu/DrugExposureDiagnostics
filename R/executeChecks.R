@@ -1,6 +1,6 @@
-# Copyright 2022 DARWIN EU®
+# Copyright 2024 DARWIN EU®
 #
-# This file is part of IncidencePrevalence
+# This file is part of DrugExposureDiagnostics
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,10 +19,12 @@
 #' @param cdm CDMConnector reference object
 #' @param ingredients vector of ingredients, by default: acetaminophen
 #' @param subsetToConceptId vector of concept IDs of the ingredients
-#'  to subset down to. If NULL, all concept IDs for an ingredient will be
-#'  considered.
+#'  to filter. If a concept ID is positive it will be included, a negative one will be excluded.
+#'  If NULL, all concept IDs for an ingredient will be considered.
 #' @param checks the checks to be executed, by default the missing values, the
-#' exposure duration and the quantity.
+#' exposure duration and the quantity. Possible options are "missing",
+#' "exposureDuration", "type", "route", "sourceConcept", "daysSupply",
+#' "verbatimEndDate", "dose", "sig", "quantity", "histogram" and "diagnosticsSummary"
 #' @param minCellCount minimum number of events to report- results
 #' lower than this will be obscured. If NULL all results will be reported.
 #' @param sample the number of samples, default 10.000
@@ -63,6 +65,7 @@ executeChecks <- function(cdm,
   errorMessage <- checkmate::makeAssertCollection()
   checkDbType(cdm = cdm, type = "cdm_reference", messageStore = errorMessage)
   checkmate::assertNumeric(ingredients, min.len = 1, add = errorMessage)
+  checkmate::assertNumeric(subsetToConceptId, add = errorMessage, null.ok = TRUE)
   checkmate::assertTRUE(is.numeric(minCellCount) || is.null(minCellCount), add = errorMessage)
   checkmate::assertNumeric(sample, len = 1, add = errorMessage, null.ok = TRUE)
   checkSampleMinCellCount(sample, minCellCount, messageStore = errorMessage)
@@ -94,8 +97,8 @@ executeChecks <- function(cdm,
 #' @param cdm CDMConnector reference object
 #' @param ingredient ingredient, by default: acetaminophen
 #' @param subsetToConceptId vector of concept IDs of the ingredients
-#'  to subset down to. If NULL, all concept IDs for an ingredient will be
-#'  considered.
+#'  to filter. If a concept ID is positive it will be included, a negative one will be excluded.
+#'  If NULL, all concept IDs for an ingredient will be considered.
 #' @param checks the checks to be executed, by default the missing values, the
 #' exposure duration and the quantity.
 #' @param minCellCount minimum number of events to report- results
@@ -125,6 +128,7 @@ executeChecksSingleIngredient <- function(cdm,
   errorMessage <- checkmate::makeAssertCollection()
   checkDbType(cdm = cdm, type = "cdm_reference", messageStore = errorMessage)
   checkIsIngredient(cdm = cdm, conceptId = ingredient, messageStore = errorMessage)
+  checkmate::assertNumeric(subsetToConceptId, add = errorMessage, null.ok = TRUE)
   checkmate::assertTRUE(is.numeric(minCellCount) || is.null(minCellCount), add = errorMessage)
   checkmate::assertNumeric(sampleSize, len = 1, add = errorMessage, null.ok = TRUE)
   checkSampleMinCellCount(sampleSize, minCellCount, messageStore = errorMessage)
@@ -145,9 +149,21 @@ executeChecksSingleIngredient <- function(cdm,
     verbose = verbose,
     tablePrefix = tablePrefix
   )
-  if(!is.null(subsetToConceptId)) {
+  if (!is.null(subsetToConceptId)) {
+    includedConceptIds <- subsetToConceptId[subsetToConceptId > 0]
+    excludedConceptIds <- abs(subsetToConceptId[subsetToConceptId < 0])
+    if (!identical(intersect(includedConceptIds, excludedConceptIds), numeric(0))) {
+      stop("Same concept id's can't be included and excluded in subsetToConceptId")
+    }
+    if (!identical(includedConceptIds, numeric(0))) {
+      cdm[["ingredient_concepts"]] <- cdm[["ingredient_concepts"]] %>%
+        dplyr::filter(.data$concept_id %in% .env$includedConceptIds)
+    }
+    if (!identical(excludedConceptIds, numeric(0))) {
+      cdm[["ingredient_concepts"]] <- cdm[["ingredient_concepts"]] %>%
+        dplyr::filter(!(.data$concept_id %in% .env$excludedConceptIds))
+    }
     cdm[["ingredient_concepts"]] <- cdm[["ingredient_concepts"]] %>%
-      dplyr::filter(.data$concept_id %in%  .env$subsetToConceptId) %>%
       CDMConnector::computeQuery()
   }
 

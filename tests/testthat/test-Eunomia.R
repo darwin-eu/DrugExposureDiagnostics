@@ -201,6 +201,25 @@ test_that("subset on specific concepts", {
   expect_true(all(result_subset2$conceptSummary$drug_concept_id %in%
                     c(40162522, 1127078)))
 
+  # check exclude
+  result_subset3 <- executeChecks(cdm = cdm,
+                                  ingredients = 1125315,
+                                  subsetToConceptId = -40162522)
+
+  expect_true(all(result_subset3$conceptSummary$drug_concept_id == 1127078))
+
+  # combine exclude and include
+  result_subset4 <- executeChecks(cdm = cdm,
+                                  ingredients = 1125315,
+                                  subsetToConceptId = c(-40162522, 1127078))
+
+  expect_true(identical(result_subset3, result_subset4))
+
+  # exclude and include same ID -> error
+  expect_error(executeChecks(cdm = cdm,
+                             ingredients = 1125315,
+                             subsetToConceptId = c(-40162522, 40162522)))
+
   DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
 })
 
