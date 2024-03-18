@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">DrugExposureDiagnostics</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,8 +84,8 @@
 
 <dt>subsetToConceptId</dt>
 <dd><p>vector of concept IDs of the ingredients
-to subset down to. If NULL, all concept IDs for an ingredient will be
-considered.</p></dd>
+to filter. If a concept ID is positive it will be included, a negative one will be excluded.
+If NULL, all concept IDs for an ingredient will be considered.</p></dd>
 
 
 <dt>checks</dt>
