@@ -7,6 +7,7 @@
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/DrugExposureDiagnostics)](https://CRAN.R-project.org/package=DrugExposureDiagnostics)
+[![codecov.io](https://codecov.io/github/darwin-eu/DrugExposureDiagnostics/coverage.svg?branch=main)](https://app.codecov.io/github/darwin-eu/DrugExposureDiagnostics?branch=main)
 [![R-CMD-check](https://github.com/darwin-eu/DrugExposureDiagnostics/workflows/R-CMD-check/badge.svg)](https://github.com/darwin-eu/DrugExposureDiagnostics/actions)
 <!-- badges: end -->
 
