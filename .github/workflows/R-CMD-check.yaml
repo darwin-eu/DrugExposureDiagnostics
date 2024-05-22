@@ -50,3 +50,10 @@ jobs:
           EUNOMIA_DATA_FOLDER: ${{ runner.temp }}
         with:
           upload-snapshots: true
+
+      - name: Test coverage
+        if: runner.os == 'macOS'
+        run: |
+          install.packages("covr")
+          covr::codecov()
+        shell: Rscript {0}
