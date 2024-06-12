@@ -81,9 +81,9 @@ all_checks <- executeChecks(cdm = cdm,
 #>   median, q75, q95, max
 #> ! Table is collected to memory as not all requested estimates are supported on
 #>   the database side
-#> → Start summary of data, at 2024-06-12 14:25:50.275436
+#> → Start summary of data, at 2024-06-12 14:48:26.801546
 #> 
-#> ✔ Summary finished, at 2024-06-12 14:25:50.428211
+#> ✔ Summary finished, at 2024-06-12 14:48:26.97046
 ```
 
 The output is a list which contains the following set of tibbles:
@@ -110,27 +110,27 @@ glimpse(all_checks$conceptSummary)
 #> Rows: 6
 #> Columns: 25
 #> Rowwise: 
-#> $ drug_concept_id             <dbl> 1127433, 1127078, 40229134, 40162522, 1913…
-#> $ drug                        <chr> "acetaminophen 325 MG / Oxycodone Hydrochl…
+#> $ drug_concept_id             <dbl> 40231925, 19133768, 1127433, 1127078, 4022…
+#> $ drug                        <chr> "acetaminophen 325 MG / Hydrocodone Bitart…
 #> $ ingredient_concept_id       <dbl> 1125315, 1125315, 1125315, 1125315, 112531…
 #> $ ingredient                  <chr> "acetaminophen", "acetaminophen", "acetami…
-#> $ n_records                   <int> 13, 19, 12, 18, 14, 10
-#> $ n_patients                  <int> 11, 13, 11, 15, 13, 9
+#> $ n_records                   <int> 10, 14, 13, 19, 12, 18
+#> $ n_patients                  <int> 9, 13, 11, 13, 11, 15
 #> $ domain_id                   <chr> "Drug", "Drug", "Drug", "Drug", "Drug", "D…
 #> $ vocabulary_id               <chr> "RxNorm", "RxNorm", "RxNorm", "RxNorm", "R…
 #> $ concept_class_id            <chr> "Clinical Drug", "Clinical Drug", "Clinica…
 #> $ standard_concept            <chr> "S", "S", "S", "S", "S", "S"
-#> $ concept_code                <chr> "1049221", "833036", "1043400", "313782", …
+#> $ concept_code                <chr> "857005", "282464", "1049221", "833036", "…
 #> $ valid_start_date            <date> 1970-01-01, 1970-01-01, 1970-01-01, 1970-0…
 #> $ valid_end_date              <date> 2099-12-31, 2099-12-31, 2099-12-31, 2099-1…
 #> $ invalid_reason              <lgl> NA, NA, NA, NA, NA, NA
-#> $ amount_value                <dbl> 200, 300, 100, NA, 300, NA
-#> $ amount_unit_concept_id      <dbl> 8576, 8576, 8576, NA, 8576, NA
-#> $ numerator_value             <dbl> NA, NA, NA, 2, NA, 2
-#> $ numerator_unit_concept_id   <dbl> NA, NA, NA, 8576, NA, 8576
+#> $ amount_value                <dbl> NA, NA, 200, NA, 100, 200
+#> $ amount_unit_concept_id      <dbl> NA, NA, 9655, NA, 9655, 9655
+#> $ numerator_value             <dbl> 3, 3, NA, 3, NA, NA
+#> $ numerator_unit_concept_id   <dbl> 8576, 8576, NA, 8576, NA, NA
 #> $ numerator_unit              <chr> NA, NA, NA, NA, NA, NA
-#> $ denominator_value           <dbl> NA, NA, NA, 10, NA, 10
-#> $ denominator_unit_concept_id <dbl> NA, NA, NA, 8587, NA, 8587
+#> $ denominator_value           <dbl> 10, 10, NA, 10, NA, NA
+#> $ denominator_unit_concept_id <dbl> 8587, 8587, NA, 8587, NA, NA
 #> $ denominator_unit            <chr> NA, NA, NA, NA, NA, NA
 #> $ amount_unit                 <chr> NA, NA, NA, NA, NA, NA
 #> $ dose_form                   <chr> "Oral Tablet", "Oral Tablet", "Oral Tablet…
@@ -141,12 +141,12 @@ all_checks$conceptSummary %>%
 #> # Rowwise: 
 #>   drug_concept_id drug                                          
 #>             <dbl> <chr>                                         
-#> 1         1127433 acetaminophen 325 MG / Oxycodone Hydrochloride
-#> 2         1127078 acetaminophen 750 MG / Hydrocodone Bitartrate 
-#> 3        40229134 acetaminophen 21.7 MG/ML / Dextromethorphan   
-#> 4        40162522 acetaminophen 325 MG Oral Tablet              
-#> 5        19133768 acetaminophen 160 MG Oral Tablet              
-#> 6        40231925 acetaminophen 325 MG / Hydrocodone Bitartrate
+#> 1        40231925 acetaminophen 325 MG / Hydrocodone Bitartrate 
+#> 2        19133768 acetaminophen 160 MG Oral Tablet              
+#> 3         1127433 acetaminophen 325 MG / Oxycodone Hydrochloride
+#> 4         1127078 acetaminophen 750 MG / Hydrocodone Bitartrate 
+#> 5        40229134 acetaminophen 21.7 MG/ML / Dextromethorphan   
+#> 6        40162522 acetaminophen 325 MG Oral Tablet
 ```
 
 Other tibbles then contain information from the various checks
