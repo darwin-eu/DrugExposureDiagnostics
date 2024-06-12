@@ -139,9 +139,9 @@
 <span><span class="co">#&gt;   median, q75, q95, max</span></span>
 <span><span class="co">#&gt; ! Table is collected to memory as not all requested estimates are supported on</span></span>
 <span><span class="co">#&gt;   the database side</span></span>
-<span><span class="co">#&gt; → Start summary of data, at 2024-06-12 14:25:50.275436</span></span>
+<span><span class="co">#&gt; → Start summary of data, at 2024-06-12 14:48:26.801546</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ✔ Summary finished, at 2024-06-12 14:25:50.428211</span></span></code></pre></div>
+<span><span class="co">#&gt; ✔ Summary finished, at 2024-06-12 14:48:26.97046</span></span></code></pre></div>
 <p>The output is a list which contains the following set of tibbles:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">all_checks</span><span class="op">)</span></span>
@@ -161,27 +161,27 @@
 <span><span class="co">#&gt; Rows: 6</span></span>
 <span><span class="co">#&gt; Columns: 25</span></span>
 <span><span class="co">#&gt; Rowwise: </span></span>
-<span><span class="co">#&gt; $ drug_concept_id             &lt;dbl&gt; 1127433, 1127078, 40229134, 40162522, 1913…</span></span>
-<span><span class="co">#&gt; $ drug                        &lt;chr&gt; "acetaminophen 325 MG / Oxycodone Hydrochl…</span></span>
+<span><span class="co">#&gt; $ drug_concept_id             &lt;dbl&gt; 40231925, 19133768, 1127433, 1127078, 4022…</span></span>
+<span><span class="co">#&gt; $ drug                        &lt;chr&gt; "acetaminophen 325 MG / Hydrocodone Bitart…</span></span>
 <span><span class="co">#&gt; $ ingredient_concept_id       &lt;dbl&gt; 1125315, 1125315, 1125315, 1125315, 112531…</span></span>
 <span><span class="co">#&gt; $ ingredient                  &lt;chr&gt; "acetaminophen", "acetaminophen", "acetami…</span></span>
-<span><span class="co">#&gt; $ n_records                   &lt;int&gt; 13, 19, 12, 18, 14, 10</span></span>
-<span><span class="co">#&gt; $ n_patients                  &lt;int&gt; 11, 13, 11, 15, 13, 9</span></span>
+<span><span class="co">#&gt; $ n_records                   &lt;int&gt; 10, 14, 13, 19, 12, 18</span></span>
+<span><span class="co">#&gt; $ n_patients                  &lt;int&gt; 9, 13, 11, 13, 11, 15</span></span>
 <span><span class="co">#&gt; $ domain_id                   &lt;chr&gt; "Drug", "Drug", "Drug", "Drug", "Drug", "D…</span></span>
 <span><span class="co">#&gt; $ vocabulary_id               &lt;chr&gt; "RxNorm", "RxNorm", "RxNorm", "RxNorm", "R…</span></span>
 <span><span class="co">#&gt; $ concept_class_id            &lt;chr&gt; "Clinical Drug", "Clinical Drug", "Clinica…</span></span>
 <span><span class="co">#&gt; $ standard_concept            &lt;chr&gt; "S", "S", "S", "S", "S", "S"</span></span>
-<span><span class="co">#&gt; $ concept_code                &lt;chr&gt; "1049221", "833036", "1043400", "313782", …</span></span>
+<span><span class="co">#&gt; $ concept_code                &lt;chr&gt; "857005", "282464", "1049221", "833036", "…</span></span>
 <span><span class="co">#&gt; $ valid_start_date            &lt;date&gt; 1970-01-01, 1970-01-01, 1970-01-01, 1970-0…</span></span>
 <span><span class="co">#&gt; $ valid_end_date              &lt;date&gt; 2099-12-31, 2099-12-31, 2099-12-31, 2099-1…</span></span>
 <span><span class="co">#&gt; $ invalid_reason              &lt;lgl&gt; NA, NA, NA, NA, NA, NA</span></span>
-<span><span class="co">#&gt; $ amount_value                &lt;dbl&gt; 200, 300, 100, NA, 300, NA</span></span>
-<span><span class="co">#&gt; $ amount_unit_concept_id      &lt;dbl&gt; 8576, 8576, 8576, NA, 8576, NA</span></span>
-<span><span class="co">#&gt; $ numerator_value             &lt;dbl&gt; NA, NA, NA, 2, NA, 2</span></span>
-<span><span class="co">#&gt; $ numerator_unit_concept_id   &lt;dbl&gt; NA, NA, NA, 8576, NA, 8576</span></span>
+<span><span class="co">#&gt; $ amount_value                &lt;dbl&gt; NA, NA, 200, NA, 100, 200</span></span>
+<span><span class="co">#&gt; $ amount_unit_concept_id      &lt;dbl&gt; NA, NA, 9655, NA, 9655, 9655</span></span>
+<span><span class="co">#&gt; $ numerator_value             &lt;dbl&gt; 3, 3, NA, 3, NA, NA</span></span>
+<span><span class="co">#&gt; $ numerator_unit_concept_id   &lt;dbl&gt; 8576, 8576, NA, 8576, NA, NA</span></span>
 <span><span class="co">#&gt; $ numerator_unit              &lt;chr&gt; NA, NA, NA, NA, NA, NA</span></span>
-<span><span class="co">#&gt; $ denominator_value           &lt;dbl&gt; NA, NA, NA, 10, NA, 10</span></span>
-<span><span class="co">#&gt; $ denominator_unit_concept_id &lt;dbl&gt; NA, NA, NA, 8587, NA, 8587</span></span>
+<span><span class="co">#&gt; $ denominator_value           &lt;dbl&gt; 10, 10, NA, 10, NA, NA</span></span>
+<span><span class="co">#&gt; $ denominator_unit_concept_id &lt;dbl&gt; 8587, 8587, NA, 8587, NA, NA</span></span>
 <span><span class="co">#&gt; $ denominator_unit            &lt;chr&gt; NA, NA, NA, NA, NA, NA</span></span>
 <span><span class="co">#&gt; $ amount_unit                 &lt;chr&gt; NA, NA, NA, NA, NA, NA</span></span>
 <span><span class="co">#&gt; $ dose_form                   &lt;chr&gt; "Oral Tablet", "Oral Tablet", "Oral Tablet…</span></span>
@@ -192,12 +192,12 @@
 <span><span class="co">#&gt; # Rowwise: </span></span>
 <span><span class="co">#&gt;   drug_concept_id drug                                          </span></span>
 <span><span class="co">#&gt;             &lt;dbl&gt; &lt;chr&gt;                                         </span></span>
-<span><span class="co">#&gt; 1         1127433 acetaminophen 325 MG / Oxycodone Hydrochloride</span></span>
-<span><span class="co">#&gt; 2         1127078 acetaminophen 750 MG / Hydrocodone Bitartrate </span></span>
-<span><span class="co">#&gt; 3        40229134 acetaminophen 21.7 MG/ML / Dextromethorphan   </span></span>
-<span><span class="co">#&gt; 4        40162522 acetaminophen 325 MG Oral Tablet              </span></span>
-<span><span class="co">#&gt; 5        19133768 acetaminophen 160 MG Oral Tablet              </span></span>
-<span><span class="co">#&gt; 6        40231925 acetaminophen 325 MG / Hydrocodone Bitartrate</span></span></code></pre></div>
+<span><span class="co">#&gt; 1        40231925 acetaminophen 325 MG / Hydrocodone Bitartrate </span></span>
+<span><span class="co">#&gt; 2        19133768 acetaminophen 160 MG Oral Tablet              </span></span>
+<span><span class="co">#&gt; 3         1127433 acetaminophen 325 MG / Oxycodone Hydrochloride</span></span>
+<span><span class="co">#&gt; 4         1127078 acetaminophen 750 MG / Hydrocodone Bitartrate </span></span>
+<span><span class="co">#&gt; 5        40229134 acetaminophen 21.7 MG/ML / Dextromethorphan   </span></span>
+<span><span class="co">#&gt; 6        40162522 acetaminophen 325 MG Oral Tablet</span></span></code></pre></div>
 <p>Other tibbles then contain information from the various checks performed.</p>
 <p>For example, we can see a summary of missingness for the ingredient-related records in the drug exposure table, both overall and by concept.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
