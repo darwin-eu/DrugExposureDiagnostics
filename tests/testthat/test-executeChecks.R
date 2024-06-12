@@ -1,13 +1,13 @@
 test_that("execute default checks, default ingredient, verbose", {
 
-  cdm <- getEunomiaCdm()
+  cdm <- mockDrugExposure()
 
   result <- executeChecks(cdm, verbose = TRUE)
 
   # checks
   expect_equal(length(result), 7)
-  expect_equal(nrow(result$conceptSummary), 2)
-  expect_true(any(grepl("Acetaminophen", result$conceptSummary$drug)))
+  expect_equal(nrow(result$conceptSummary), 6)
+  expect_true(any(grepl("acetaminophen", result$conceptSummary$drug)))
   # check that all colnames don't have any uppercase characters (this might not be supported on some databases)
   allColnames <- unlist(lapply(names(result), FUN = function(name)  {
     lapply(colnames(result[[name]]), FUN = function(colname) {colname} )
@@ -20,23 +20,23 @@ test_that("execute default checks, default ingredient, verbose", {
 })
 
 test_that("execute all checks, given ingredient", {
-  cdm <- getEunomiaCdm(1125315)
+  cdm <- mockDrugExposure()
 
   result <- executeChecks(cdm = cdm,
                           ingredients = 1125315, #acetaminophen
                           checks = c("missing", "exposureDuration", "type", "route",
                                      "sourceConcept", "daysSupply", "verbatimEndDate",
-                                     "dose", "sig", "quantity", "histogram", "diagnosticsSummary"))
+                                     "dose", "sig", "quantity", "diagnosticsSummary"))
   # checks
-  expect_equal(length(result), 25)
-  expect_equal(nrow(result$conceptSummary), 2)
-  expect_true(any(grepl("Acetaminophen", result$conceptSummary$drug)))
+  expect_equal(length(result), 20)
+  expect_equal(nrow(result$conceptSummary), 6)
+  expect_true(any(grepl("acetaminophen", result$conceptSummary$drug)))
 
   DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
 })
 
 test_that("execute some checks, given ingredient", {
-  cdm <- getEunomiaCdm(1125315)
+  cdm <- mockDrugExposure()
 
   result <- executeChecks(cdm = cdm, ingredients = 1125315, checks = c("missing", "verbatimEndDate")) #acetaminophen
 
@@ -44,14 +44,14 @@ test_that("execute some checks, given ingredient", {
   expect_equal(length(result), 5)
   expect_equal(names(result), c("conceptSummary", "missingValuesOverall", "missingValuesByConcept",
                                 "drugVerbatimEndDate", "drugVerbatimEndDateByConcept"))
-  expect_equal(nrow(result$conceptSummary), 2)
-  expect_true(any(grepl("Acetaminophen", result$conceptSummary$drug)))
+  expect_equal(nrow(result$conceptSummary), 6)
+  expect_true(any(grepl("acetaminophen", result$conceptSummary$drug)))
 
   DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
 })
 
 test_that("execute all checks: expected errors", {
-  cdm <- getEunomiaCdm(1125315)
+  cdm <- mockDrugExposure()
 
   expect_error(executeChecks(cdm="a", 1125315))
   expect_error(executeChecks(cdm, "a"))
@@ -62,7 +62,7 @@ test_that("execute all checks: expected errors", {
 })
 
 test_that("each check", {
-  cdm <- getEunomiaCdm(1125315)
+  cdm <- mockDrugExposure()
 
   concepts_db<-ingredientDescendantsInDb(cdm, 1125315) #acetaminophen
 
@@ -86,8 +86,7 @@ test_that("each check", {
   getDrugRoutes(cdm, "ingredient_drug_records", byConcept=TRUE)
   getDrugRoutes(cdm, "ingredient_drug_records", byConcept=FALSE)
 
-  getDrugSourceConcepts(cdm, "ingredient_drug_records", byConcept=TRUE)
-  getDrugSourceConcepts(cdm, "ingredient_drug_records", byConcept=FALSE)
+  getDrugSourceConcepts(cdm, "ingredient_drug_records")
 
   # summarise dates
   summariseDrugExposureDuration(cdm, "ingredient_drug_records", byConcept=TRUE)
@@ -100,7 +99,7 @@ test_that("each check", {
 })
 
 test_that("each check: expected errors", {
-  cdm <- getEunomiaCdm(1125315)
+  cdm <- mockDrugExposure()
 
   expect_error(ingredientDescendantsInDb(cdm, "a"))
   expect_error(ingredientDescendantsInDb(cdm, 33))
@@ -125,7 +124,7 @@ test_that("each check: expected errors", {
 })
 
 test_that("get number of Days_supply that are incorrect", {
-  cdm <- getEunomiaCdm(1125315)
+  cdm <- mockDrugExposure()
 
   cdm[["ingredient_concepts"]] <- ingredientDescendantsInDb(cdm, 1125315) #acetaminophen
   cdm[["ingredient_drug_records"]] <- getDrugRecords(cdm, 1125315, "ingredient_concepts")
@@ -141,7 +140,7 @@ test_that("get number of Days_supply that are incorrect", {
 })
 
 test_that("sampling", {
-  cdm <- getEunomiaCdm(1125315)
+  cdm <- mockDrugExposure()
 
   result <- executeChecks(cdm = cdm, ingredients = 1125315, #acetaminophen
                           sample = 50)
@@ -161,15 +160,19 @@ test_that("sampling", {
 })
 
 test_that("summary", {
-  cdm <- getEunomiaCdm(1125315)
-  result <- executeChecks(cdm = cdm, ingredients = 1125315, checks = c("missing", "exposureDuration", "dose", "quantity", "diagnosticsSummary"))
+  cdm <- mockDrugExposure()
+  result <- executeChecks(cdm = cdm, ingredients = 1125315, checks = c("missing","type",
+                          "exposureDuration", "dose","route", "quantity","diagnosticsSummary"))
 
   expect_equal(
     names(result$diagnosticsSummary),
     c("ingredient", "ingredient_concept_id", "n_records", "n_patients",
+      "proportion_of_records_by_drug_type",
+      "proportion_of_records_by_route_type",
       "proportion_of_records_with_dose_form",
-      "proportion_of_records_missing_denominator_unit_concept_id",
-      "median_amount_value_q05_q95",
+      "missing_quantity_exp_start_end_days_supply",
+      "n_dose_and_missingness",
+      "median_daily_dose_q05_q95",
       "median_quantity_q05_q95",
       "median_drug_exposure_days_q05_q95",
       "proportion_of_records_with_negative_drug_exposure_days",
@@ -179,13 +182,13 @@ test_that("summary", {
 })
 
 test_that("subset on specific concepts", {
-  cdm <- getEunomiaCdm(1125315)
+  cdm <- mockDrugExposure()
   result_all <- executeChecks(cdm = cdm,
                               ingredients = 1125315,
                               subsetToConceptId = NULL)
 
   expect_true(all(result_all$conceptSummary$drug_concept_id %in%
-    c(40162522, 1127078)))
+                    c(40162522, 19133768, 1127433, 1127078, 40229134, 40231925)))
 
 
   result_subset <- executeChecks(cdm = cdm,
@@ -204,14 +207,14 @@ test_that("subset on specific concepts", {
   # check exclude
   result_subset3 <- executeChecks(cdm = cdm,
                                   ingredients = 1125315,
-                                  subsetToConceptId = -40162522)
+                                  subsetToConceptId = c(-40162522, -19133768, -1127433, -40229134, -40231925))
 
   expect_true(all(result_subset3$conceptSummary$drug_concept_id == 1127078))
 
   # combine exclude and include
   result_subset4 <- executeChecks(cdm = cdm,
                                   ingredients = 1125315,
-                                  subsetToConceptId = c(-40162522, 1127078))
+                                  subsetToConceptId = c(-40162522, -19133768, -1127433, -40229134, -40231925, 1127078))
 
   expect_true(identical(result_subset3, result_subset4))
 
@@ -224,14 +227,34 @@ test_that("subset on specific concepts", {
 })
 
 test_that("obscuring results by minCellCount", {
-  cdm <- getEunomiaCdm(1125315)
+  cdm <- mockDrugExposure()
   result_all <- executeChecks(cdm = cdm,
                               ingredients = 1125315,
-                              minCellCount = 1000)
+                              minCellCount = 13)
 
   summary <- result_all$conceptSummary %>% dplyr::arrange(ingredient_concept_id, drug_concept_id)
-  expect_equal(summary$n_records, c(2158, NA))
-  expect_equal(summary$n_patients, c(1428, NA))
+  expect_equal(summary$n_records, c(19, NA, 14, 18, NA, NA))
+  expect_equal(summary$n_patients, c(13, NA, 13, 15, NA, NA))
+
+  DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
+})
+
+test_that("use tablePrefix", {
+  cdm <- mockDrugExposure()
+  expect_no_error(executeChecks(cdm = cdm,
+                                ingredients = 1125315,
+                                tablePrefix = "pre"))
+
+  DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
+})
+
+test_that("empty drug_strength table gives an error", {
+  cdm <- mockDrugExposure()
+  cdm$drug_strength <- cdm$drug_strength %>%
+    dplyr::filter(ingredient_concept_id != 1125315)
+
+  expect_error(executeChecks(cdm = cdm,
+                             ingredients = 1125315))
 
   DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
 })

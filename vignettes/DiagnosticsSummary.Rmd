@@ -1,0 +1,61 @@
+---
+title: "Diagnostics Summary"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Diagnostics Summary}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+options(rmarkdown.html_vignette.check_title = FALSE)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Obtain a diagnostics summary 
+
+The diagnosticsSummary summarises the diagnostics results from the package.
+For a complete diagnostics Summary the checks "missing", "exposureDuration", "type", "route", "dose" and "quantity" are needed. 
+They make up the individual components of the diagnostic Summary. 
+If fewer checks are run, the diagnostics Summary will contain fewer components.
+```{r setup}
+library(DrugExposureDiagnostics)
+library(DT)
+library(dplyr)
+
+# acetaminophen concept id is 1125315
+acetaminophen <- 1125315
+cdm <- mockDrugExposure()
+acetaminophen_checks <- executeChecks(cdm = cdm, 
+                                      ingredients = acetaminophen, 
+                                      checks = c("missing", "exposureDuration", "type","route","dose","quantity", "diagnosticsSummary"))
+```
+
+Let's have a look at the diagnostics summary
+```{r}
+datatable(acetaminophen_checks$diagnosticsSummary,
+  rownames = FALSE
+)
+```
+
+| Column  | Description |
+:------------- | :------------- |
+ingredient  | Name of drug ingredient for which the checks have been performed. |
+ingredient_concept_id | Concept ID of ingredient. |
+n_records | Number of records in the database for the ingredient or any of its descendants. Note, this count is generated before any sampling or calendar restrictions used for other checks. |
+n_patients | Number of patients in the database who had a records of the ingredient or any of its descendants. Note, this count is generated before any sampling or calendar restrictions used for other checks. |
+proportion_of_records_by_drug_type | Proportion of drug records by drug types (drug types indicate whether the drug was a prescription record, a dispensation record, patient-reported, or so on). Note, this count is generated after sampling and calendar restrictions.|
+proportion_of_records_by_route_type | Proportion of drug records by associated route type. Note, this count is generated after sampling and calendar restrictions. |
+proportion_of_records_with_dose_form | Proportion of drug records with an associated dose form. Note, this count is generated before any sampling or calendar restrictions used for other checks. |
+missing_quantity_exp_start_end_days_supply | Independent missingness of quantity, drug exposure start date, drug exposure end date, and days supply. Note, this count is generated after sampling and calendar restrictions. |
+n_dose_and_missingness | The count of records for which dose estimation is theoretically possible, yet the missingness indicates for how many of those dose was not estimated because of non available units, zeros or negative values e.g. Note, this count is generated before any sampling or calendar restrictions used for other checks. |
+median_daily_dose_q05_q95 | Median daily dose along with 5th and 95th quantiles and available units, dose it not output per unit because it would duplicate the summary. However, most drugs only have one unit. Note, this count is generated after sampling and calendar restrictions. |
+median_quantity_q05_q95 | Median quantity recorded for quantity, along with 5th and 95th quantiles. Note, this count is generated after sampling and calendar restrictions. |
+median_drug_exposure_days_q05_q95 | Median drug exposure days along with 5th and 95th quantiles based on drug exposure end date minus drug exposure start date plus one day. Note, this count is generated after sampling and calendar restrictions. |
+proportion_of_records_with_negative_drug_exposure_days | Proportion of drug records where drug exposure end date is before drug exposure start date. Note, this count is generated after sampling and calendar restrictions. |
+result_obscured | TRUE if count has been suppressed due to being below the minimum cell count, otherwise FALSE. |

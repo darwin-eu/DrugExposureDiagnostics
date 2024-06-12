@@ -35,14 +35,12 @@ or install the development version:
 install.packages("remotes")
 remotes::install_github("darwin-eu/DrugExposureDiagnostics")
 ```
-## Setup
 
-In order to use the example data from the eunomia dataset, you need to set an environment variable. You can do it like this:
+## Citation
 
-* ```{r} usethis::edit_r_environ() ```
-* EUNOMIA_DATA_FOLDER = "/mypath/eunomiaData"
-* save the file
-* restart RStudio
+```{r}
+citation("DrugExposureDiagnostics")
+```
 
 ## Example use
 ```{r, message=FALSE}
@@ -52,7 +50,7 @@ library(dplyr)
 ```
 
 ```{r}
-cdm <- getEunomiaCdm()
+cdm <- mockDrugExposure()
 ```
 
 Let´s look at the ingredient acetaminophen (https://athena.ohdsi.org/search-terms/terms/1125315).
@@ -62,8 +60,8 @@ We can run all the checks available in ´DrugExposureDiagnostics´ using the ´e
 ```{r}
 all_checks <- executeChecks(cdm = cdm, 
                             ingredients = 1125315, 
-                            checks = c("missing", "exposureDuration", "type", "route", "sourceConcept", "daysSupply", "verbatimEndDate", 
-                                       "dose", "sig", "quantity", "histogram", "diagnosticsSummary"))
+                            checks = c("missing", "exposureDuration", "type", "route", "sourceConcept", "daysSupply", 
+                                       "verbatimEndDate", "dose", "sig", "quantity", "diagnosticsSummary"))
 ```
 
 The output is a list which contains the following set of tibbles:

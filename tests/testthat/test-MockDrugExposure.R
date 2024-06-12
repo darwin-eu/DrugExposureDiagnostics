@@ -33,7 +33,6 @@ test_that("check working example with defaults", {
     "numerator_unit_concept_id",
     "denominator_value",
     "denominator_unit_concept_id",
-    "denominator_unit",
     "valid_start_date",
     "valid_end_date",
     "invalid_reason"
@@ -173,16 +172,28 @@ test_that("check working example with drug_exposure options", {
   DBI::dbDisconnect(attr(db, "dbcon"), shutdown = TRUE)
 })
 
-test_that("check working example with drug_strength options", {
-  db <- mockDrugExposure(amount_val = 1,den_val = 1,unit = "mg",num_val = 1)
+test_that("check working example with drug_strength default options", {
+  db <- mockDrugExposure(drug_exposure_size = 20,
+                         patient_size = 10, amount_val = c(100,200), denom_unit = NA, num_unit= NA)
   expect_true(nrow(db$drug_strength %>%
-                     dplyr::select("amount_value")%>%dplyr::distinct()%>%dplyr::collect()) == 1)
+                     dplyr::select("amount_value")%>%dplyr::distinct()%>%dplyr::collect()) == 2)
   expect_true(nrow(db$drug_strength %>%
                      dplyr::select("denominator_value")%>%dplyr::distinct()%>%dplyr::collect()) == 1)
   expect_true(nrow(db$drug_strength %>%
                      dplyr::select("numerator_value")%>%dplyr::distinct()%>%dplyr::collect()) == 1)
+
+  DBI::dbDisconnect(attr(db, "dbcon"), shutdown = TRUE)
+})
+
+
+test_that("check working example with drug_strength num_denom only", {
+  db <- mockDrugExposure(amount_val = NA, amount_unit = NA)
   expect_true(nrow(db$drug_strength %>%
-                     dplyr::select("denominator_unit")%>%dplyr::distinct()%>%dplyr::collect()) == 1)
+                        dplyr::select("amount_value")%>%dplyr::distinct()%>%dplyr::collect()) == 1)
+  expect_true(nrow(db$drug_strength %>%
+                     dplyr::select("denominator_value")%>%dplyr::distinct()%>%dplyr::collect()) == 1)
+  expect_true(nrow(db$drug_strength %>%
+                     dplyr::select("numerator_value")%>%dplyr::distinct()%>%dplyr::collect()) == 1)
 
   DBI::dbDisconnect(attr(db, "dbcon"), shutdown = TRUE)
 })

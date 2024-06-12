@@ -1,19 +1,19 @@
 Package: DrugExposureDiagnostics
 Title: Diagnostics for OMOP Common Data Model Drug Records
-Version: 1.0.4
+Version: 1.0.5
 Authors@R: c(
     person("Ger", "Inberg", email = "g.inberg@erasmusmc.nl", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8993-8748")),
     person("Edward", "Burn", email = "edward.burn@ndorms.ox.ac.uk", role = c("aut"), 
            comment = c(ORCID = "0000-0002-9286-1128")),
+    person("Theresa", "Burkard", email = "theresa.burkard@ndorms.ox.ac.uk", role = c("aut"), 
+           comment = c(ORCID = "0000-0003-1313-4473")),
     person("Yuchen", "Guo", email = "yuchen.guo@ndorms.ox.ac.uk", role = c("ctb"), 
            comment = c(ORCID = "0000-0002-0847-4855")),
     person("Marti", "Catala", email = "marti.catalasabate@ndorms.ox.ac.uk", role = c("ctb"), 
            comment = c(ORCID = "0000-0003-3308-9905")),
     person("Mike", "Du", email = "mike.du@ndorms.ox.ac.uk", role = c("ctb"), 
            comment = c(ORCID = "0000-0002-9517-8834")),
-    person("Theresa", "Burkard", email = "theresa.burkard@ndorms.ox.ac.uk", role = c("ctb"), 
-           comment = c(ORCID = "0000-0003-1313-4473")),
     person("Xintong", "Li", email = "xintong.li@ndorms.ox.ac.uk", role = c("ctb"), 
            comment = c(ORCID = "0000-0002-6872-5804")),
     person("Ross", "Williams", email = "r.williams@erasmusmc.nl", role = c("ctb"), 
@@ -24,7 +24,7 @@ Description: Ingredient specific diagnostics for drug exposure records in the Ob
 License: Apache License (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Depends: 
     R (>= 4.0)
 Imports: 
@@ -35,7 +35,9 @@ Imports:
     tidyr (>= 1.2.0),
     tidyselect (>= 1.2.0),
     checkmate (>= 2.0.0),
-    glue (>= 1.5.0)
+    glue (>= 1.5.0),
+    DrugUtilisation (>= 0.6.0),
+    omopgenerics (>= 0.2.1)
 Suggests: 
     testthat (>= 3.0.0),
     duckdb,

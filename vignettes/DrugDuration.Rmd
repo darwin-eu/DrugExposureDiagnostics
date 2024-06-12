@@ -1,0 +1,79 @@
+---
+title: "DrugDuration"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{DrugDuration}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+options(rmarkdown.html_vignette.check_title = FALSE)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Run duration check
+```{r setup}
+library(DrugExposureDiagnostics)
+library(dplyr)
+library(DT)
+
+# acetaminophen concept id is 1125315
+acetaminophen <- 1125315
+cdm <- mockDrugExposure()
+acetaminophen_checks <- executeChecks(cdm = cdm, 
+                                      ingredients = acetaminophen, 
+                                      checks = "exposureDuration")
+```
+
+## Drug exposure duration Overall
+This shows the drug exposure duration of the drug records summarised on ingredient level. The drug exposure duration is estimated through (drug_exposure_end_date - drug_exposure_start_date + 1) for every individual drug exposure record. 
+
+```{r}
+datatable(acetaminophen_checks$drugExposureDurationOverall,
+  rownames = FALSE
+)
+```
+
+| Column  | Description |
+:------------- | :------------- |
+ingredient_concept_id | Concept ID of ingredient. |
+ingredient  | Name of drug ingredient. |
+n_records | Number of records for ingredient concept. If n_records is the same as n_sample this means that there are more records but the number was cut at the pre-specified sample number for efficiency reasons. |
+n_sample | The pre-specified maximum sample. If n_records is smaller than the sample it means that sampling was ignored because the total number of records was already too small. |
+n_person | Number of individuals. |
+n_non_negative_days  | Number of drug records with a duration of one day or more. |
+n_negative_days  | Number of drug records with a negative duration (i.e. drug exposure start date after drug exposure end date). |
+proportion_negative_days  | Proportion of drug records with a negative duration |
+minimum_drug_exposure_days  | Minimum drug exposure duration |
+q05_drug_exposure_days  | 5th quantile of drug exposure duration |
+q10_drug_exposure_days  | 10th quantile of drug exposure duration |
+q25_drug_exposure_days   | 25th quantile of drug exposure duration |   
+median_drug_exposure_days  | Median drug exposure duration |
+q75_drug_exposure_days  | 75th quantile of drug exposure duration |
+q90_drug_exposure_days  | 90th quantile of drug exposure duration |
+q95_drug_exposure_days  | 95th quantile of drug exposure duration |
+maximum_drug_exposure_days  | Maximum drug exposure duration |
+result_obscured | TRUE if count has been suppressed due to being below the minimum cell count, otherwise FALSE. |
+
+
+
+## Drug exposure duration by drug concept
+This shows the drug exposure duration on the drug concept level. The drug exposure duration is estimated through (drug_exposure_end_date - drug_exposure_start_date + 1) for every individual drug exposure record. The tables are identical to the overall just including two more columns at the beginning. \
+
+
+| Column  | Description |
+:------------- | :------------- |
+drug_concept_id  | ID of the drug concept. |
+drug  | Name of the drug concept. |
+
+```{r}
+datatable(acetaminophen_checks$drugExposureDurationByConcept,
+  rownames = FALSE
+)
+```

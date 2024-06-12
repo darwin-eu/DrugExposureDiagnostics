@@ -14,7 +14,7 @@ checkVerbatimEndDate(
 \arguments{
 \item{cdm}{CDMConnector reference object}
 
-\item{drugRecordsTable}{modified drug exposure table}
+\item{drugRecordsTable}{a modified version of the drug exposure table, default "ingredient_drug_records"}
 
 \item{byConcept}{whether to get result by drug concept}
 

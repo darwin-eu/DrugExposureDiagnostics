@@ -4,24 +4,15 @@
 \alias{checkDrugDose}
 \title{Get a summary of the daily drug dose}
 \usage{
-checkDrugDose(
-  cdm,
-  drugRecordsTable = "ingredient_drug_records",
-  drugStrengthTable = "drug_strength",
-  byConcept = TRUE,
-  sampleSize = sampleSize
-)
+checkDrugDose(cdm, ingredientConceptId, minCellCount = 5)
 }
 \arguments{
 \item{cdm}{CDMConnector reference object}
 
-\item{drugRecordsTable}{modified drug exposure table}
+\item{ingredientConceptId}{ingredient}
 
-\item{drugStrengthTable}{drug strength table}
-
-\item{byConcept}{whether to get result by drug concept}
-
-\item{sampleSize}{the sample size given in execute checks}
+\item{minCellCount}{minimum number of events to report- results
+lower than this will be obscured. If NULL all results will be reported.}
 }
 \value{
 a table with the stats about the daily dose

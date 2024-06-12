@@ -12,11 +12,14 @@ mockDrugExposure(
   drug_strength = NULL,
   ingredient_drug_records = NULL,
   drug_exposure_size = 100,
-  unique_drug_records = 80,
   patient_size = 50,
-  amount_val = c(1, 2, 3),
+  person = NULL,
+  observation_period = NULL,
+  amount_val = c(NA, 100, 200, 300),
   den_val = c(1, 10, 100),
-  unit = c("", "actuat", "mg", "mL", "mL", "h"),
+  amount_unit = c(8587, 8576, 9655),
+  num_unit = c(8587, 8576, 9655),
+  denom_unit = c(8587, 8576, 8505),
   num_val = c(1, 2, 3),
   seed = 1
 )
@@ -36,15 +39,21 @@ mockDrugExposure(
 
 \item{drug_exposure_size}{the sample size of the drug exposure table}
 
-\item{unique_drug_records}{number of unique drug records}
-
 \item{patient_size}{the number of unique patients in the drug exposure table}
+
+\item{person}{person table}
+
+\item{observation_period}{observation_period table}
 
 \item{amount_val}{vector of possible numeric amount value for the drug in the drug strength table}
 
 \item{den_val}{vector of possible numeric denominator value for the drug in drug strength table}
 
-\item{unit}{vector of possible unit type drug strength table please select from "", "actuat", "mg", "mL", "mL", "h".}
+\item{amount_unit}{vector of possible amount unit type drug strength table representing milligram, milliliter and microgram}
+
+\item{num_unit}{vector of possible numerator unit type drug strength table representing milligram, milliliter and microgram}
+
+\item{denom_unit}{vector of possible numerator unit type drug strength table representing milligram, milliliter and hour}
 
 \item{num_val}{vector of possible numeric numerator denominator value drug strength table}
 

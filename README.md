@@ -29,15 +29,28 @@ install.packages("remotes")
 remotes::install_github("darwin-eu/DrugExposureDiagnostics")
 ```
 
-## Setup
+## Citation
 
-In order to use the example data from the eunomia dataset, you need to
-set an environment variable. You can do it like this:
-
-- `{r} usethis::edit_r_environ()`
-- EUNOMIA_DATA_FOLDER = “/mypath/eunomiaData”
-- save the file
-- restart RStudio
+``` r
+citation("DrugExposureDiagnostics")
+#> Warning in citation("DrugExposureDiagnostics"): could not determine year for
+#> 'DrugExposureDiagnostics' from package DESCRIPTION file
+#> To cite package 'DrugExposureDiagnostics' in publications use:
+#> 
+#>   Inberg G, Burn E, Burkard T (????). _DrugExposureDiagnostics:
+#>   Diagnostics for OMOP Common Data Model Drug Records_. R package
+#>   version 1.0.5, https://github.com/darwin-eu/DrugExposureDiagnostics,
+#>   <https://darwin-eu.github.io/DrugExposureDiagnostics/>.
+#> 
+#> A BibTeX entry for LaTeX users is
+#> 
+#>   @Manual{,
+#>     title = {DrugExposureDiagnostics: Diagnostics for OMOP Common Data Model Drug Records},
+#>     author = {Ger Inberg and Edward Burn and Theresa Burkard},
+#>     note = {R package version 1.0.5, https://github.com/darwin-eu/DrugExposureDiagnostics},
+#>     url = {https://darwin-eu.github.io/DrugExposureDiagnostics/},
+#>   }
+```
 
 ## Example use
 
@@ -48,7 +61,7 @@ library(dplyr)
 ```
 
 ``` r
-cdm <- getEunomiaCdm()
+cdm <- mockDrugExposure()
 ```
 
 Let´s look at the ingredient acetaminophen
@@ -60,11 +73,17 @@ the ´executeChecks´ function.
 ``` r
 all_checks <- executeChecks(cdm = cdm, 
                             ingredients = 1125315, 
-                            checks = c("missing", "exposureDuration", "type", "route", "sourceConcept", "daysSupply", "verbatimEndDate", 
-                                       "dose", "sig", "quantity", "histogram", "diagnosticsSummary"))
-#> population after earliestStartDate smaller than sample
-#> Joining with `by = join_by(ingredient_concept_id)`
-#> Joining with `by = join_by(ingredient_concept_id)`
+                            checks = c("missing", "exposureDuration", "type", "route", "sourceConcept", "daysSupply", 
+                                       "verbatimEndDate", "dose", "sig", "quantity", "diagnosticsSummary"))
+#> population after earliestStartDate smaller than sample, sampling ignored
+#> ℹ The following estimates will be computed:
+#> • daily_dose: count_missing, percentage_missing, mean, sd, min, q05, q25,
+#>   median, q75, q95, max
+#> ! Table is collected to memory as not all requested estimates are supported on
+#>   the database side
+#> → Start summary of data, at 2024-06-12 14:25:50.275436
+#> 
+#> ✔ Summary finished, at 2024-06-12 14:25:50.428211
 ```
 
 The output is a list which contains the following set of tibbles:
@@ -76,14 +95,11 @@ names(all_checks)
 #>  [5] "drugExposureDurationByConcept" "drugTypesOverall"             
 #>  [7] "drugTypesByConcept"            "drugRoutesOverall"            
 #>  [9] "drugRoutesByConcept"           "drugSourceConceptsOverall"    
-#> [11] "drugSourceConceptsByConcept"   "drugDaysSupply"               
-#> [13] "drugDaysSupplyByConcept"       "drugVerbatimEndDate"          
-#> [15] "drugVerbatimEndDateByConcept"  "drugDose"                     
-#> [17] "drugDoseByConcept"             "drugSig"                      
-#> [19] "drugSigByConcept"              "drugQuantity"                 
-#> [21] "drugQuantityByConcept"         "drugDaysSupplyHistogram"      
-#> [23] "drugQuantityHistogram"         "drugDurationHistogram"        
-#> [25] "diagnosticsSummary"
+#> [11] "drugDaysSupply"                "drugDaysSupplyByConcept"      
+#> [13] "drugVerbatimEndDate"           "drugVerbatimEndDateByConcept" 
+#> [15] "drugDose"                      "drugSig"                      
+#> [17] "drugSigByConcept"              "drugQuantity"                 
+#> [19] "drugQuantityByConcept"         "diagnosticsSummary"
 ```
 
 The first item contains information on the concept ids that are used in
@@ -91,43 +107,46 @@ the database for a given ingredient.
 
 ``` r
 glimpse(all_checks$conceptSummary)
-#> Rows: 2
-#> Columns: 26
+#> Rows: 6
+#> Columns: 25
 #> Rowwise: 
-#> $ drug_concept_id             <int> 40162522, 1127078
-#> $ drug                        <chr> "Acetaminophen 325 MG / Hydrocodone Bitart…
-#> $ ingredient_concept_id       <dbl> 1125315, 1125315
-#> $ ingredient                  <chr> "Acetaminophen", "Acetaminophen"
-#> $ n_records                   <int> 312, 2158
-#> $ n_patients                  <int> 312, 1428
-#> $ domain_id                   <chr> "Drug", "Drug"
-#> $ vocabulary_id               <chr> "RxNorm", "RxNorm"
-#> $ concept_class_id            <chr> "Clinical Drug", "Clinical Drug"
-#> $ standard_concept            <chr> "S", "S"
-#> $ concept_code                <chr> "857005", "282464"
-#> $ valid_start_date            <date> 2009-08-02, 1970-01-01
-#> $ valid_end_date              <date> 2099-12-31, 2099-12-31
-#> $ invalid_reason              <chr> NA, NA
-#> $ amount_value                <dbl> 1, 1
-#> $ amount_unit_concept_id      <dbl> 1, 1
-#> $ numerator_value             <dbl> 1, 1
-#> $ numerator_unit_concept_id   <dbl> 1, 1
-#> $ numerator_unit              <chr> NA, NA
-#> $ denominator_value           <dbl> 1, 1
-#> $ denominator_unit_concept_id <dbl> 1, 1
-#> $ denominator_unit            <chr> NA, NA
-#> $ box_size                    <int> NA, NA
-#> $ amount_unit                 <chr> NA, NA
-#> $ dose_form                   <chr> NA, NA
-#> $ result_obscured             <lgl> FALSE, FALSE
+#> $ drug_concept_id             <dbl> 1127433, 1127078, 40229134, 40162522, 1913…
+#> $ drug                        <chr> "acetaminophen 325 MG / Oxycodone Hydrochl…
+#> $ ingredient_concept_id       <dbl> 1125315, 1125315, 1125315, 1125315, 112531…
+#> $ ingredient                  <chr> "acetaminophen", "acetaminophen", "acetami…
+#> $ n_records                   <int> 13, 19, 12, 18, 14, 10
+#> $ n_patients                  <int> 11, 13, 11, 15, 13, 9
+#> $ domain_id                   <chr> "Drug", "Drug", "Drug", "Drug", "Drug", "D…
+#> $ vocabulary_id               <chr> "RxNorm", "RxNorm", "RxNorm", "RxNorm", "R…
+#> $ concept_class_id            <chr> "Clinical Drug", "Clinical Drug", "Clinica…
+#> $ standard_concept            <chr> "S", "S", "S", "S", "S", "S"
+#> $ concept_code                <chr> "1049221", "833036", "1043400", "313782", …
+#> $ valid_start_date            <date> 1970-01-01, 1970-01-01, 1970-01-01, 1970-0…
+#> $ valid_end_date              <date> 2099-12-31, 2099-12-31, 2099-12-31, 2099-1…
+#> $ invalid_reason              <lgl> NA, NA, NA, NA, NA, NA
+#> $ amount_value                <dbl> 200, 300, 100, NA, 300, NA
+#> $ amount_unit_concept_id      <dbl> 8576, 8576, 8576, NA, 8576, NA
+#> $ numerator_value             <dbl> NA, NA, NA, 2, NA, 2
+#> $ numerator_unit_concept_id   <dbl> NA, NA, NA, 8576, NA, 8576
+#> $ numerator_unit              <chr> NA, NA, NA, NA, NA, NA
+#> $ denominator_value           <dbl> NA, NA, NA, 10, NA, 10
+#> $ denominator_unit_concept_id <dbl> NA, NA, NA, 8587, NA, 8587
+#> $ denominator_unit            <chr> NA, NA, NA, NA, NA, NA
+#> $ amount_unit                 <chr> NA, NA, NA, NA, NA, NA
+#> $ dose_form                   <chr> "Oral Tablet", "Oral Tablet", "Oral Tablet…
+#> $ result_obscured             <lgl> FALSE, FALSE, FALSE, FALSE, FALSE, FALSE
 all_checks$conceptSummary %>% 
   select("drug_concept_id", "drug")
-#> # A tibble: 2 × 2
+#> # A tibble: 6 × 2
 #> # Rowwise: 
-#>   drug_concept_id drug                                                          
-#>             <int> <chr>                                                         
-#> 1        40162522 Acetaminophen 325 MG / Hydrocodone Bitartrate 7.5 MG Oral Tab…
-#> 2         1127078 Acetaminophen 160 MG Oral Tablet
+#>   drug_concept_id drug                                          
+#>             <dbl> <chr>                                         
+#> 1         1127433 acetaminophen 325 MG / Oxycodone Hydrochloride
+#> 2         1127078 acetaminophen 750 MG / Hydrocodone Bitartrate 
+#> 3        40229134 acetaminophen 21.7 MG/ML / Dextromethorphan   
+#> 4        40162522 acetaminophen 325 MG Oral Tablet              
+#> 5        19133768 acetaminophen 160 MG Oral Tablet              
+#> 6        40231925 acetaminophen 325 MG / Hydrocodone Bitartrate
 ```
 
 Other tibbles then contain information from the various checks
@@ -139,54 +158,44 @@ by concept.
 
 ``` r
 all_checks$missingValuesOverall
-#> # A tibble: 18 × 9
+#> # A tibble: 15 × 9
 #> # Rowwise:  ingredient_concept_id, ingredient
 #>    ingredient_concept_id ingredient    variable               n_records n_sample
 #>                    <dbl> <chr>         <chr>                      <int>    <dbl>
-#>  1               1125315 Acetaminophen n_missing_drug_exposu…        59    10000
-#>  2               1125315 Acetaminophen n_missing_drug_exposu…        59    10000
-#>  3               1125315 Acetaminophen n_missing_verbatim_en…        59    10000
-#>  4               1125315 Acetaminophen n_missing_drug_type_c…        59    10000
-#>  5               1125315 Acetaminophen n_missing_stop_reason         59    10000
-#>  6               1125315 Acetaminophen n_missing_refills             59    10000
-#>  7               1125315 Acetaminophen n_missing_quantity            59    10000
-#>  8               1125315 Acetaminophen n_missing_days_supply         59    10000
-#>  9               1125315 Acetaminophen n_missing_sig                 59    10000
-#> 10               1125315 Acetaminophen n_missing_route_conce…        59    10000
-#> 11               1125315 Acetaminophen n_missing_lot_number          59    10000
-#> 12               1125315 Acetaminophen n_missing_provider_id         59    10000
-#> 13               1125315 Acetaminophen n_missing_visit_occur…        59    10000
-#> 14               1125315 Acetaminophen n_missing_visit_detai…        59    10000
-#> 15               1125315 Acetaminophen n_missing_drug_source…        59    10000
-#> 16               1125315 Acetaminophen n_missing_drug_source…        59    10000
-#> 17               1125315 Acetaminophen n_missing_route_sourc…        59    10000
-#> 18               1125315 Acetaminophen n_missing_dose_unit_s…        59    10000
+#>  1               1125315 acetaminophen n_missing_drug_exposu…        44    10000
+#>  2               1125315 acetaminophen n_missing_person_id           44    10000
+#>  3               1125315 acetaminophen n_missing_drug_concep…        44    10000
+#>  4               1125315 acetaminophen n_missing_drug_exposu…        44    10000
+#>  5               1125315 acetaminophen n_missing_drug_exposu…        44    10000
+#>  6               1125315 acetaminophen n_missing_verbatim_en…        44    10000
+#>  7               1125315 acetaminophen n_missing_drug_type_c…        44    10000
+#>  8               1125315 acetaminophen n_missing_quantity            44    10000
+#>  9               1125315 acetaminophen n_missing_days_supply         44    10000
+#> 10               1125315 acetaminophen n_missing_sig                 44    10000
+#> 11               1125315 acetaminophen n_missing_route_conce…        44    10000
+#> 12               1125315 acetaminophen n_missing_drug_source…        44    10000
+#> 13               1125315 acetaminophen n_missing_drug_source…        44    10000
+#> 14               1125315 acetaminophen n_missing_route_sourc…        44    10000
+#> 15               1125315 acetaminophen n_missing_dose_unit_s…        44    10000
 #> # ℹ 4 more variables: n_records_not_missing_value <dbl>,
 #> #   n_records_missing_value <dbl>, proportion_records_missing_value <dbl>,
 #> #   result_obscured <lgl>
 all_checks$missingValuesByConcept
-#> # A tibble: 18 × 11
+#> # A tibble: 90 × 11
 #> # Rowwise:  drug_concept_id, drug, ingredient_concept_id, ingredient
 #>    drug_concept_id drug      ingredient_concept_id ingredient variable n_records
-#>              <int> <chr>                     <dbl> <chr>      <chr>        <int>
-#>  1        40162522 Acetamin…               1125315 Acetamino… n_missi…        59
-#>  2        40162522 Acetamin…               1125315 Acetamino… n_missi…        59
-#>  3        40162522 Acetamin…               1125315 Acetamino… n_missi…        59
-#>  4        40162522 Acetamin…               1125315 Acetamino… n_missi…        59
-#>  5        40162522 Acetamin…               1125315 Acetamino… n_missi…        59
-#>  6        40162522 Acetamin…               1125315 Acetamino… n_missi…        59
-#>  7        40162522 Acetamin…               1125315 Acetamino… n_missi…        59
-#>  8        40162522 Acetamin…               1125315 Acetamino… n_missi…        59
-#>  9        40162522 Acetamin…               1125315 Acetamino… n_missi…        59
-#> 10        40162522 Acetamin…               1125315 Acetamino… n_missi…        59
-#> 11        40162522 Acetamin…               1125315 Acetamino… n_missi…        59
-#> 12        40162522 Acetamin…               1125315 Acetamino… n_missi…        59
-#> 13        40162522 Acetamin…               1125315 Acetamino… n_missi…        59
-#> 14        40162522 Acetamin…               1125315 Acetamino… n_missi…        59
-#> 15        40162522 Acetamin…               1125315 Acetamino… n_missi…        59
-#> 16        40162522 Acetamin…               1125315 Acetamino… n_missi…        59
-#> 17        40162522 Acetamin…               1125315 Acetamino… n_missi…        59
-#> 18        40162522 Acetamin…               1125315 Acetamino… n_missi…        59
+#>              <dbl> <chr>                     <dbl> <chr>      <chr>        <int>
+#>  1        40162522 acetamin…               1125315 acetamino… n_missi…        12
+#>  2        40162522 acetamin…               1125315 acetamino… n_missi…        12
+#>  3        40162522 acetamin…               1125315 acetamino… n_missi…        12
+#>  4        40162522 acetamin…               1125315 acetamino… n_missi…        12
+#>  5        40162522 acetamin…               1125315 acetamino… n_missi…        12
+#>  6        40162522 acetamin…               1125315 acetamino… n_missi…        12
+#>  7        40162522 acetamin…               1125315 acetamino… n_missi…        12
+#>  8        40162522 acetamin…               1125315 acetamino… n_missi…        12
+#>  9        40162522 acetamin…               1125315 acetamino… n_missi…        12
+#> 10        40162522 acetamin…               1125315 acetamino… n_missi…        12
+#> # ℹ 80 more rows
 #> # ℹ 5 more variables: n_sample <dbl>, n_records_not_missing_value <dbl>,
 #> #   n_records_missing_value <dbl>, proportion_records_missing_value <dbl>,
 #> #   result_obscured <lgl>
@@ -198,23 +207,11 @@ by concept.
 
 ``` r
 all_checks$drugExposureDurationOverall
-#> # A tibble: 1 × 17
+#> # A tibble: 1 × 18
 #> # Rowwise:  ingredient_concept_id
-#>   ingredient_concept_id ingredient    n_records n_sample n_non_negative_days
-#>                   <dbl> <chr>             <int>    <dbl>               <int>
-#> 1               1125315 Acetaminophen        59    10000                  59
-#> # ℹ 12 more variables: n_negative_days <int>, proportion_negative_days <dbl>,
-#> #   minimum_drug_exposure_days <dbl>, q05_drug_exposure_days <dbl>,
-#> #   q10_drug_exposure_days <dbl>, q25_drug_exposure_days <dbl>,
-#> #   median_drug_exposure_days <dbl>, q75_drug_exposure_days <dbl>,
-#> #   q90_drug_exposure_days <dbl>, q95_drug_exposure_days <dbl>,
-#> #   maximum_drug_exposure_days <dbl>, result_obscured <lgl>
-all_checks$drugExposureDurationByConcept
-#> # A tibble: 1 × 19
-#> # Rowwise:  drug_concept_id, drug, ingredient_concept_id
-#>   drug_concept_id drug       ingredient_concept_id ingredient n_records n_sample
-#>             <int> <chr>                      <dbl> <chr>          <int>    <dbl>
-#> 1        40162522 Acetamino…               1125315 Acetamino…        59    10000
+#>   ingredient_concept_id ingredient    n_records n_sample n_person
+#>                   <dbl> <chr>             <int>    <dbl>    <int>
+#> 1               1125315 acetaminophen        44    10000       25
 #> # ℹ 13 more variables: n_non_negative_days <int>, n_negative_days <int>,
 #> #   proportion_negative_days <dbl>, minimum_drug_exposure_days <dbl>,
 #> #   q05_drug_exposure_days <dbl>, q10_drug_exposure_days <dbl>,
@@ -222,6 +219,24 @@ all_checks$drugExposureDurationByConcept
 #> #   q75_drug_exposure_days <dbl>, q90_drug_exposure_days <dbl>,
 #> #   q95_drug_exposure_days <dbl>, maximum_drug_exposure_days <dbl>,
 #> #   result_obscured <lgl>
+all_checks$drugExposureDurationByConcept
+#> # A tibble: 6 × 20
+#> # Rowwise:  drug_concept_id, drug, ingredient_concept_id
+#>   drug_concept_id drug       ingredient_concept_id ingredient n_records n_sample
+#>             <dbl> <chr>                      <dbl> <chr>          <int>    <dbl>
+#> 1         1127078 acetamino…               1125315 acetamino…         8    10000
+#> 2         1127433 acetamino…               1125315 acetamino…         8    10000
+#> 3        19133768 acetamino…               1125315 acetamino…         8    10000
+#> 4        40162522 acetamino…               1125315 acetamino…        12    10000
+#> 5        40229134 acetamino…               1125315 acetamino…         6    10000
+#> 6        40231925 acetamino…               1125315 acetamino…        NA       NA
+#> # ℹ 14 more variables: n_person <int>, n_non_negative_days <int>,
+#> #   n_negative_days <int>, proportion_negative_days <dbl>,
+#> #   minimum_drug_exposure_days <dbl>, q05_drug_exposure_days <dbl>,
+#> #   q10_drug_exposure_days <dbl>, q25_drug_exposure_days <dbl>,
+#> #   median_drug_exposure_days <dbl>, q75_drug_exposure_days <dbl>,
+#> #   q90_drug_exposure_days <dbl>, q95_drug_exposure_days <dbl>,
+#> #   maximum_drug_exposure_days <dbl>, result_obscured <lgl>
 ```
 
 For further information on the checks performed please see the package

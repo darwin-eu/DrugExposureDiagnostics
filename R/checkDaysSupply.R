@@ -18,7 +18,7 @@
 #' Check if Days_supply is the same as datediff(drug_exp_start_date,drug_exp_end_date)
 #'
 #' @param cdm CDMConnector reference object
-#' @param drugRecordsTable a modified version of the drug exposure table
+#' @param drugRecordsTable a modified version of the drug exposure table, default "ingredient_drug_records"
 #' @param byConcept whether to get result by drug concept
 #' @param sampleSize the sample size given in execute checks
 #'
@@ -73,8 +73,7 @@ checkDaysSupply <- function(cdm,
                      proportion_missing_days_supply = .data$n_missing_days_supply / dplyr::n(),
                      minimum_drug_exposure_days_supply =  min(.data$days_supply, na.rm = T),
                      maximum_drug_exposure_days_supply = max(.data$days_supply, na.rm = T),
-                     n_records_with_days_supply = sum(!is.na(.data$days_supply)),
-                     n_people = length(unique(.data$person_id)),
+                     n_person = dplyr::n_distinct(.data$person_id),
                      q05_drug_exposure_days_supply = stats::quantile(
                        .data$days_supply,
                        0.05, na.rm = T
@@ -100,8 +99,12 @@ checkDaysSupply <- function(cdm,
                        .data$days_supply,
                        0.95, na.rm = T
                      ),
+    ) %>% dplyr::select(
+      grouping, "n_records", "n_sample", "n_person", "minimum_drug_exposure_days_supply",
+      "q05_drug_exposure_days_supply","q10_drug_exposure_days_supply","q25_drug_exposure_days_supply","median_drug_exposure_days_supply",
+      "q75_drug_exposure_days_supply","q90_drug_exposure_days_supply","q95_drug_exposure_days_supply","maximum_drug_exposure_days_supply",
+      "n_different_days_supply_and_drug_dates","n_days_supply_match_drug_dates","n_missing_days_supply",
+      "proportion_different_days_supply_and_drug_dates","proportion_days_supply_match_drug_dates", "proportion_missing_days_supply"
     )
-
   return(records)
-
 }

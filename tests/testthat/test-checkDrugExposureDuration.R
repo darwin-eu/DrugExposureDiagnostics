@@ -43,9 +43,10 @@ test_that("summariseDrugExposureDuration test overall", {
   result <- summariseDrugExposureDuration(testData, "ingredient_drug_records", byConcept = FALSE)
 
   expect_equal(nrow(result), 2)
-  expect_equal(ncol(result), 16)
-  expect_equal(colnames(result), c("ingredient_concept_id", "ingredient", "n_records", "n_sample", "n_non_negative_days", "n_negative_days",
-                                   "proportion_negative_days", "minimum_drug_exposure_days", "q05_drug_exposure_days",
+  expect_equal(ncol(result), 17)
+  expect_equal(colnames(result), c("ingredient_concept_id", "ingredient", "n_records", "n_sample","n_person",
+                                   "n_non_negative_days", "n_negative_days", "proportion_negative_days",
+                                   "minimum_drug_exposure_days", "q05_drug_exposure_days",
                                    "q10_drug_exposure_days", "q25_drug_exposure_days", "median_drug_exposure_days",
                                    "q75_drug_exposure_days", "q90_drug_exposure_days", "q95_drug_exposure_days",
                                    "maximum_drug_exposure_days"))

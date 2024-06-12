@@ -26,6 +26,10 @@ test_that("checkVerbatimEndDate overall", {
   expect_equal(result$n_records, c(2,2,1))
   expect_equal(result$n_not_missing_verbatim_end_date, c(1,2,1))
   expect_equal(result$n_verbatim_end_date_and_drug_exposure_end_date_differ, c(0,1,1))
+  expect_equal(result$proportion_missing_verbatim_end_date, c(0.2, 0.0, 0.0))
+  expect_equal(result$proportion_not_missing_verbatim_end_date, c(0.2, 0.4, 0.2))
+  expect_equal(result$proportion_verbatim_end_date_equal_to_drug_exposure_end_date, c(0.2, 0.2, 0.0))
+  expect_equal(result$proportion_verbatim_end_date_and_drug_exposure_end_date_differ, c(0.0, 0.2, 0.2))
   expect_equal(result$minimum_verbatim_end_date, as.Date(c("2017-01-03", "2018-05-04", "2020-11-06")))
   expect_equal(result$maximum_verbatim_end_date, as.Date(c("2017-01-03", "2019-01-05", "2020-11-06")))
 

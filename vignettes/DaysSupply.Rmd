@@ -1,0 +1,81 @@
+---
+title: "Days Supply"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Days Supply}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+options(rmarkdown.html_vignette.check_title = FALSE)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Run the days supply check 
+```{r setup}
+library(DrugExposureDiagnostics)
+library(dplyr)
+library(DT)
+
+# acetaminophen concept id is 1125315
+acetaminophen <- 1125315
+cdm <- mockDrugExposure()
+acetaminophen_checks <- executeChecks(cdm = cdm, 
+                                      ingredients = acetaminophen, 
+                                      checks = "daysSupply")
+```
+
+## Days supply Overall
+This shows the days supply of the drug records summarised on ingredient level.
+
+```{r}
+datatable(acetaminophen_checks$drugDaysSupply,
+  rownames = FALSE
+)
+```
+
+| Column  | Description |
+:------------- | :------------- |
+ingredient_concept_id | Concept ID of ingredient. |
+ingredient  | Name of drug ingredient. |
+n_records | Number of records for ingredient concept. If n_records is the same as n_sample this means that there are more records but the number was cut at the pre-specified sample number for efficiency reasons. |
+n_sample | The pre-specified maximum sample. If n_records is smaller than the sample it means that sampling was ignored because the total number of records was already too small. |
+n_person | Number of individuals. |
+minimum_drug_exposure_days_supply  | Minimum drug exposure days supply |
+q05_drug_exposure_days_supply_supply  | 5th quantile of drug exposure days supply |
+q10_drug_exposure_days_supply  | 10th quantile of drug exposure days supply |
+q25_drug_exposure_days_supply   | 25th quantile of drug exposure days supply |   
+median_drug_exposure_days_supply  | Median drug exposure days supply |
+q75_drug_exposure_days_supply  | 75th quantile of drug exposure days supply |
+q90_drug_exposure_days_supply  | 90th quantile of drug exposure days supply |
+q95_drug_exposure_days_supply  | 95th quantile of drug exposure days supply |
+maximum_drug_exposure_days_supply  | Maximum drug exposure days supply |
+n_different_days_supply_and_drug_dates | Number of records where days supply differs to drug exposure days supply (estimated through drug_exposure_end_date - drug_exposure_start_date + 1). Ideally these two values should overlap because often the drug_exposure_end_date is derived from the days_supply field. However, the days_supply field is not a required field where as drug_exposure_end_date is a required field. If days_supply is missing then it is automatically captured as a difference. |
+n_days_supply_match_drug_dates | Number of records where days supply is identical to drug exposure days supply (estimated through drug_exposure_end_date - drug_exposure_start_date + 1). Ideally these two values should overlap because often the drug_exposure_end_date is derived from the days_supply field. However, the days_supply field is not a required field where as drug_exposure_end_date is a required field. |
+n_missing_days_supply | Number of records with missing days supply. This field together with n_different_days_supply_and_drug_dates and n_days_supply_match_drug_dates shall be identical to n_records. |
+proportion_different_days_supply_and_drug_dates | Proportion of records where days supply differs to drug exposure days supply (estimated through drug_exposure_end_date - drug_exposure_start_date + 1). |
+proportion_days_supply_match_drug_dates | Proportion of records where days supply is idential to drug exposure days supply (estimated through drug_exposure_end_date - drug_exposure_start_date + 1). |      Proportion of records with missing values in days_supply.  This field together with proportion_different_days_supply_and_drug_dates and proportion_days_supply_match_drug_dates shall add up to 1. |
+proportion_missing_days_supply | 
+result_obscured | TRUE if count has been suppressed due to being below the minimum cell count, otherwise FALSE. | 
+
+## Days supply by drug concept
+This shows the days supply on the drug concept level. The tables are identical to the overall just including two more columns at the beginning. \
+
+
+| Column  | Description |
+:------------- | :------------- |
+drug_concept_id  | ID of the drug concept. |
+drug  | Name of the drug concept. |
+
+```{r}
+datatable(acetaminophen_checks$drugDaysSupplyByConcept,
+  rownames = FALSE
+)
+```
+

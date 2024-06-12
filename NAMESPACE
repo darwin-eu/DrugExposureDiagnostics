@@ -2,7 +2,7 @@
 
 export("%>%")
 export(executeChecks)
-export(getEunomiaCdm)
+export(mockDrugExposure)
 export(writeResultToDisk)
 importFrom(graphics,hist)
 importFrom(magrittr,"%>%")

@@ -17,7 +17,7 @@ ingredientDescendantsInDb(
 
 \item{ingredient}{ingredient concept id for ingredient of interest}
 
-\item{drugRecordsTable}{table name of the drug exposure records}
+\item{drugRecordsTable}{table name of the drug exposure records, default "drug_exposure"}
 
 \item{tablePrefix}{The stem for the permanent tables that will
 be created when running the diagnostics. Permanent tables will be created using

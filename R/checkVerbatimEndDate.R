@@ -17,7 +17,7 @@
 #' Check the verbatim_end_date field
 #'
 #' @param cdm CDMConnector reference object
-#' @param drugRecordsTable modified drug exposure table
+#' @param drugRecordsTable a modified version of the drug exposure table, default "ingredient_drug_records"
 #' @param byConcept whether to get result by drug concept
 #' @param sampleSize the sample size given in execute checks
 #'
@@ -43,16 +43,17 @@ checkVerbatimEndDate <- function(cdm,
     grouping <- c("ingredient_concept_id", "ingredient")
   }
 
-  records <- cdm[[drugRecordsTable]]
+  total <- cdm[[drugRecordsTable]] %>%
+    dplyr::summarise(total = dplyr::n()) %>% dplyr::pull()
 
-  # get stats
-  records %>%
+  records <- cdm[[drugRecordsTable]] %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
     dplyr::summarise(
       minimum_verbatim_end_date = min(.data$verbatim_end_date, na.rm = T),
       maximum_verbatim_end_date = max(.data$verbatim_end_date, na.rm = T),
       n_records = as.integer(dplyr::n()),
       n_sample = .env$sampleSize,
+      n_person = dplyr::n_distinct(.data$person_id),
       n_missing_verbatim_end_date = sum(dplyr::case_when(
         is.na(.data$verbatim_end_date) ~ 1,
         !is.na(.data$verbatim_end_date) ~ 0), na.rm = T),
@@ -68,4 +69,12 @@ checkVerbatimEndDate <- function(cdm,
         .data$drug_exposure_end_date == .data$verbatim_end_date ~ 0,
         is.na(.data$drug_exposure_end_date) | is.na(.data$verbatim_end_date) ~ 0), na.rm = T)
       )
+
+  records <- records %>%
+    dplyr::mutate(
+      proportion_missing_verbatim_end_date = .data$n_missing_verbatim_end_date / .env$total,
+      proportion_not_missing_verbatim_end_date = .data$n_not_missing_verbatim_end_date / .env$total,
+      proportion_verbatim_end_date_equal_to_drug_exposure_end_date = .data$n_verbatim_end_date_equal_to_drug_exposure_end_date / .env$total,
+      proportion_verbatim_end_date_and_drug_exposure_end_date_differ = .data$n_verbatim_end_date_and_drug_exposure_end_date_differ / .env$total
+    )
 }

@@ -18,7 +18,7 @@
 #'
 #' @param cdm CDMConnector reference object
 #' @param ingredient ingredient concept id for ingredient of interest
-#' @param drugRecordsTable table name of the drug exposure records
+#' @param drugRecordsTable table name of the drug exposure records, default "drug_exposure"
 #' @param tablePrefix The stem for the permanent tables that will
 #' be created when running the diagnostics. Permanent tables will be created using
 #' this prefix, and any existing tables that start with this will be at risk of
@@ -42,6 +42,7 @@ ingredientDescendantsInDb <- function(cdm,
   )
   checkLogical(verbose, messageStore = errorMessage)
   checkIsIngredient(cdm = cdm, conceptId = ingredient, messageStore = errorMessage)
+  checkIngredientInTable(cdm = cdm, conceptId = ingredient, tableName = "drug_strength", messageStore = errorMessage)
   checkmate::reportAssertions(collection = errorMessage)
 
   if (verbose == TRUE) {
@@ -184,10 +185,14 @@ ingredientDescendantsInDb <- function(cdm,
     } else {
         names(drugConceptForm)[2] <- "dose_form"
     }
+
+    drugConceptFormTblName <- CDMConnector::uniqueTableName()
+    cdm <- CDMConnector::insertTable(
+      cdm = cdm, name = drugConceptFormTblName, table = drugConceptForm, overwrite = TRUE
+    )
     dbConceptsTable <- dbConceptsTable %>%
-      dplyr::left_join(drugConceptForm,
-                       by="concept_id",
-                       copy = TRUE)
+      dplyr::left_join(cdm[[drugConceptFormTblName]],
+                       by="concept_id")
   } else {
     dbConceptsTable <- dbConceptsTable %>%
       dplyr::mutate(dose_form = NA)

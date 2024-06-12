@@ -1,5 +1,10 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 1.0.5
+* Use dailyDoseCoverage function from package DrugUtilisation
+* Remove Eunomia dependency
+* Remove histogram output from checks
+
 # DrugExposureDiagnostics 1.0.4
 * Add option to exclude drug concept ids
 * Performance improvement

@@ -20,10 +20,15 @@ test_that("checkDrugSig overall", {
     dplyr::arrange(.data$ingredient_concept_id, dplyr::desc(.data$n_records), .data$sig)
 
   expect_equal(nrow(result), 5)
-  expect_equal(ncol(result), 4)
+  expect_equal(ncol(result), 7)
+  expect_equal(colnames(result),
+               c("ingredient_concept_id", "ingredient", "sig", "n_records", "n_sample","n_person",
+                 "proportion_records"))
   expect_equal(result$ingredient_concept_id, c(1, 2, 2, 3, 4))
   expect_equal(result$sig, c("sig1", "sig1", NA, NA, "sig2"))
   expect_equal(result$n_records, c(2, 1, 1, 1, 1))
+  expect_equal(result$proportion_records, c(1/3, 1/6, 1/6, 1/6, 1/6))
+  expect_equal(unique(result$n_sample), 100)
 
   DBI::dbDisconnect(attr(testData, "dbcon"), shutdown = TRUE)
 })
@@ -36,10 +41,15 @@ test_that("checkDrugSig byConcept", {
     dplyr::arrange(.data$ingredient_concept_id, dplyr::desc(.data$n_records), .data$sig)
 
   expect_equal(nrow(result), 6)
-  expect_equal(ncol(result), 6)
+  expect_equal(ncol(result), 9)
+  expect_equal(colnames(result), c("drug_concept_id", "drug", "ingredient_concept_id",
+                                   "ingredient", "sig", "n_records", "n_sample","n_person",
+                                   "proportion_records"))
   expect_equal(result$ingredient_concept_id, c(1, 1, 2, 2, 3, 4))
   expect_equal(result$sig, c("sig1","sig1","sig1", NA, NA, "sig2"))
   expect_equal(result$n_records, c(1, 1, 1, 1, 1, 1))
+  expect_equal(result$proportion_records, c(1/6, 1/6, 1/6, 1/6, 1/6,1/6))
+  expect_equal(unique(result$n_sample), 100)
 
   DBI::dbDisconnect(attr(testData, "dbcon"), shutdown = TRUE)
 })

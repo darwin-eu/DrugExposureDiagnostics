@@ -24,7 +24,7 @@
 #' @param checks the checks to be executed, by default the missing values, the
 #' exposure duration and the quantity. Possible options are "missing",
 #' "exposureDuration", "type", "route", "sourceConcept", "daysSupply",
-#' "verbatimEndDate", "dose", "sig", "quantity", "histogram" and "diagnosticsSummary"
+#' "verbatimEndDate", "dose", "sig", "quantity" and "diagnosticsSummary"
 #' @param minCellCount minimum number of events to report- results
 #' lower than this will be obscured. If NULL all results will be reported.
 #' @param sample the number of samples, default 10.000
@@ -148,10 +148,12 @@ executeChecksSingleIngredient <- function(cdm,
     ingredient = ingredient,
     verbose = verbose,
     tablePrefix = tablePrefix
-  )
+  ) %>%
+    dplyr::compute(name = "ingredient_concepts")
+
   if (!is.null(subsetToConceptId)) {
-    includedConceptIds <- subsetToConceptId[subsetToConceptId > 0]
-    excludedConceptIds <- abs(subsetToConceptId[subsetToConceptId < 0])
+    includedConceptIds <- as.numeric(subsetToConceptId[subsetToConceptId > 0])
+    excludedConceptIds <- as.numeric(abs(subsetToConceptId[subsetToConceptId < 0]))
     if (!identical(intersect(includedConceptIds, excludedConceptIds), numeric(0))) {
       stop("Same concept id's can't be included and excluded in subsetToConceptId")
     }
@@ -164,7 +166,7 @@ executeChecksSingleIngredient <- function(cdm,
         dplyr::filter(!(.data$concept_id %in% .env$excludedConceptIds))
     }
     cdm[["ingredient_concepts"]] <- cdm[["ingredient_concepts"]] %>%
-      CDMConnector::computeQuery()
+      dplyr::compute()
   }
 
   if (verbose == TRUE) {
@@ -176,7 +178,8 @@ executeChecksSingleIngredient <- function(cdm,
     ingredient = ingredient,
     includedConceptsTable = "ingredient_concepts",
     tablePrefix = tablePrefix
-  )
+  ) %>%
+    dplyr::compute(name = "ingredient_drug_strength")
 
   if (verbose == TRUE) {
     start <- printDurationAndMessage("Progress: getting drug records for ingredient", start)
@@ -186,7 +189,8 @@ executeChecksSingleIngredient <- function(cdm,
     ingredient = ingredient,
     includedConceptsTable = "ingredient_concepts",
     tablePrefix = tablePrefix
-  )
+  ) %>%
+    dplyr::compute(name = "ingredient_drug_records")
 
   if (verbose == TRUE) {
     start <- printDurationAndMessage("Progress: get concepts used", start)
@@ -214,15 +218,15 @@ executeChecksSingleIngredient <- function(cdm,
       start <- printDurationAndMessage("Progress: sampling drug records", start)
     }
     if (dplyr::pull(dplyr::tally(dplyr::filter(cdm[["ingredient_drug_records"]], .data$drug_exposure_start_date > .env$earliestStartDate)), .data$n) < sampleSize) {
-      message("population after earliestStartDate smaller than sample")
+      message("population after earliestStartDate smaller than sample, sampling ignored")
       cdm[["ingredient_drug_records"]] <- cdm[["ingredient_drug_records"]] %>%
         dplyr::filter(.data$drug_exposure_start_date > .env$earliestStartDate) %>%
-        CDMConnector::computeQuery()
+        dplyr::compute()
     } else {
       cdm[["ingredient_drug_records"]] <- cdm[["ingredient_drug_records"]] %>%
         dplyr::filter(.data$drug_exposure_start_date > .env$earliestStartDate) %>%
         dplyr::slice_sample(n = sampleSize) %>%
-        CDMConnector::computeQuery()
+        dplyr::compute()
     }
   }
 
@@ -284,18 +288,13 @@ executeChecksSingleIngredient <- function(cdm,
     }
   }
 
-  drugSourceConceptsOverall <- drugSourceConceptsByConcept <- NULL
+  drugSourceConcepts <- NULL
   if ("sourceConcept" %in% checks) {
     if (verbose == TRUE) {
       start <- printDurationAndMessage("Progress: check drugSourceConcepts", start)
     }
 
-    drugSourceConceptsOverall <- getDrugSourceConcepts(cdm, "ingredient_drug_records",
-                                                       byConcept = FALSE, sampleSize = sampleSize) %>% dplyr::collect()
-    if (isTRUE(byConcept)) {
-    drugSourceConceptsByConcept <- getDrugSourceConcepts(cdm, "ingredient_drug_records",
-                                                         byConcept = byConcept, sampleSize = sampleSize) %>% dplyr::collect()
-    }
+    drugSourceConcepts <- getDrugSourceConcepts(cdm, "ingredient_drug_records", sampleSize = sampleSize) %>% dplyr::collect()
   }
 
   drugDaysSupply <- drugDaysSupplyByConcept <- NULL
@@ -322,18 +321,12 @@ executeChecksSingleIngredient <- function(cdm,
     }
   }
 
-  drugDose <- drugDoseByConcept <- NULL
+  drugDose <- NULL
   if ("dose" %in% checks) {
     if (verbose == TRUE) {
       start <- printDurationAndMessage("Progress: check drugDose", start)
     }
-
-    drugDose <- checkDrugDose(cdm, "ingredient_drug_records",
-                              "drug_strength", byConcept = FALSE, sampleSize = sampleSize) %>% dplyr::collect()
-    if (isTRUE(byConcept)) {
-    drugDoseByConcept <- checkDrugDose(cdm, "ingredient_drug_records",
-                                       "drug_strength", byConcept = byConcept, sampleSize = sampleSize) %>% dplyr::collect()
-    }
+    drugDose <- checkDrugDose(cdm, ingredientConceptId = ingredient, minCellCount = minCellCount) %>% dplyr::collect()
   }
 
   drugSig <- drugSigByConcept <- NULL
@@ -360,16 +353,6 @@ executeChecksSingleIngredient <- function(cdm,
     }
   }
 
-  drugDaysSupplyHistogram <- drugQuantityHistogram <- drugDurationHistogram <- NULL
-  if ("histogram" %in% checks) {
-    if (verbose == TRUE) {
-      start <- printDurationAndMessage("Progress: create histograms", start)
-    }
-    drugDaysSupplyHistogram <- createHistogram(cdm, "ingredient_drug_records", type = "days_supply")
-    drugQuantityHistogram <- createHistogram(cdm, "ingredient_drug_records", type = "quantity")
-    drugDurationHistogram <- createHistogram(cdm, "ingredient_drug_records", type = "duration")
-  }
-
   if (!is.null(tablePrefix)) {
     if (verbose == TRUE) {
       start <- printDurationAndMessage("Cleaning up tables", start)
@@ -377,7 +360,7 @@ executeChecksSingleIngredient <- function(cdm,
     tables <- CDMConnector::listTables(attr(cdm, "dbcon"),
                                        schema = attr(cdm, "write_schema"))
     tables <- tables[grepl(tablePrefix, tables)]
-    CDMConnector::dropTable(cdm, tables, verbose)
+    CDMConnector::dropTable(cdm, tables)
   }
 
   if (verbose == TRUE) {
@@ -393,21 +376,16 @@ executeChecksSingleIngredient <- function(cdm,
                  "drugTypesByConcept" = drugTypesByConcept,
                  "drugRoutesOverall" = drugRoutesOverall,
                  "drugRoutesByConcept" = drugRoutesByConcept,
-                 "drugSourceConceptsOverall" = drugSourceConceptsOverall,
-                 "drugSourceConceptsByConcept" = drugSourceConceptsByConcept,
+                 "drugSourceConceptsOverall" = drugSourceConcepts,
                  "drugDaysSupply" = drugDaysSupply,
                  "drugDaysSupplyByConcept" = drugDaysSupplyByConcept,
                  "drugVerbatimEndDate" = drugVerbatimEndDate,
                  "drugVerbatimEndDateByConcept" = drugVerbatimEndDateByConcept,
                  "drugDose" = drugDose,
-                 "drugDoseByConcept" = drugDoseByConcept,
                  "drugSig" = drugSig,
                  "drugSigByConcept" = drugSigByConcept,
                  "drugQuantity" = drugQuantity,
-                 "drugQuantityByConcept" = drugQuantityByConcept,
-                 "drugDaysSupplyHistogram" = drugDaysSupplyHistogram,
-                 "drugQuantityHistogram" = drugQuantityHistogram,
-                 "drugDurationHistogram" = drugDurationHistogram)
+                 "drugQuantityByConcept" = drugQuantityByConcept)
 
   # add summary table
   if ("diagnosticsSummary" %in% checks) {
@@ -420,16 +398,13 @@ executeChecksSingleIngredient <- function(cdm,
   return(Filter(Negate(is.null), sapply(names(result),
                                         FUN = function(tableName) {
                                           table <- result[[tableName]]
-                                          if (!is.null(table)) {
-                                            if (grepl("Histogram", tableName)) {
-                                              table %>% hist2DataFrame()
-                                            } else {
-                                              obscureCounts(table = table,
-                                                            tableName = tableName,
-                                                            minCellCount = minCellCount,
-                                                            substitute = NA)
-                                            }
+                                          if (!is.null(table) && !grepl("Dose", tableName)) {
+                                            table <- obscureCounts(table = table,
+                                                                   tableName = tableName,
+                                                                   minCellCount = minCellCount,
+                                                                   substitute = NA)
                                           }
+                                          return(table)
                                         },
                                         simplify = FALSE,
                                         USE.NAMES = TRUE)))

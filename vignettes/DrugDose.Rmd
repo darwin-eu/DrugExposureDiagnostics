@@ -1,0 +1,63 @@
+---
+title: "Drug Dose"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{DrugDose}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+options(rmarkdown.html_vignette.check_title = FALSE)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Run the Drug Dose check 
+```{r setup}
+library(DrugExposureDiagnostics)
+library(dplyr)
+library(DT)
+
+# acetaminophen concept id is 1125315
+acetaminophen <- 1125315
+cdm <- mockDrugExposure()
+acetaminophen_checks <- executeChecks(cdm = cdm, 
+                                      ingredients = acetaminophen, 
+                                      checks = "dose")
+```
+
+## Drug dose
+The drug dose check is only output "overall". Yet it contains the strata unit, unit and route, and unit and route and pattern_id. The pattern refers to rows in the drug_strength table. The drug strength table has around 120 different patterns. Yet only around 40 of those make sense clinically. The dose is estimated for pre-specified drug strength patterns. To know the level of detail, there is a variable called pattern name (more explanation below for this variable).\
+The output of the drug dose check is a "summarised result". More information can be found here: https://darwin-eu-dev.github.io/omopgenerics/articles/a04_summarised_result.html 
+The result is a "summarised result" because we use the function `dailyDoseCoverage()` from the DrugUtilisation R Package. https://darwin-eu-dev.github.io/DrugUtilisation/reference/dailyDoseCoverage.html
+
+```{r}
+datatable(acetaminophen_checks$drugDose,
+  rownames = FALSE
+)
+```
+
+| Column  | Description |
+:------------- | :------------- |
+result_id | Can be used to attach settings. |
+cdm_name | The name of the database. |
+group_name | Here it is the ingredient_name. |
+group_level | Here it is the ingredient. |
+strata_name | Possible strata here are overall, unit, unit and route, unit and route and pattern_id. |
+strata_level | The strata_level gives the names of the strata_name items. |
+variable_name | The name of variable for which the estimates were output.|
+variable_level | Further stratification are possible and would be depicted here but are not applied for the dailyDoseCoverage function. |
+estimate_name | Says which estimate was output. |
+estimate_type | Gives the variable type of the estimate.|
+estimate_value | Shows the estimated value. |
+additional_name | Additional information could be stored here, but just says "overall". |
+additional_level | Additional information could be stored here, but just says "overall". |
+pattern_name | The pattern name contains the information of the level of detail as follows: "overall" is the overall dose estimation (beware that units may be mixed up, e.g. international units and milligrams), therefore the more sensible thing to look at is at "unit" level: if the pattern_name says "milligram", "milliliter", or any other unit alone, you are in the "unit" strata. This means that the estimated dose has the unit shown in pattern_name. Thus, if there are two different units for any ingredient, it means that there are drug concept with different units. The next more detailed level is "route and unit", this depicts as "oral milligram" for example. So you know that this strata contains all oral dose forms that have the unit milligram. Thus, the depicted daily dose also has the unit milligram. The final level of detail is "unit, route, drug_strength pattern". This shows as "milligram oral milligram_milligram" meaning the drug strength pattern is milligram (numerator) by milligram (denominator), there is also the possibility of milligram_missing_milligram for example if the denominator value is missing and it is a non-quantified drug. Another option are fixed amount drug strength pattern (if only amount is filled and numerator and denominator are missing). These patterns are mainly used for solid dose forms (pills, suppositories. etc). Drug strength pattern come from the DRUG_STRENGTH table and are pre-specified for each drug (mainly depending on their units and wether they are fixed amounts of concentration or time based drugs). More information on drug strength patterns can be found in the paper on how to estimate daily dose in OMOP CDM. https://doi.org/10.1002/pds.5809
+ingredient_concept_id | Concept ID of ingredient. |
+ingredient  | Name of drug ingredient. |
+

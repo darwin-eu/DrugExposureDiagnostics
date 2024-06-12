@@ -103,6 +103,25 @@ checkIsIngredient <- function(cdm, conceptId, messageStore) {
   }
 }
 
+#' Check ingredient is present in given table
+#'
+#' @param cdm CDMConnector reference object
+#' @param conceptId ingredient concept id to check
+#' @param tableName name of the table to check
+#' @param messageStore checkmate collection
+#'
+checkIngredientInTable <- function(cdm, conceptId, tableName, messageStore) {
+  ingredientTable <- cdm[[tableName]] %>%
+    dplyr::filter(.data$ingredient_concept_id == .env$conceptId)
+  ingredientTableCount <- ingredientTable %>%
+    dplyr::tally() %>%
+    dplyr::pull("n")
+  if (ingredientTableCount == 0) {
+    message <- glue::glue("- ingredient concept ({conceptId}) could not be found in {tableName} table")
+    messageStore$push(message)
+  }
+}
+
 #' Compute the difference in days between 2 variables in a database table.
 #'
 #' @param cdm CDMConnector reference object
@@ -141,89 +160,6 @@ printDurationAndMessage <- function(message, start) {
   return(currentTime)
 }
 
-#' Save an object of class histogram to a data.frame
-#'
-#' @param h a histogram
-#'
-#' @return a dataframe with the converted values of the histogram
-#'
-hist2DataFrame <- function(h)
-{
-  df <-  data.frame(ingredient_concept_id = h$ingredient_concept_id,
-                    ingredient = h$ingredient,
-                    breaks = h$breaks, counts = c(h$counts, 1),
-                    density = c(h$density, 1), mids = c(h$mids, 1),
-                    xname = rep(h$xname, length(h$breaks)),
-                    equidist = rep(T, length(h$breaks)))
-
-  return(df)
-}
-
-#' Load an object of class histogram from a data.frame
-#'
-#' @param df the dataframe
-#'
-#' @return an object of class histogram
-#'
-dataFrame2Hist <- function(df)
-{
-  df         <- df %>%
-    dplyr::relocate(c("ingredient_concept_id", "ingredient"),  .after = dplyr::last_col())
-  h          <- as.list(df)
-  h$counts   <- h$counts[-length(h$breaks)]
-  h$density  <- h$density[-length(h$breaks)]
-  h$mids     <- h$mids[-length(h$breaks)]
-  h$xname    <- h$xname[1]
-  h$equidist <- h$equidist[1]
- class(h)   <- "histogram"
-
-  return(h)
-}
-
-#' Get an eunomia CDM reference for given ingredient
-#'
-#' @param ingredientId The ingredient concept id
-#'
-#' @return A list of dplyr database table references pointing to CDM tables
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' library(CDMConnector)
-#' getEunomiaCdm(1125315)
-#' }
-getEunomiaCdm <- function(ingredientId = 1125315) {
-  if (Sys.getenv("EUNOMIA_DATA_FOLDER") == "") {
-    Sys.setenv("EUNOMIA_DATA_FOLDER" = tempdir())
-  }
-  if (!dir.exists(Sys.getenv("EUNOMIA_DATA_FOLDER"))) {
-    dir.create(Sys.getenv("EUNOMIA_DATA_FOLDER"))
-  }
-  if (!CDMConnector::eunomia_is_available()) {
-    invisible(utils::capture.output(CDMConnector::downloadEunomiaData(pathToData = Sys.getenv("EUNOMIA_DATA_FOLDER"))))
-  }
-  con <- DBI::dbConnect(duckdb::duckdb(), dbdir = CDMConnector::eunomia_dir())
-  drugConceptIds <- DBI::dbReadTable(con, "drug_exposure") %>%
-    utils::head(10) %>%
-    dplyr::select("drug_concept_id")
-  drugStrengthTable <- data.frame(
-    drug_concept_id = drugConceptIds,
-    ingredient_concept_id = rep(ingredientId, length(drugConceptIds)),
-    amount_value = as.numeric(1),
-    amount_unit_concept_id = as.numeric(1),
-    numerator_value = as.numeric(1),
-    numerator_unit_concept_id = as.numeric(1),
-    denominator_value = as.numeric(1),
-    denominator_unit_concept_id = as.numeric(1),
-    box_size = as.integer(NA),
-    valid_start_date = as.Date("1970-01-01"),
-    valid_end_date = as.Date("2099-12-31"),
-    invalid_reason = as.character(NA)
-  )
-  DBI::dbWriteTable(con, "drug_strength", drugStrengthTable, overwrite = TRUE)
-  return(CDMConnector::cdm_from_con(con, cdm_schema = "main", write_schema = "main"))
-}
-
 #' Store the given input in a remote database table. It will be stored either in a
 #' permanent table or a temporary table depending on tablePrefix.
 #'
@@ -238,17 +174,16 @@ getEunomiaCdm <- function(ingredientId = 1125315) {
 #' @param overwrite if the table should be overwritten (default TRUE).
 #'
 #' @return reference to the table
-#'
 computeDBQuery <- function(table, tablePrefix, tableName, cdm, overwrite = TRUE) {
   if (is.null(tablePrefix)) {
     table <- table %>%
-      CDMConnector::computeQuery()
+      dplyr::compute()
   } else {
     table <- table %>%
-      CDMConnector::computeQuery(name = paste0(tablePrefix, tableName),
-                                 temporary = FALSE,
-                                 schema = attr(cdm, "write_schema"),
-                                 overwrite = TRUE)
+      dplyr::compute(name = paste0(tablePrefix, tableName),
+                     temporary = FALSE,
+                     schema = attr(cdm, "write_schema"),
+                     overwrite = TRUE)
   }
   return(table)
 }

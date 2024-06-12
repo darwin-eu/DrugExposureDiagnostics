@@ -35,8 +35,8 @@ test_that("check days supply overall", {
 
   expect_equal(result$minimum_drug_exposure_days_supply, c(1,4,5,6))
   expect_equal(result$n_records, c(2,2,1,2))
-  expect_equal(ncol(result), 21)
-  expect_equal(result$n_people, c(2,2,1,2))
+  expect_equal(ncol(result), 20)
+  expect_equal(result$n_person, c(2,2,1,2))
 
   DBI::dbDisconnect(attr(testData, "dbcon"), shutdown = TRUE)
 })
@@ -60,8 +60,8 @@ test_that("check days supply by Concept", {
 
   expect_equal(result$minimum_drug_exposure_days_supply, c(6,1,7,4,5,3))
   expect_equal(result$n_records, c(1,1,1,2,1,1))
-  expect_equal(ncol(result), 23)
-  expect_equal(result$n_people, c(1,1,1,2,1,1))
+  expect_equal(ncol(result), 22)
+  expect_equal(result$n_person, c(1,1,1,2,1,1))
 
   DBI::dbDisconnect(attr(testData, "dbcon"), shutdown = TRUE)
 })

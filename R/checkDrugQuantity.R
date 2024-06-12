@@ -18,7 +18,7 @@
 #' Summarise the quantity column of the drug_exposure table
 #'
 #' @param cdm CDMConnector reference object
-#' @param drugRecordsTable modified drug exposure table
+#' @param drugRecordsTable a modified version of the drug exposure table, default "ingredient_drug_records"
 #' @param byConcept whether to get result by drug concept
 #' @param sampleSize the sample size given in execute checks
 #'
@@ -51,7 +51,8 @@ summariseQuantity <- function(cdm,
       "drug",
       "ingredient_concept_id",
       "ingredient",
-      "quantity"
+      "quantity",
+      "person_id"
     ) %>%
     dplyr::collect()
 
@@ -61,6 +62,7 @@ summariseQuantity <- function(cdm,
     dplyr::summarise(
       n_records = as.integer(dplyr::n()),
       n_sample = .env$sampleSize,
+      n_person = dplyr::n_distinct(.data$person_id),
       minimum_drug_exposure_quantity =  min(.data$quantity, na.rm = T),
       q05_drug_exposure_quantity = stats::quantile(
         .data$quantity,

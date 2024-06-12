@@ -1,4 +1,4 @@
-test_that("check for drugRoutes|drugSig|drugVerbatimEndDate|drugQuantity|drugSourceConcepts|drugTypes|drugExposureDuration|missingValues|drugDose|drugDaysSupply", {
+test_that("check for drugRoutes|drugSig|drugVerbatimEndDate|drugQuantity|drugSourceConcepts|drugTypes|drugExposureDuration|missingValues|drugDaysSupply", {
   table <- tibble::tibble(
     "drug_concept_id" = c("1", "2", "3", "4", "5", "6"),
     "ingredient_concept_id" = c("1", "2", "3", "4", "5", "6"),
@@ -12,7 +12,7 @@ test_that("check for drugRoutes|drugSig|drugVerbatimEndDate|drugQuantity|drugSou
   )
 
   types <- c("drugRoutes", "drugSig", "drugVerbatimEndDate", "drugQuantity", "drugSourceConcepts", "drugTypes", "drugExposureDuration",
-             "missingValues", "drugDose", "drugDaysSupply")
+             "missingValues","drugDaysSupply")
   lapply(types, FUN = function(type) {
     result <- obscureCounts(table, type, minCellCount = 10, substitute = NA)
 

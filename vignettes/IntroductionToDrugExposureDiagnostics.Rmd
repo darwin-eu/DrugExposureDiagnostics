@@ -20,15 +20,19 @@ library(CDMConnector)
 library(dplyr)
 library(DT)
 ```
-First, connect to the database.
+First, connect to the database. 
+Examples of how to connect your database using CDMConnector can be found here: 
+https://darwin-eu.github.io/CDMConnector/articles/a04_DBI_connection_examples.html \
+Here we use the internal mock database. 
 
 ```{r}
-cdm <- getEunomiaCdm()
+cdm <- mockDrugExposure()
 ```
 
-### Check for single ingredient. 
+### Drug(s) of interest
 
-In the DrugExposureDiagnostics package, all the diagnostics are conducted on ingredient level. We will use "acetaminophen" as an example. Here is a brief look at this ingredient. 
+In the DrugExposureDiagnostics package, all the diagnostics are conducted on ingredient level, and if requested, additionally on drug level. We will use the ingredient "acetaminophen" as an example.\
+Here is a brief look at this ingredient. 
 
 +------------------+---------------+
 | Property         | Value         |
@@ -54,14 +58,17 @@ In the DrugExposureDiagnostics package, all the diagnostics are conducted on ing
 | Valid end        | 31-Dec-2099   |
 +------------------+---------------+
 
-We can run all available checks at the same time using the ´executeChecks()´ function. This will return a list which contains the results of each check.
+### Running the diagnostics
+
+We can run all available checks at the same time using the ´executeChecks()´ function. This will return a list which contains the results of each check.\
+Multiple ingredients can be added in the vector of ´ingredients´
 
 ```{r executeChecks}
 all_checks <- executeChecks(cdm,
                             ingredients = c(1125315),
                             subsetToConceptId = NULL,
-                            checks = c("missing", "exposureDuration", "type", "route", "sourceConcept", "daysSupply", "verbatimEndDate", 
-                                       "dose", "sig", "quantity", "histogram", "diagnosticsSummary"), 
+                            checks = c("missing", "exposureDuration", "type", "route", "sourceConcept", "daysSupply", 
+                                       "verbatimEndDate", "dose", "sig", "quantity", "diagnosticsSummary"), 
                             minCellCount = 5,
                             sample = 10000,
                             tablePrefix = NULL,
@@ -70,7 +77,7 @@ all_checks <- executeChecks(cdm,
                             byConcept = TRUE)
 ```
 
-The`cdm` is the database reference of the OMOP CDM using the `CDMConnector` package.    
+The `cdm` is the database reference of the OMOP CDM using the `CDMConnector` package.    
 The `ingredients` is a list of ingredients of interests, by default it is 1125315 for acetaminophen. 
 The `subsetToConceptId` vector of concept IDs of the ingredients to filter. If a concept ID is positive it will be included, 
 a negative one will be excluded. If NULL, all concept IDs for an ingredient will be considered.
@@ -81,15 +88,34 @@ The `minCellCount` is minimum number of events to report, numbers lower than thi
 The `tablePrefix` is an optional value for database tables that will be created during executeChecks.
 `earliestStartDate` is the earliest data from which drug records will be included.
 `verbose` is a parameter that enables the printing of messages to the console.
-`byConcept` is a boolean that determines if only overall results should be returned or also by drug concept.
+`byConcept` is a boolean that determines if only overall results should be returned or also by drug concept.\
 
-We can then check what results available from ´executeChecks()´ by
+
+The check "missing" outputs the `missingValuesOverall` if `byConcept = FALSE` and additionally `missingValuesbyConcept` if `byConcept = TRUE` \
+The check "exposureDuration" outputs the `drugExposureDurationOverall` if `byConcept = FALSE` and additionally `drugExposureDurationbyConcept` if `byConcept = TRUE` \
+The check "type"  outputs the `drugTypesOverall` if `byConcept = FALSE` and additionally `drugTypesbyConcept` if `byConcept = TRUE` \
+The check "route"  outputs the `drugRoutesOverall` if `byConcept = FALSE` and additionally `drugRoutesbyConcept` if `byConcept = TRUE` \
+The check "sourceConcept"  outputs the `sourceConceptsOverall` (which is actually the drug concept level. It disregards the `byConcept` argument because only the drug concept level makes sense here) \
+The check "daysSupply"  outputs the `drugDaysSupplyOverall` if `byConcept = FALSE` and additionally `drugDaysSupplybyConcept` if `byConcept = TRUE` \
+The check "verbatimEndDate"  outputs the `drugVerbatimEndDate` if `byConcept = FALSE` and additionally `drugVerbatimEndDatebyConcept` if `byConcept = TRUE` \
+The check "dose"  outputs the `drugDoseOverall` (output only on ingredient level. It disregards the `byConcept` argument because only the drug concept level makes sense here) \
+The check "sig"  outputs the `drugSig` if `byConcept = FALSE` and additionally `drugSigbyConcept` if `byConcept = TRUE` \
+The check "quantity"  outputs the `drugQuantity` if `byConcept = FALSE` and additionally `drugQuantitybyConcept` if `byConcept = TRUE` \
+The check "diagnosticsSummary" outputs a summary called `diagnosticsSummary` \
+
+Here, we see the files created: 
 ```{r}
 names(all_checks)
 ```
 
-Let's take a look at the results. `conceptSummary` contains information on the concept ids that are used in the database for a given ingredient. So in the case of acetaminophen, the following drugs contain the acetaminophen as an ingredient. 
+### Assessing the drug concepts (of interest)
 
+The first item shown, the `conceptSummary` is not the output from a check but always output. This table is used within the function as an input for all the requested checks.  
+It contains information from the CONCEPT table and DRUG_STRENGTH table. \
+The `conceptSummary` has several use: \
+It can be quickly seen whether a certain drug is mapped on ingredient level. Thereby, the drug_concept_id and ingredient_concept_id are identical.\
+Furthermore, the `conceptSummary` can be used to make decisions about further refine the concept list. For example, though the argument `subsetToConceptId` in the `executeChecks()` function, the selected concepts can be requested or eliminated.\
+The `conceptSummary` in the case of acetaminophen with  `subsetToConceptId = NULL`, the following drug concepts are part of the diagnostics investigation. 
 
 ```{r,  message=FALSE, warning=FALSE }  
 datatable(all_checks$conceptSummary,
@@ -97,11 +123,43 @@ datatable(all_checks$conceptSummary,
 )
 ```
 
+| Column  | Description |
+:------------- | :------------- |
+drug_concept_id  | ID of the drug concept. |
+drug  | Name of the drug concept. |
+ingredient_concept_id | Concept ID of ingredient. |
+ingredient  | Name of drug ingredient for which the checks have been performed. |
+n_records | Number of records for drug concept. |
+domain_id  | From the CONCEPT table. A foreign key to the domain table the drug concept belongs to. |
+vocabulary_id | From the CONCEPT table. A foreign key to the vocabulary table indicating from which source the drug concept has been adapted. |
+concept_class_id  | From the CONCEPT table. The concept class of the drug concept (e.g.‘Ingredient’ or ‘Clinical Drug’). |
+standard_concept  | From the CONCEPT table. A flag indicating whether the drug concept is standard ('S'), a classification ('C'), or a non-standard Source (NULL). |
+concept_code  | From the CONCEPT table. The concept code represents the identifier of the Concept in the source vocabulary.  |
+valid_start_date  | From the CONCEPT table. The date when the drug concept was first recorded |
+valid_end_date  | From the CONCEPT table. The date when the drug concept became invalid because it was deleted or superseded (updated) by a new concept. |
+invalid_reason  | From the CONCEPT table. Reason the Concept was invalidated. Possible values are D (deleted), U (replaced with an update) or NULL when valid_end_date has the default value. |
+amount_value  | From DRUG_STRENGTH table. The numeric value or the amount of active ingredient contained within the drug product. |
+amount_unit_concept_id  | From DRUG_STRENGTH table. The Concept representing the Unit of measure for the amount of active ingredient contained within the drug product. |
+numerator_value  | From DRUG_STRENGTH table. The concentration of the active ingredient contained within the drug product. | 
+numerator_unit_concept_id | From DRUG_STRENGTH table. The Concept representing the Unit of measure for the concentration of active ingredient.|
+numerator_unit  | From the CONCEPT table. The concept name associated with the numerator_unit_concept_id. |
+denominator_value | From DRUG_STRENGTH table. The amount of total liquid (or other divisible product, such as ointment, gel, spray, etc.).  |
+denominator_unit_concept_id  | From DRUG_STRENGTH table. The Concept representing the denominator unit for the concentration of active ingredient. |
+denominator_unit  |  From the CONCEPT table. The concept name associated with the denominator_unit_concept_id |
+box_size | The number of units of Clinical Branded Drug or Quantified Clinical or Branded Drug contained in a box as dispensed to the patient. |
+amount_unit  | From DRUG_STRENGTH table. |
+dose_form  | From CONCEPT_RELATIONSHIP table. The RxNorm dose form associated with the drug concept. |
+result_obscured | TRUE if count has been suppressed due to being below the minimum cell count, otherwise FALSE. |
 
-After running the checks, we can write the CSV files into a zip file to disk using the `writeResultToDisk()` function. 
+### Saving the diagnostic output
+
+After running the checks, we can write the created outputs (CSV files) into a zip file to disk using the `writeResultToDisk()` function. 
+The zip created from using the `writeResultToDisk()` function can be input (unzipped) into the correspoding Shiny Application. \
+Please replace the "your_database" with the name of your database. 
+Create your designated "output_folder" at your desired location and put the path if not the working directory.
 ```{r eval=FALSE}
 writeResultToDisk(all_checks,
-                  databaseId = "your_database_id", 
+                  databaseId = "your_database", 
                   outputFolder = "output_folder")
 ```
 

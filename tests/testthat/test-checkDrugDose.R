@@ -1,83 +1,90 @@
 getInputDb <- function() {
 
-  ingredient_drug_records <- tibble::tibble(
-    drug_exposure_id = c("1", "2", "3", "4", "5", "6", "7"),
-    person_id = c("1", "2", "3", "4", "5", "6", "7"),
-    drug_concept_id = c("40162522", "40162522", "1127078", "1127078", "1127078", "1127433", "1127433"),
-    drug = c("x", "xxxx", "xx", "xx", "xxx", "x", "xx"),
+  drug_exposure <- tibble::tibble(
+    drug_exposure_id = c(1, 2, 3, 4, 5, 6, 7),
+    person_id = c(1, 2, 3, 4, 5, 6, 7),
+    drug_concept_id = c(40162522, 40162522, 1127078, 1127078, 1127078, 1127433, 1127433),
     ingredient_concept_id = rep(1125315, 7),
     ingredient = rep("acetaminophen", 7),
     drug_exposure_start_date = as.Date(c("2016-01-01","2017-01-01",NA,"2019-01-01","2020-01-01","2021-01-01","2022-01-01")),
     drug_exposure_end_date = as.Date(c("2016-01-02","2017-01-03",NA,"2019-01-05","2020-01-06","2021-01-07","2022-01-08")),
+    verbatim_end_date = as.Date(c("2016-01-02","2017-01-03",NA,"2019-01-05","2020-01-06","2021-01-07","2022-01-08")),
     days_supply = c(1,3,NA,4,5,6,7),
-    quantity = c(10,20,1,NA,2,3,NA)
+    quantity = c(10,20,1,NA,2,3,NA),
+    drug_type_concept_id = rep(0, 7),
+    stop_reason = rep(0, 7),
+    refills = rep(0, 7),
+    sig = rep("0", 7),
+    route_concept_id = rep(0, 7),
+    lot_number = rep(0, 7),
+    provider_id = rep(0, 7),
+    visit_occurrence_id = rep(0, 7),
+    drug_source_value = rep(0, 7),
+    drug_source_concept_id = rep(0, 7),
+    route_source_value = rep(0, 7),
+    dose_unit_source_value = rep(0, 7)
   )
 
-  mockDrugExposure(ingredient_drug_records = ingredient_drug_records)
+  drug_strength <- tibble::tibble(
+    drug_concept_id = c(40162522, 1127078, 1127433),
+    ingredient_concept_id =  rep(1125315, 3),
+    amount_value = c(325,160,325),
+    denominator_value = rep(as.numeric(NA), 3),
+    numerator_value = rep(as.numeric(NA), 3),
+    numerator_unit_concept_id = rep(as.numeric(NA), 3),
+    denominator_unit_concept_id = rep(as.numeric(NA), 3),
+    amount_unit_concept_id = rep(8576,3),
+    valid_start_date = as.Date(rep("1970-01-01",3)),
+    valid_end_date = as.Date(rep("2099-12-31",3)),
+    invalid_reason = as.character(rep("none",3))
+  )
+
+  concept_relationship <-  data.frame(
+      concept_id_1 = c(40162522,1127078, 1127433),
+      concept_id_2 = rep(19082573,3),
+      relationship_id = c("RxNorm has dose form","RxNorm has dose form","RxNorm has dose form"),
+      valid_start_date = as.Date(rep("1970-01-01",3)),
+      valid_end_date = as.Date(rep("2099-12-31",3))
+  )
+
+  mockDrugExposure(drug_exposure = drug_exposure,
+                   drug_strength = drug_strength ,
+                   concept_relationship = concept_relationship,
+                   patient_size = 5)
 
 }
 
 test_that("checkDrugDose overall", {
   testData <- getInputDb()
-  result <- checkDrugDose(testData, "ingredient_drug_records", "drug_strength", byConcept = FALSE,
-                          sampleSize = 100)
+  ingredient = 1125315
+  minCellCount = 0
 
-  expect_equal(nrow(result), 1)
-  expect_equal(ncol(result), 34)
+  result <- checkDrugDose(testData, ingredientConceptId = ingredient, minCellCount = minCellCount)
+
+  expect_equal(nrow(result), 48)
+  expect_equal(ncol(result), 16)
   expect_equal(colnames(result), c(
-    "ingredient_concept_id", "ingredient",
-    "n_records","n_sample", "missing_days_supply_or_dates",
-    "proportion_of_records_missing_days_supply_or_dates", "missing_or_null_quantity",
-    "proportion_missing_or_null_quantity", "missing_denominator_unit_concept_id",
-    "proportion_of_records_missing_denominator_unit_concept_id", "missing_or_null_amount_value",
-    "proportion_of_records_missing_or_null_amount_value", "q05_quantity",
-    "q10_quantity", "q15_quantity", "q20_quantity", "q25_quantity",
-    "median_quantity", "q75_quantity", "q80_quantity", "q85_quantity",
-    "q90_quantity", "q95_quantity", "q05_amount_value", "q10_amount_value",
-    "q15_amount_value", "q20_amount_value", "q25_amount_value", "median_amount_value",
-    "q75_amount_value", "q80_amount_value", "q85_amount_value", "q90_amount_value",
-    "q95_amount_value"
+    "result_id","cdm_name","group_name","group_level","strata_name","strata_level",
+    "variable_name","variable_level","estimate_name","estimate_type","estimate_value","additional_name",
+    "additional_level","pattern_name","ingredient","ingredient_concept_id"
   ))
-  #check the values
-  expect_true(result$ingredient_concept_id==1125315)
-  expect_true(result$ingredient=="acetaminophen")
-  expect_true(result$missing_days_supply_or_dates == 1)
-  expect_true(result$proportion_of_records_missing_days_supply_or_dates==
-                (result$missing_days_supply_or_dates/result$n_records))
-  expect_true(result$missing_or_null_quantity==2)
+  expect_true(result$group_level[1] == "acetaminophen")
+  expect_equal(result %>%
+                 dplyr::filter(.data$estimate_name == "count" & .data$strata_level == "overall") %>%
+                 dplyr::pull(estimate_value), "7")
+  expect_equal(round(as.numeric(result %>%
+                   dplyr::filter(.data$estimate_name == "median" & .data$strata_level == "overall") %>%
+                   dplyr::pull(estimate_value),0)), 882)
+  expect_true(!is.na(result %>%
+                  dplyr::filter(.data$estimate_name == "min" & .data$strata_level == "overall") %>%
+                  dplyr::pull(estimate_value)))
+  expect_equal(result %>%
+                 dplyr::filter(.data$strata_level %in% c("milligram")) %>%
+                 dplyr::pull(strata_level),
+               result %>%
+                 dplyr::filter(.data$strata_level %in% c("milligram")) %>%
+                 dplyr::pull(pattern_name))
 
   DBI::dbDisconnect(attr(testData, "dbcon"), shutdown = TRUE)
-})
 
-test_that("checkDrugDose by Concept", {
-  testData <- getInputDb()
-  result <- checkDrugDose(testData, "ingredient_drug_records","drug_strength" , byConcept = TRUE,
-                          sampleSize = 100)
-
-  expect_equal(nrow(result), 6)
-  expect_equal(ncol(result), 36)
-  expect_equal(colnames(result), c(
-    "drug_concept_id","drug", "ingredient_concept_id", "ingredient",
-    "n_records","n_sample", "missing_days_supply_or_dates",
-    "proportion_of_records_missing_days_supply_or_dates", "missing_or_null_quantity",
-    "proportion_missing_or_null_quantity", "missing_denominator_unit_concept_id",
-    "proportion_of_records_missing_denominator_unit_concept_id", "missing_or_null_amount_value",
-    "proportion_of_records_missing_or_null_amount_value", "q05_quantity",
-    "q10_quantity", "q15_quantity", "q20_quantity", "q25_quantity",
-    "median_quantity", "q75_quantity", "q80_quantity", "q85_quantity",
-    "q90_quantity", "q95_quantity", "q05_amount_value", "q10_amount_value",
-    "q15_amount_value", "q20_amount_value", "q25_amount_value", "median_amount_value",
-    "q75_amount_value", "q80_amount_value", "q85_amount_value", "q90_amount_value",
-    "q95_amount_value"
-  ))
-  #check the values
-  expect_true(result$drug_concept_id[1]==	1127078)
-  expect_true(result$ingredient_concept_id[1]==	1125315)
-  expect_true(result$ingredient[1]=="acetaminophen")
-  expect_true(result$missing_days_supply_or_dates[1]== 1)
-  expect_true(result$proportion_of_records_missing_days_supply_or_dates[1]==
-                (result$missing_days_supply_or_dates[1]/result$n_records[1]))
-  expect_true(result$n_records[1]==2)
-
-  DBI::dbDisconnect(attr(testData, "dbcon"), shutdown = TRUE)
 })
