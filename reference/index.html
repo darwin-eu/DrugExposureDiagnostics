@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">DrugExposureDiagnostics</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,8 +24,18 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/DaysSupply.html">Days Supply</a>
+    <a class="dropdown-item" href="../articles/DiagnosticsSummary.html">Diagnostics Summary</a>
+    <a class="dropdown-item" href="../articles/DrugDose.html">Drug Dose</a>
+    <a class="dropdown-item" href="../articles/DrugDuration.html">DrugDuration</a>
+    <a class="dropdown-item" href="../articles/DrugSig.html">Drug Sig</a>
+    <a class="dropdown-item" href="../articles/DrugSourceConcepts.html">Drug Source Concepts</a>
+    <a class="dropdown-item" href="../articles/DrugTypes.html">Drug Types</a>
     <a class="dropdown-item" href="../articles/IntroductionToDrugExposureDiagnostics.html">Introduction To DrugExposureDiagnostics</a>
-    <a class="dropdown-item" href="../articles/SummaryOfChecks.html">Summary Of Checks</a>
+    <a class="dropdown-item" href="../articles/Missingness.html">Missingness</a>
+    <a class="dropdown-item" href="../articles/Quantity.html">Quantity</a>
+    <a class="dropdown-item" href="../articles/Routes.html">Routes</a>
+    <a class="dropdown-item" href="../articles/VerbatimEndDate.html">Verbatim End Date</a>
   </div>
 </li>
 <li class="nav-item">
@@ -83,6 +93,11 @@
         <dd>Check the drug sig field; this is the verbatim instruction for the drug as written by the provider.</dd>
       </dl><dl><dt>
           
+          <code><a href="checkIngredientInTable.html">checkIngredientInTable()</a></code> 
+        </dt>
+        <dd>Check ingredient is present in given table</dd>
+      </dl><dl><dt>
+          
           <code><a href="checkIsIngredient.html">checkIsIngredient()</a></code> 
         </dt>
         <dd>Check is an ingredient</dd>
@@ -111,16 +126,6 @@
           <code><a href="computeDBQuery.html">computeDBQuery()</a></code> 
         </dt>
         <dd>Store the given input in a remote database table. It will be stored either in a permanent table or a temporary table depending on tablePrefix.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="createHistogram.html">createHistogram()</a></code> 
-        </dt>
-        <dd>create a histogram for one of days_supply, duration, quantity</dd>
-      </dl><dl><dt>
-          
-          <code><a href="dataFrame2Hist.html">dataFrame2Hist()</a></code> 
-        </dt>
-        <dd>Load an object of class histogram from a data.frame</dd>
       </dl><dl><dt>
           
           <code><a href="executeChecks.html">executeChecks()</a></code> 
@@ -168,16 +173,6 @@
         <dd>Compute the difference in days between 2 variables in a database table.</dd>
       </dl><dl><dt>
           
-          <code><a href="getEunomiaCdm.html">getEunomiaCdm()</a></code> 
-        </dt>
-        <dd>Get an eunomia CDM reference for given ingredient</dd>
-      </dl><dl><dt>
-          
-          <code><a href="hist2DataFrame.html">hist2DataFrame()</a></code> 
-        </dt>
-        <dd>Save an object of class histogram to a data.frame</dd>
-      </dl><dl><dt>
-          
           <code><a href="ingredientDescendantsInDb.html">ingredientDescendantsInDb()</a></code> 
         </dt>
         <dd>Get the descendants for the given ingredients</dd>
@@ -221,7 +216,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Ger Inberg, Edward Burn.</p>
+  <p>Developed by Ger Inberg, Edward Burn, Theresa Burkard.</p>
 </div>
 
 <div class="pkgdown-footer-right">

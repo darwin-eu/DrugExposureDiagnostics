@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">DrugExposureDiagnostics</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,8 +41,18 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/DaysSupply.html">Days Supply</a>
+    <a class="dropdown-item" href="../articles/DiagnosticsSummary.html">Diagnostics Summary</a>
+    <a class="dropdown-item" href="../articles/DrugDose.html">Drug Dose</a>
+    <a class="dropdown-item" href="../articles/DrugDuration.html">DrugDuration</a>
+    <a class="dropdown-item" href="../articles/DrugSig.html">Drug Sig</a>
+    <a class="dropdown-item" href="../articles/DrugSourceConcepts.html">Drug Source Concepts</a>
+    <a class="dropdown-item" href="../articles/DrugTypes.html">Drug Types</a>
     <a class="dropdown-item" href="../articles/IntroductionToDrugExposureDiagnostics.html">Introduction To DrugExposureDiagnostics</a>
-    <a class="dropdown-item" href="../articles/SummaryOfChecks.html">Summary Of Checks</a>
+    <a class="dropdown-item" href="../articles/Missingness.html">Missingness</a>
+    <a class="dropdown-item" href="../articles/Quantity.html">Quantity</a>
+    <a class="dropdown-item" href="../articles/Routes.html">Routes</a>
+    <a class="dropdown-item" href="../articles/VerbatimEndDate.html">Verbatim End Date</a>
   </div>
 </li>
 <li class="nav-item">
@@ -90,16 +100,18 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://darwin-eu.github.io/CDMConnector/" class="external-link">CDMConnector</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rstudio/DT" class="external-link">DT</a></span><span class="op">)</span></span></code></pre></div>
-<p>First, connect to the database.</p>
+<p>First, connect to the database. Examples of how to connect your
+database using CDMConnector can be found here: <a href="https://darwin-eu.github.io/CDMConnector/articles/a04_DBI_connection_examples.html" class="external-link uri">https://darwin-eu.github.io/CDMConnector/articles/a04_DBI_connection_examples.html</a><br>
+Here we use the internal mock database.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getEunomiaCdm.html">getEunomiaCdm</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Creating CDM database /tmp/RtmpymFm7Y/GiBleed_5.3.zip</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mockDrugExposure.html">mockDrugExposure</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
-<h3 id="check-for-single-ingredient-">Check for single ingredient.<a class="anchor" aria-label="anchor" href="#check-for-single-ingredient-"></a>
+<h3 id="drugs-of-interest">Drug(s) of interest<a class="anchor" aria-label="anchor" href="#drugs-of-interest"></a>
 </h3>
 <p>In the DrugExposureDiagnostics package, all the diagnostics are
-conducted on ingredient level. We will use “acetaminophen” as an
-example. Here is a brief look at this ingredient.</p>
+conducted on ingredient level, and if requested, additionally on drug
+level. We will use the ingredient “acetaminophen” as an example.<br>
+Here is a brief look at this ingredient.</p>
 <table style="width:49%;" class="table">
 <colgroup>
 <col width="26%">
@@ -152,25 +164,56 @@ example. Here is a brief look at this ingredient.</p>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section level3">
+<h3 id="running-the-diagnostics">Running the diagnostics<a class="anchor" aria-label="anchor" href="#running-the-diagnostics"></a>
+</h3>
 <p>We can run all available checks at the same time using the
 ´executeChecks()´ function. This will return a list which contains the
-results of each check.</p>
+results of each check.<br>
+Multiple ingredients can be added in the vector of ´ingredients´</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">all_checks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/executeChecks.html">executeChecks</a></span><span class="op">(</span><span class="va">cdm</span>,</span>
 <span>                            ingredients <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1125315</span><span class="op">)</span>,</span>
 <span>                            subsetToConceptId <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>                            checks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"missing"</span>, <span class="st">"exposureDuration"</span>, <span class="st">"type"</span>, <span class="st">"route"</span>, <span class="st">"sourceConcept"</span>, <span class="st">"daysSupply"</span>, <span class="st">"verbatimEndDate"</span>, </span>
-<span>                                       <span class="st">"dose"</span>, <span class="st">"sig"</span>, <span class="st">"quantity"</span>, <span class="st">"histogram"</span>, <span class="st">"diagnosticsSummary"</span><span class="op">)</span>, </span>
+<span>                            checks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"missing"</span>, <span class="st">"exposureDuration"</span>, <span class="st">"type"</span>, <span class="st">"route"</span>, <span class="st">"sourceConcept"</span>, <span class="st">"daysSupply"</span>, </span>
+<span>                                       <span class="st">"verbatimEndDate"</span>, <span class="st">"dose"</span>, <span class="st">"sig"</span>, <span class="st">"quantity"</span>, <span class="st">"diagnosticsSummary"</span><span class="op">)</span>, </span>
 <span>                            minCellCount <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>                            sample <span class="op">=</span> <span class="fl">10000</span>,</span>
 <span>                            tablePrefix <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>                            earliestStartDate <span class="op">=</span> <span class="st">"2010-01-01"</span>,</span>
 <span>                            verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                            byConcept <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; population after earliestStartDate smaller than sample</span></span>
-<span><span class="co">#&gt; Joining with `by = join_by(ingredient_concept_id)`</span></span>
-<span><span class="co">#&gt; Joining with `by = join_by(ingredient_concept_id)`</span></span></code></pre></div>
-<p>The<code>cdm</code> is the database reference of the OMOP CDM using
+<span><span class="co">#&gt; population after earliestStartDate smaller than sample, sampling ignored</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> The following estimates will be computed:</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> daily_dose: count_missing, percentage_missing, mean, sd, min, q05, q25,</span></span>
+<span><span class="co">#&gt;   median, q75, q95, max</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Table is collected to memory as not all requested estimates are supported on</span></span>
+<span><span class="co">#&gt;   the database side</span></span>
+<span><span class="co">#&gt; → Start summary of data, at 2024-06-12 12:36:15.640626</span></span>
+<span><span class="co">#&gt; Warning: There were 2 warnings in `dplyr::summarise()`.</span></span>
+<span><span class="co">#&gt; The first warning was:</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `dplyr::across(...)`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In group 1: `strata_id = 1`.</span></span>
+<span><span class="co">#&gt; Caused by warning in `base::min()`:</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> no non-missing arguments to min; returning Inf</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning.</span></span>
+<span><span class="co">#&gt; There were 2 warnings in `dplyr::summarise()`.</span></span>
+<span><span class="co">#&gt; The first warning was:</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `dplyr::across(...)`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In group 1: `strata_id = 1`.</span></span>
+<span><span class="co">#&gt; Caused by warning in `base::min()`:</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> no non-missing arguments to min; returning Inf</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning.</span></span>
+<span><span class="co">#&gt; There were 2 warnings in `dplyr::summarise()`.</span></span>
+<span><span class="co">#&gt; The first warning was:</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `dplyr::across(...)`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In group 1: `strata_id = 1`.</span></span>
+<span><span class="co">#&gt; Caused by warning in `base::min()`:</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> no non-missing arguments to min; returning Inf</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Summary finished, at 2024-06-12 12:36:16.145064</span></span></code></pre></div>
+<p>The <code>cdm</code> is the database reference of the OMOP CDM using
 the <code>CDMConnector</code> package.<br>
 The <code>ingredients</code> is a list of ingredients of interests, by
 default it is 1125315 for acetaminophen. The
@@ -189,9 +232,47 @@ that will be created during executeChecks.
 records will be included. <code>verbose</code> is a parameter that
 enables the printing of messages to the console. <code>byConcept</code>
 is a boolean that determines if only overall results should be returned
-or also by drug concept.</p>
-<p>We can then check what results available from ´executeChecks()´
-by</p>
+or also by drug concept.<br></p>
+<p>The check “missing” outputs the <code>missingValuesOverall</code> if
+<code>byConcept = FALSE</code> and additionally
+<code>missingValuesbyConcept</code> if
+<code>byConcept = TRUE</code><br>
+The check “exposureDuration” outputs the
+<code>drugExposureDurationOverall</code> if
+<code>byConcept = FALSE</code> and additionally
+<code>drugExposureDurationbyConcept</code> if
+<code>byConcept = TRUE</code><br>
+The check “type” outputs the <code>drugTypesOverall</code> if
+<code>byConcept = FALSE</code> and additionally
+<code>drugTypesbyConcept</code> if <code>byConcept = TRUE</code><br>
+The check “route” outputs the <code>drugRoutesOverall</code> if
+<code>byConcept = FALSE</code> and additionally
+<code>drugRoutesbyConcept</code> if <code>byConcept = TRUE</code><br>
+The check “sourceConcept” outputs the <code>sourceConceptsOverall</code>
+(which is actually the drug concept level. It disregards the
+<code>byConcept</code> argument because only the drug concept level
+makes sense here)<br>
+The check “daysSupply” outputs the <code>drugDaysSupplyOverall</code> if
+<code>byConcept = FALSE</code> and additionally
+<code>drugDaysSupplybyConcept</code> if
+<code>byConcept = TRUE</code><br>
+The check “verbatimEndDate” outputs the <code>drugVerbatimEndDate</code>
+if <code>byConcept = FALSE</code> and additionally
+<code>drugVerbatimEndDatebyConcept</code> if
+<code>byConcept = TRUE</code><br>
+The check “dose” outputs the <code>drugDoseOverall</code> (output only
+on ingredient level. It disregards the <code>byConcept</code> argument
+because only the drug concept level makes sense here)<br>
+The check “sig” outputs the <code>drugSig</code> if
+<code>byConcept = FALSE</code> and additionally
+<code>drugSigbyConcept</code> if <code>byConcept = TRUE</code><br>
+The check “quantity” outputs the <code>drugQuantity</code> if
+<code>byConcept = FALSE</code> and additionally
+<code>drugQuantitybyConcept</code> if
+<code>byConcept = TRUE</code><br>
+The check “diagnosticsSummary” outputs a summary called
+<code>diagnosticsSummary</code><br></p>
+<p>Here, we see the files created:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">all_checks</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "conceptSummary"                "missingValuesOverall"         </span></span>
@@ -199,37 +280,200 @@ by</p>
 <span><span class="co">#&gt;  [5] "drugExposureDurationByConcept" "drugTypesOverall"             </span></span>
 <span><span class="co">#&gt;  [7] "drugTypesByConcept"            "drugRoutesOverall"            </span></span>
 <span><span class="co">#&gt;  [9] "drugRoutesByConcept"           "drugSourceConceptsOverall"    </span></span>
-<span><span class="co">#&gt; [11] "drugSourceConceptsByConcept"   "drugDaysSupply"               </span></span>
-<span><span class="co">#&gt; [13] "drugDaysSupplyByConcept"       "drugVerbatimEndDate"          </span></span>
-<span><span class="co">#&gt; [15] "drugVerbatimEndDateByConcept"  "drugDose"                     </span></span>
-<span><span class="co">#&gt; [17] "drugDoseByConcept"             "drugSig"                      </span></span>
-<span><span class="co">#&gt; [19] "drugSigByConcept"              "drugQuantity"                 </span></span>
-<span><span class="co">#&gt; [21] "drugQuantityByConcept"         "drugDaysSupplyHistogram"      </span></span>
-<span><span class="co">#&gt; [23] "drugQuantityHistogram"         "drugDurationHistogram"        </span></span>
-<span><span class="co">#&gt; [25] "diagnosticsSummary"</span></span></code></pre></div>
-<p>Let’s take a look at the results. <code>conceptSummary</code>
-contains information on the concept ids that are used in the database
-for a given ingredient. So in the case of acetaminophen, the following
-drugs contain the acetaminophen as an ingredient.</p>
+<span><span class="co">#&gt; [11] "drugDaysSupply"                "drugDaysSupplyByConcept"      </span></span>
+<span><span class="co">#&gt; [13] "drugVerbatimEndDate"           "drugVerbatimEndDateByConcept" </span></span>
+<span><span class="co">#&gt; [15] "drugDose"                      "drugSig"                      </span></span>
+<span><span class="co">#&gt; [17] "drugSigByConcept"              "drugQuantity"                 </span></span>
+<span><span class="co">#&gt; [19] "drugQuantityByConcept"         "diagnosticsSummary"</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="assessing-the-drug-concepts-of-interest">Assessing the drug concepts (of interest)<a class="anchor" aria-label="anchor" href="#assessing-the-drug-concepts-of-interest"></a>
+</h3>
+<p>The first item shown, the <code>conceptSummary</code> is not the
+output from a check but always output. This table is used within the
+function as an input for all the requested checks.<br>
+It contains information from the CONCEPT table and DRUG_STRENGTH
+table.<br>
+The <code>conceptSummary</code> has several use:<br>
+It can be quickly seen whether a certain drug is mapped on ingredient
+level. Thereby, the drug_concept_id and ingredient_concept_id are
+identical.<br>
+Furthermore, the <code>conceptSummary</code> can be used to make
+decisions about further refine the concept list. For example, though the
+argument <code>subsetToConceptId</code> in the
+<code><a href="../reference/executeChecks.html">executeChecks()</a></code> function, the selected concepts can be
+requested or eliminated.<br>
+The <code>conceptSummary</code> in the case of acetaminophen with
+<code>subsetToConceptId = NULL</code>, the following drug concepts are
+part of the diagnostics investigation.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/DT/man/datatable.html" class="external-link">datatable</a></span><span class="op">(</span><span class="va">all_checks</span><span class="op">$</span><span class="va">conceptSummary</span>,</span>
 <span>  rownames <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="datatables html-widget html-fill-item" id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"filter":"none","vertical":false,"data":[[40162522,1127078],["Acetaminophen 325 MG / Hydrocodone Bitartrate 7.5 MG Oral Tablet","Acetaminophen 160 MG Oral Tablet"],[1125315,1125315],["Acetaminophen","Acetaminophen"],[312,2158],[312,1428],["Drug","Drug"],["RxNorm","RxNorm"],["Clinical Drug","Clinical Drug"],["S","S"],["857005","282464"],["2009-08-02","1970-01-01"],["2099-12-31","2099-12-31"],[null,null],[1,1],[1,1],[1,1],[1,1],[null,null],[1,1],[1,1],[null,null],[null,null],[null,null],[null,null],[false,false]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>drug_concept_id<\/th>\n      <th>drug<\/th>\n      <th>ingredient_concept_id<\/th>\n      <th>ingredient<\/th>\n      <th>n_records<\/th>\n      <th>n_patients<\/th>\n      <th>domain_id<\/th>\n      <th>vocabulary_id<\/th>\n      <th>concept_class_id<\/th>\n      <th>standard_concept<\/th>\n      <th>concept_code<\/th>\n      <th>valid_start_date<\/th>\n      <th>valid_end_date<\/th>\n      <th>invalid_reason<\/th>\n      <th>amount_value<\/th>\n      <th>amount_unit_concept_id<\/th>\n      <th>numerator_value<\/th>\n      <th>numerator_unit_concept_id<\/th>\n      <th>numerator_unit<\/th>\n      <th>denominator_value<\/th>\n      <th>denominator_unit_concept_id<\/th>\n      <th>denominator_unit<\/th>\n      <th>box_size<\/th>\n      <th>amount_unit<\/th>\n      <th>dose_form<\/th>\n      <th>result_obscured<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[0,2,4,5,14,15,16,17,19,20,22]},{"name":"drug_concept_id","targets":0},{"name":"drug","targets":1},{"name":"ingredient_concept_id","targets":2},{"name":"ingredient","targets":3},{"name":"n_records","targets":4},{"name":"n_patients","targets":5},{"name":"domain_id","targets":6},{"name":"vocabulary_id","targets":7},{"name":"concept_class_id","targets":8},{"name":"standard_concept","targets":9},{"name":"concept_code","targets":10},{"name":"valid_start_date","targets":11},{"name":"valid_end_date","targets":12},{"name":"invalid_reason","targets":13},{"name":"amount_value","targets":14},{"name":"amount_unit_concept_id","targets":15},{"name":"numerator_value","targets":16},{"name":"numerator_unit_concept_id","targets":17},{"name":"numerator_unit","targets":18},{"name":"denominator_value","targets":19},{"name":"denominator_unit_concept_id","targets":20},{"name":"denominator_unit","targets":21},{"name":"box_size","targets":22},{"name":"amount_unit","targets":23},{"name":"dose_form","targets":24},{"name":"result_obscured","targets":25}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><p>After running the checks, we can write the CSV files into a zip file
-to disk using the <code><a href="../reference/writeResultToDisk.html">writeResultToDisk()</a></code> function.</p>
+<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"filter":"none","vertical":false,"data":[[40229134,19133768,1127433,1127078,40162522,40231925],["acetaminophen 21.7 MG/ML / Dextromethorphan","acetaminophen 160 MG Oral Tablet","acetaminophen 325 MG / Oxycodone Hydrochloride","acetaminophen 750 MG / Hydrocodone Bitartrate","acetaminophen 325 MG Oral Tablet","acetaminophen 325 MG / Hydrocodone Bitartrate"],[1125315,1125315,1125315,1125315,1125315,1125315],["acetaminophen","acetaminophen","acetaminophen","acetaminophen","acetaminophen","acetaminophen"],[12,14,13,19,18,10],[11,13,11,13,15,9],["Drug","Drug","Drug","Drug","Drug","Drug"],["RxNorm","RxNorm","RxNorm","RxNorm","RxNorm","RxNorm"],["Clinical Drug","Clinical Drug","Clinical Drug","Clinical Drug","Clinical Drug","Clinical Drug"],["S","S","S","S","S","S"],["1043400","282464","1049221","833036","313782","857005"],["1970-01-01","1970-01-01","1970-01-01","1970-01-01","1970-01-01","1970-01-01"],["2099-12-31","2099-12-31","2099-12-31","2099-12-31","2099-12-31","2099-12-31"],[null,null,null,null,null,null],[200,200,null,null,null,300],[9655,9655,null,null,null,9655],[null,null,2,2,2,null],[null,null,9655,9655,9655,null],[null,null,null,null,null,null],[null,null,1,1,1,null],[null,null,8576,8576,8576,null],[null,null,null,null,null,null],[null,null,null,null,null,null],["Oral Tablet","Oral Tablet","Oral Tablet","Oral Tablet","Oral Tablet","Oral Tablet"],[false,false,false,false,false,false]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>drug_concept_id<\/th>\n      <th>drug<\/th>\n      <th>ingredient_concept_id<\/th>\n      <th>ingredient<\/th>\n      <th>n_records<\/th>\n      <th>n_patients<\/th>\n      <th>domain_id<\/th>\n      <th>vocabulary_id<\/th>\n      <th>concept_class_id<\/th>\n      <th>standard_concept<\/th>\n      <th>concept_code<\/th>\n      <th>valid_start_date<\/th>\n      <th>valid_end_date<\/th>\n      <th>invalid_reason<\/th>\n      <th>amount_value<\/th>\n      <th>amount_unit_concept_id<\/th>\n      <th>numerator_value<\/th>\n      <th>numerator_unit_concept_id<\/th>\n      <th>numerator_unit<\/th>\n      <th>denominator_value<\/th>\n      <th>denominator_unit_concept_id<\/th>\n      <th>denominator_unit<\/th>\n      <th>amount_unit<\/th>\n      <th>dose_form<\/th>\n      <th>result_obscured<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[0,2,4,5,14,15,16,17,19,20]},{"name":"drug_concept_id","targets":0},{"name":"drug","targets":1},{"name":"ingredient_concept_id","targets":2},{"name":"ingredient","targets":3},{"name":"n_records","targets":4},{"name":"n_patients","targets":5},{"name":"domain_id","targets":6},{"name":"vocabulary_id","targets":7},{"name":"concept_class_id","targets":8},{"name":"standard_concept","targets":9},{"name":"concept_code","targets":10},{"name":"valid_start_date","targets":11},{"name":"valid_end_date","targets":12},{"name":"invalid_reason","targets":13},{"name":"amount_value","targets":14},{"name":"amount_unit_concept_id","targets":15},{"name":"numerator_value","targets":16},{"name":"numerator_unit_concept_id","targets":17},{"name":"numerator_unit","targets":18},{"name":"denominator_value","targets":19},{"name":"denominator_unit_concept_id","targets":20},{"name":"denominator_unit","targets":21},{"name":"amount_unit","targets":22},{"name":"dose_form","targets":23},{"name":"result_obscured","targets":24}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Column</th>
+<th align="left">Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">drug_concept_id</td>
+<td align="left">ID of the drug concept.</td>
+</tr>
+<tr class="even">
+<td align="left">drug</td>
+<td align="left">Name of the drug concept.</td>
+</tr>
+<tr class="odd">
+<td align="left">ingredient_concept_id</td>
+<td align="left">Concept ID of ingredient.</td>
+</tr>
+<tr class="even">
+<td align="left">ingredient</td>
+<td align="left">Name of drug ingredient for which the checks have been
+performed.</td>
+</tr>
+<tr class="odd">
+<td align="left">n_records</td>
+<td align="left">Number of records for drug concept.</td>
+</tr>
+<tr class="even">
+<td align="left">domain_id</td>
+<td align="left">From the CONCEPT table. A foreign key to the domain
+table the drug concept belongs to.</td>
+</tr>
+<tr class="odd">
+<td align="left">vocabulary_id</td>
+<td align="left">From the CONCEPT table. A foreign key to the vocabulary
+table indicating from which source the drug concept has been
+adapted.</td>
+</tr>
+<tr class="even">
+<td align="left">concept_class_id</td>
+<td align="left">From the CONCEPT table. The concept class of the drug
+concept (e.g.‘Ingredient’ or ‘Clinical Drug’).</td>
+</tr>
+<tr class="odd">
+<td align="left">standard_concept</td>
+<td align="left">From the CONCEPT table. A flag indicating whether the
+drug concept is standard (‘S’), a classification (‘C’), or a
+non-standard Source (NULL).</td>
+</tr>
+<tr class="even">
+<td align="left">concept_code</td>
+<td align="left">From the CONCEPT table. The concept code represents the
+identifier of the Concept in the source vocabulary.</td>
+</tr>
+<tr class="odd">
+<td align="left">valid_start_date</td>
+<td align="left">From the CONCEPT table. The date when the drug concept
+was first recorded</td>
+</tr>
+<tr class="even">
+<td align="left">valid_end_date</td>
+<td align="left">From the CONCEPT table. The date when the drug concept
+became invalid because it was deleted or superseded (updated) by a new
+concept.</td>
+</tr>
+<tr class="odd">
+<td align="left">invalid_reason</td>
+<td align="left">From the CONCEPT table. Reason the Concept was
+invalidated. Possible values are D (deleted), U (replaced with an
+update) or NULL when valid_end_date has the default value.</td>
+</tr>
+<tr class="even">
+<td align="left">amount_value</td>
+<td align="left">From DRUG_STRENGTH table. The numeric value or the
+amount of active ingredient contained within the drug product.</td>
+</tr>
+<tr class="odd">
+<td align="left">amount_unit_concept_id</td>
+<td align="left">From DRUG_STRENGTH table. The Concept representing the
+Unit of measure for the amount of active ingredient contained within the
+drug product.</td>
+</tr>
+<tr class="even">
+<td align="left">numerator_value</td>
+<td align="left">From DRUG_STRENGTH table. The concentration of the
+active ingredient contained within the drug product.</td>
+</tr>
+<tr class="odd">
+<td align="left">numerator_unit_concept_id</td>
+<td align="left">From DRUG_STRENGTH table. The Concept representing the
+Unit of measure for the concentration of active ingredient.</td>
+</tr>
+<tr class="even">
+<td align="left">numerator_unit</td>
+<td align="left">From the CONCEPT table. The concept name associated
+with the numerator_unit_concept_id.</td>
+</tr>
+<tr class="odd">
+<td align="left">denominator_value</td>
+<td align="left">From DRUG_STRENGTH table. The amount of total liquid
+(or other divisible product, such as ointment, gel, spray, etc.).</td>
+</tr>
+<tr class="even">
+<td align="left">denominator_unit_concept_id</td>
+<td align="left">From DRUG_STRENGTH table. The Concept representing the
+denominator unit for the concentration of active ingredient.</td>
+</tr>
+<tr class="odd">
+<td align="left">denominator_unit</td>
+<td align="left">From the CONCEPT table. The concept name associated
+with the denominator_unit_concept_id</td>
+</tr>
+<tr class="even">
+<td align="left">box_size</td>
+<td align="left">The number of units of Clinical Branded Drug or
+Quantified Clinical or Branded Drug contained in a box as dispensed to
+the patient.</td>
+</tr>
+<tr class="odd">
+<td align="left">amount_unit</td>
+<td align="left">From DRUG_STRENGTH table.</td>
+</tr>
+<tr class="even">
+<td align="left">dose_form</td>
+<td align="left">From CONCEPT_RELATIONSHIP table. The RxNorm dose form
+associated with the drug concept.</td>
+</tr>
+<tr class="odd">
+<td align="left">result_obscured</td>
+<td align="left">TRUE if count has been suppressed due to being below
+the minimum cell count, otherwise FALSE.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level3">
+<h3 id="saving-the-diagnostic-output">Saving the diagnostic output<a class="anchor" aria-label="anchor" href="#saving-the-diagnostic-output"></a>
+</h3>
+<p>After running the checks, we can write the created outputs (CSV
+files) into a zip file to disk using the
+<code><a href="../reference/writeResultToDisk.html">writeResultToDisk()</a></code> function. The zip created from using
+the <code><a href="../reference/writeResultToDisk.html">writeResultToDisk()</a></code> function can be input (unzipped)
+into the correspoding Shiny Application.<br>
+Please replace the “your_database” with the name of your database.
+Create your designated “output_folder” at your desired location and put
+the path if not the working directory.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/writeResultToDisk.html">writeResultToDisk</a></span><span class="op">(</span><span class="va">all_checks</span>,</span>
-<span>                  databaseId <span class="op">=</span> <span class="st">"your_database_id"</span>, </span>
+<span>                  databaseId <span class="op">=</span> <span class="st">"your_database"</span>, </span>
 <span>                  outputFolder <span class="op">=</span> <span class="st">"output_folder"</span><span class="op">)</span></span></code></pre></div>
 </div>
-  </main>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Ger Inberg, Edward Burn.</p>
+  <p>Developed by Ger Inberg, Edward Burn, Theresa Burkard.</p>
 </div>
 
 <div class="pkgdown-footer-right">

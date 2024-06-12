@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">DrugExposureDiagnostics</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,8 +24,18 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/DaysSupply.html">Days Supply</a>
+    <a class="dropdown-item" href="../articles/DiagnosticsSummary.html">Diagnostics Summary</a>
+    <a class="dropdown-item" href="../articles/DrugDose.html">Drug Dose</a>
+    <a class="dropdown-item" href="../articles/DrugDuration.html">DrugDuration</a>
+    <a class="dropdown-item" href="../articles/DrugSig.html">Drug Sig</a>
+    <a class="dropdown-item" href="../articles/DrugSourceConcepts.html">Drug Source Concepts</a>
+    <a class="dropdown-item" href="../articles/DrugTypes.html">Drug Types</a>
     <a class="dropdown-item" href="../articles/IntroductionToDrugExposureDiagnostics.html">Introduction To DrugExposureDiagnostics</a>
-    <a class="dropdown-item" href="../articles/SummaryOfChecks.html">Summary Of Checks</a>
+    <a class="dropdown-item" href="../articles/Missingness.html">Missingness</a>
+    <a class="dropdown-item" href="../articles/Quantity.html">Quantity</a>
+    <a class="dropdown-item" href="../articles/Routes.html">Routes</a>
+    <a class="dropdown-item" href="../articles/VerbatimEndDate.html">Verbatim End Date</a>
   </div>
 </li>
 <li class="nav-item">
@@ -66,11 +76,14 @@
 <span>  drug_strength <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ingredient_drug_records <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  drug_exposure_size <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>  unique_drug_records <span class="op">=</span> <span class="fl">80</span>,</span>
 <span>  patient_size <span class="op">=</span> <span class="fl">50</span>,</span>
-<span>  amount_val <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>  person <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  observation_period <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  amount_val <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">100</span>, <span class="fl">200</span>, <span class="fl">300</span><span class="op">)</span>,</span>
 <span>  den_val <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">100</span><span class="op">)</span>,</span>
-<span>  unit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"actuat"</span>, <span class="st">"mg"</span>, <span class="st">"mL"</span>, <span class="st">"mL"</span>, <span class="st">"h"</span><span class="op">)</span>,</span>
+<span>  amount_unit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">8587</span>, <span class="fl">8576</span>, <span class="fl">9655</span><span class="op">)</span>,</span>
+<span>  num_unit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">8587</span>, <span class="fl">8576</span>, <span class="fl">9655</span><span class="op">)</span>,</span>
+<span>  denom_unit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">8587</span>, <span class="fl">8576</span>, <span class="fl">8505</span><span class="op">)</span>,</span>
 <span>  num_val <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>,</span>
 <span>  seed <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -106,12 +119,16 @@
 <dd><p>the sample size of the drug exposure table</p></dd>
 
 
-<dt>unique_drug_records</dt>
-<dd><p>number of unique drug records</p></dd>
-
-
 <dt>patient_size</dt>
 <dd><p>the number of unique patients in the drug exposure table</p></dd>
+
+
+<dt>person</dt>
+<dd><p>person table</p></dd>
+
+
+<dt>observation_period</dt>
+<dd><p>observation_period table</p></dd>
 
 
 <dt>amount_val</dt>
@@ -122,8 +139,16 @@
 <dd><p>vector of possible numeric denominator value for the drug in drug strength table</p></dd>
 
 
-<dt>unit</dt>
-<dd><p>vector of possible unit type drug strength table please select from "", "actuat", "mg", "mL", "mL", "h".</p></dd>
+<dt>amount_unit</dt>
+<dd><p>vector of possible amount unit type drug strength table representing milligram, milliliter and microgram</p></dd>
+
+
+<dt>num_unit</dt>
+<dd><p>vector of possible numerator unit type drug strength table representing milligram, milliliter and microgram</p></dd>
+
+
+<dt>denom_unit</dt>
+<dd><p>vector of possible numerator unit type drug strength table representing milligram, milliliter and hour</p></dd>
 
 
 <dt>num_val</dt>
@@ -146,7 +171,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Ger Inberg, Edward Burn.</p>
+  <p>Developed by Ger Inberg, Edward Burn, Theresa Burkard.</p>
 </div>
 
 <div class="pkgdown-footer-right">

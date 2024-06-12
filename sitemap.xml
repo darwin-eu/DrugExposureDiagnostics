@@ -7,10 +7,40 @@
     <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/LICENSE.html</loc>
   </url>
   <url>
+    <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/articles/DaysSupply.html</loc>
+  </url>
+  <url>
+    <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/articles/DiagnosticsSummary.html</loc>
+  </url>
+  <url>
+    <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/articles/DrugDose.html</loc>
+  </url>
+  <url>
+    <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/articles/DrugDuration.html</loc>
+  </url>
+  <url>
+    <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/articles/DrugSig.html</loc>
+  </url>
+  <url>
+    <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/articles/DrugSourceConcepts.html</loc>
+  </url>
+  <url>
+    <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/articles/DrugTypes.html</loc>
+  </url>
+  <url>
     <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/articles/IntroductionToDrugExposureDiagnostics.html</loc>
   </url>
   <url>
-    <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/articles/SummaryOfChecks.html</loc>
+    <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/articles/Missingness.html</loc>
+  </url>
+  <url>
+    <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/articles/Quantity.html</loc>
+  </url>
+  <url>
+    <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/articles/Routes.html</loc>
+  </url>
+  <url>
+    <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/articles/VerbatimEndDate.html</loc>
   </url>
   <url>
     <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/articles/index.html</loc>
@@ -40,6 +70,9 @@
     <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/checkDrugSig.html</loc>
   </url>
   <url>
+    <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/checkIngredientInTable.html</loc>
+  </url>
+  <url>
     <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/checkIsIngredient.html</loc>
   </url>
   <url>
@@ -56,12 +89,6 @@
   </url>
   <url>
     <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/computeDBQuery.html</loc>
-  </url>
-  <url>
-    <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/createHistogram.html</loc>
-  </url>
-  <url>
-    <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/dataFrame2Hist.html</loc>
   </url>
   <url>
     <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/executeChecks.html</loc>
@@ -89,12 +116,6 @@
   </url>
   <url>
     <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/getDuration.html</loc>
-  </url>
-  <url>
-    <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/getEunomiaCdm.html</loc>
-  </url>
-  <url>
-    <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/hist2DataFrame.html</loc>
   </url>
   <url>
     <loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/index.html</loc>
