@@ -1,5 +1,8 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 1.0.6
+* Fixed bug in generating diagnosticsSummary
+
 # DrugExposureDiagnostics 1.0.5
 * Use dailyDoseCoverage function from package DrugUtilisation
 * Remove Eunomia dependency

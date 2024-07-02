@@ -23,6 +23,7 @@ test_that("summariseChecks works", {
                                                        q95_drug_exposure_days = c(15, 19))
   resultList$drugDose <- data.frame(ingredient_concept_id = c(rep("1125315",12),rep("1139042",12)),
                                     ingredient = c(rep("Acetaminophen",12),rep("Acetylcysteine",12)),
+                                    group_name = c(rep("ingredient_name",24)),
                                     strata_name = c(rep(c(rep("overall",6),rep("unit",6)),2)),
                                     strata_level = c(rep(c(rep("NA",6),rep("milligram",6)),2)),
                                     variable_name = c(rep(c("number_records",rep("daily_dose",5)),4)),
@@ -77,6 +78,7 @@ test_that("summariseChecks partial inputs: summary, quantity and dose", {
                                           n_patients = c(123, 200))
   resultList$drugDose <- data.frame(ingredient_concept_id = c(rep("1125315",12),rep("1139042",12)),
                                     ingredient = c(rep("Acetaminophen",12),rep("Acetylcysteine",12)),
+                                    group_name = c(rep("ingredient_name",24)),
                                     strata_name = c(rep(c(rep("overall",6),rep("unit",6)),2)),
                                     strata_level = c(rep(c(rep("NA",6),rep("milligram",6)),2)),
                                     variable_name = c(rep(c("number_records",rep("daily_dose",5)),4)),
@@ -139,6 +141,34 @@ test_that("summariseChecks partial inputs: summary and quantity", {
   expect_equal(result$ingredient_concept_id, ingredientConceptIds)
   expect_equal(result$n_records, c(123, 299))
   expect_equal(result$proportion_of_records_with_dose_form, c("123 (100%)", "0 (0%)"))
+})
+
+test_that("summariseChecks empty/wrong inputs", {
+  expect_error(summariseChecks(list()))
+  expect_error(summariseChecks(NULL))
+})
+
+test_that("summariseChecks partial inputs with only empty ingredient: summary of missing and quantity and dose", {
+
+  cdm <- mockDrugExposure()
+
+  empty_ing <- executeChecks(cdm = cdm,  ingredients = c(36854851), checks = c("missing", "quantity", "dose", "diagnosticsSummary"))
+
+  expect_equal(nrow(empty_ing$diagnosticsSummary), 0)
+
+  DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
+})
+
+test_that("summariseChecks partial inputs with combination of not empty and empty ingredient: summary of missing and quantity and dose", {
+
+  cdm <- mockDrugExposure()
+
+  empty_ing <- executeChecks(cdm = cdm,  ingredients = c(1125315, 36854851), checks = c("missing", "quantity", "dose", "diagnosticsSummary"))
+
+  expect_equal(empty_ing$diagnosticsSummary$ingredient, "acetaminophen")
+  expect_equal(nrow(empty_ing$diagnosticsSummary), 1)
+
+  DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
 })
 
 test_that("summariseChecks empty/wrong inputs", {

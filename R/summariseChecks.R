@@ -47,7 +47,7 @@ summariseChecks <- function(resultList) {
     dplyr::select(-.data$n_dose_form)
 
   # missingness
-  if (!is.null(resultList$missingValuesOverall)) {
+  if (!is.null(resultList$missingValuesOverall) && nrow(resultList$missingValuesOverall >1)) {
     diagnosticsSummary <- diagnosticsSummary %>%
       dplyr::left_join(
         resultList$missingValuesOverall %>% dplyr::ungroup() %>%
@@ -120,20 +120,21 @@ summariseChecks <- function(resultList) {
     )
   }
 
-  # dose count, missingness count
-  if (!is.null(resultList$drugDose)) {
+  # dose count, missingness count. If result is empty, there will be just 2 rows
+  if (!is.null(resultList$drugDose) && nrow(resultList$drugDose) > 2) {
     diagnosticsSummary <- diagnosticsSummary %>% dplyr::left_join(
       resultList$drugDose %>%
         dplyr::select(
           "ingredient_concept_id",
           "strata_name",
           "estimate_name",
-          "estimate_value"
+          "estimate_value",
+          "group_name"
         ) %>% dplyr::mutate (
           estimate_value = round(as.numeric(.data$estimate_value),1)
           ) %>%
         dplyr::filter(.data$strata_name == "overall",
-                      .data$estimate_name %in% c("count","count_missing","percentage_missing")
+                      .data$estimate_name %in% c("count", "count_missing", "percentage_missing")
         ) %>%  tidyr::pivot_wider(names_from = .data$estimate_name, values_from = .data$estimate_value) %>%
         dplyr::mutate(n_dose_and_missingness =
                         glue::glue(paste("{.data$count} ({.data$count_missing}, {.data$percentage_missing}%)"))) %>%

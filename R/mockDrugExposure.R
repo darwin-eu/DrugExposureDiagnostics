@@ -99,7 +99,8 @@ mockDrugExposure <- function(drug_exposure = NULL,
           19133768,
           4132161,
           38000177,
-          19082573
+          19082573,
+          36854851
         ),
         concept_name = c(
           "acetaminophen",
@@ -111,16 +112,17 @@ mockDrugExposure <- function(drug_exposure = NULL,
           "acetaminophen 160 MG Oral Tablet",
           "Oral",
           "Prescription written",
-          "Oral Tablet"
+          "Oral Tablet",
+          "METAMIZOLE"
         ) ,
-        domain_id = c(rep("Drug", 7),"Route","Type Concept","Drug"),
-        vocabulary_id = c(rep("RxNorm", 7), "SNOMED","Drug Type","RxNorm"),
-        concept_class_id = c("Ingredient", rep("Clinical Drug", 6),"Qualifier Value","Drug Type","Dose Form"),
-        standard_concept = c(rep("S", 8), rep("Non-standard",2)),
-        concept_code = c("161", "313782", "833036", "1049221", "1043400", "857005", "282464","26643006","OMOP4822241","Oral Tablet"),
-        valid_start_date = c(rep(as.Date("1970-01-01"), 10)),
-        valid_end_date = c(rep(as.Date("2099-12-31"), 10)),
-        invalid_reason = c(rep(NA, 10))
+        domain_id = c(rep("Drug", 7),"Route","Type Concept",rep("Drug",2)),
+        vocabulary_id = c(rep("RxNorm", 7), "SNOMED","Drug Type","RxNorm","RxNormExtension"),
+        concept_class_id = c("Ingredient", rep("Clinical Drug", 6),"Qualifier Value","Drug Type","Dose Form","Ingredient"),
+        standard_concept = c(rep("S", 8), rep("Non-standard",2), "S"),
+        concept_code = c("161", "313782", "833036", "1049221", "1043400", "857005", "282464","26643006","OMOP4822241","421026006","OMOP5172468"),
+        valid_start_date = c(rep(as.Date("1970-01-01"), 11)),
+        valid_end_date = c(rep(as.Date("2099-12-31"), 11)),
+        invalid_reason = c(rep(NA, 11))
       )
   }
 
@@ -135,14 +137,12 @@ mockDrugExposure <- function(drug_exposure = NULL,
   }
 
   if (is.null(drug_strength)) {
-    ancestor_concept_id <- rep(1125315, each = 6)
+    ancestor_concept_id <- c(rep(1125315, 6),36854851)
     descendant_concept_id <-
-      c(40162522, 1127078, 1127433, 40229134, 40231925, 19133768)
+      c(40162522, 1127078, 1127433, 40229134, 40231925, 19133768,NA)
 
     ingredient_concept_id <-
-      sample(ancestor_concept_id,
-             length(descendant_concept_id),
-             replace = TRUE)
+      c(rep(1125315, 6),36854851)
 
     amount_value <-
       sample(amount_val, length(descendant_concept_id), replace = TRUE)
