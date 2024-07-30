@@ -1,5 +1,8 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 1.0.7
+* Updates related to newest release of DrugUtilisation
+
 # DrugExposureDiagnostics 1.0.6
 * Fixed bug in generating diagnosticsSummary
 

@@ -167,6 +167,7 @@ test_that("summariseChecks partial inputs with combination of not empty and empt
 
   expect_equal(empty_ing$diagnosticsSummary$ingredient, "acetaminophen")
   expect_equal(nrow(empty_ing$diagnosticsSummary), 1)
+  expect_equal(empty_ing$diagnosticsSummary$missing_quantity_exp_start_end_days_supply, "0 (0%), 0 (0%), 0 (0%), 0 (0%)")
 
   DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
 })

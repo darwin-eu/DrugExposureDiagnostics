@@ -1,26 +1,23 @@
 getInputDb <- function() {
    ingredient_drug_records <- tibble::tibble(
-     drug_exposure_id = c("1", "2", "3", "4", "5", "6", "7"),
-     person_id = c("1", "2", "3", "4", "5", "6", "7"),
-     drug_concept_id = c("1", "4", "2", "2", "3", "1", "2"),
+     drug_exposure_id = as.integer(c("1", "2", "3", "4", "5", "6", "7")),
+     person_id = as.integer(c("1", "2", "3", "4", "5", "6", "7")),
+     drug_concept_id = as.integer(c("1", "4", "2", "2", "3", "1", "2")),
      drug = c("x", "iv", "xx", "xx", "xxx", "iv", "v"),
      ingredient_concept_id = c("1", "1", "2", "2", "3", "4", "4"),
      ingredient = c("a", "a", "b", "b", "c", "d", "d"),
     drug_exposure_start_date = as.Date(c("2016-01-01","2017-01-01","2018-01-01","2019-01-01","2020-01-01","2021-01-01","2022-01-01")),
     drug_exposure_end_date = as.Date(c("2016-01-02","2017-01-03","2018-01-04","2019-01-05","2020-01-06","2021-01-07","2022-01-08")),
-    days_supply = c(1,3,NA,4,5,6,7)
+    days_supply = c(1, 3, NA, 4, 5, 6, 7)
   )
 
   mockDrugExposure(ingredient_drug_records = ingredient_drug_records)
-
 }
-
 
 test_that("check days supply overall", {
   testData <- getInputDb()
 
   result <- checkDaysSupply(testData, "ingredient_drug_records", byConcept = FALSE, sampleSize = 100)
-
 
   expect_equal(result$n_different_days_supply_and_drug_dates, c(1,0,0,0))
 

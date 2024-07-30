@@ -51,13 +51,13 @@ summariseChecks <- function(resultList) {
     diagnosticsSummary <- diagnosticsSummary %>%
       dplyr::left_join(
         resultList$missingValuesOverall %>% dplyr::ungroup() %>%
-          dplyr::select("ingredient_concept_id", "variable", "n_records",
+          dplyr::select("ingredient_concept_id", "variable", "n_records_missing_value",
                         "proportion_records_missing_value") %>%
           dplyr::filter(.data$variable %in% c("n_missing_quantity", "n_missing_drug_exposure_start_date",
                                         "n_missing_drug_exposure_end_date", "n_missing_days_supply")
           ) %>% dplyr::mutate(missing =
             glue::glue("
-        {.data$n_records} ({.data$proportion_records_missing_value}%)")
+        {.data$n_records_missing_value} ({.data$proportion_records_missing_value}%)")
             ) %>% tidyr::pivot_wider(names_from = .data$variable, values_from = .data$missing) %>%
       dplyr::mutate(missing_quantity_exp_start_end_days_supply =
                       glue::glue("

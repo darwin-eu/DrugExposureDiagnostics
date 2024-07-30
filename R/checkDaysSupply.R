@@ -99,12 +99,12 @@ checkDaysSupply <- function(cdm,
                        .data$days_supply,
                        0.95, na.rm = T
                      ),
-    ) %>% dplyr::select(
+    ) %>% dplyr::select(dplyr::all_of(c(
       grouping, "n_records", "n_sample", "n_person", "minimum_drug_exposure_days_supply",
       "q05_drug_exposure_days_supply","q10_drug_exposure_days_supply","q25_drug_exposure_days_supply","median_drug_exposure_days_supply",
       "q75_drug_exposure_days_supply","q90_drug_exposure_days_supply","q95_drug_exposure_days_supply","maximum_drug_exposure_days_supply",
       "n_different_days_supply_and_drug_dates","n_days_supply_match_drug_dates","n_missing_days_supply",
       "proportion_different_days_supply_and_drug_dates","proportion_days_supply_match_drug_dates", "proportion_missing_days_supply"
-    )
+    )))
   return(records)
 }

@@ -1,6 +1,6 @@
 Package: DrugExposureDiagnostics
 Title: Diagnostics for OMOP Common Data Model Drug Records
-Version: 1.0.6
+Version: 1.0.7
 Authors@R: c(
     person("Ger", "Inberg", email = "g.inberg@erasmusmc.nl", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8993-8748")),
@@ -28,7 +28,7 @@ RoxygenNote: 7.3.1
 Depends: 
     R (>= 4.0)
 Imports: 
-    CDMConnector (>= 1.2.0),
+    CDMConnector (>= 1.4.0),
     dplyr (>= 1.0.0),
     magrittr (>= 2.0.0),
     rlang (>= 1.0.0),
@@ -36,8 +36,8 @@ Imports:
     tidyselect (>= 1.2.0),
     checkmate (>= 2.0.0),
     glue (>= 1.5.0),
-    DrugUtilisation (>= 0.6.0),
-    omopgenerics (>= 0.2.1)
+    DrugUtilisation (>= 0.7.0),
+    omopgenerics (>= 0.2.3)
 Suggests: 
     testthat (>= 3.0.0),
     duckdb,

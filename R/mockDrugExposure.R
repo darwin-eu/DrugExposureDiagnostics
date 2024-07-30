@@ -66,15 +66,14 @@ mockDrugExposure <- function(drug_exposure = NULL,
   checkmate::assert_numeric(denom_unit)
   checkmate::assert_numeric(num_unit)
   checkmate::reportAssertions(collection = errorMessage)
-  # mock concept ancestor table
 
-
+  # concept ancestor table
   if (is.null(concept_ancestor)) {
-    ancestor_concept_id <- rep(1125315, each = 6)
+    ancestor_concept_id <- as.integer(rep(1125315, each = 6))
     descendant_concept_id <-
-      c(40162522, 1127078, 1127433, 40229134, 40231925, 19133768)
-    min_levels_of_separation <- rep(0, each = 6)
-    max_levels_of_separation <- rep(1, each = 6)
+      as.integer(c(40162522, 1127078, 1127433, 40229134, 40231925, 19133768))
+    min_levels_of_separation <- as.integer(rep(0, each = 6))
+    max_levels_of_separation <- as.integer(rep(1, each = 6))
 
 
     concept_ancestor <-
@@ -85,11 +84,11 @@ mockDrugExposure <- function(drug_exposure = NULL,
         max_levels_of_separation = max_levels_of_separation
       )
   }
-  # mock concept table
+  # concept table
   if (is.null(concept)) {
     concept <-
       data.frame(
-        concept_id = c(
+        concept_id = as.integer(c(
           1125315,
           40162522,
           1127078,
@@ -101,7 +100,7 @@ mockDrugExposure <- function(drug_exposure = NULL,
           38000177,
           19082573,
           36854851
-        ),
+        )),
         concept_name = c(
           "acetaminophen",
           "acetaminophen 325 MG Oral Tablet",
@@ -122,15 +121,15 @@ mockDrugExposure <- function(drug_exposure = NULL,
         concept_code = c("161", "313782", "833036", "1049221", "1043400", "857005", "282464","26643006","OMOP4822241","421026006","OMOP5172468"),
         valid_start_date = c(rep(as.Date("1970-01-01"), 11)),
         valid_end_date = c(rep(as.Date("2099-12-31"), 11)),
-        invalid_reason = c(rep(NA, 11))
+        invalid_reason = as.character(c(rep(NA, 11)))
       )
   }
 
   if (is.null(concept_relationship)) {
     # add a rxnorm dose relationship
     concept_relationship <-
-      data.frame(concept_id_1 = concept$concept_id[2:7],
-                 concept_id_2 = rep(19082573, 6),
+      data.frame(concept_id_1 = as.integer(concept$concept_id[2:7]),
+                 concept_id_2 = as.integer(rep(19082573, 6)),
                  relationship_id = rep("RxNorm has dose form", 6),
                  valid_start_date = rep(as.Date("1970-01-01"), 6),
                  valid_end_date = rep(as.Date("2099-12-31"), 6))
@@ -168,14 +167,14 @@ mockDrugExposure <- function(drug_exposure = NULL,
 
     drug_strength <-
       data.frame(
-        drug_concept_id = as.numeric(descendant_concept_id),
-        ingredient_concept_id = as.numeric(ingredient_concept_id),
+        drug_concept_id = as.integer(descendant_concept_id),
+        ingredient_concept_id = as.integer(ingredient_concept_id),
         amount_value = as.numeric(amount_value),
-        amount_unit_concept_id = as.numeric(amount_unit_concept_id),
+        amount_unit_concept_id = as.integer(amount_unit_concept_id),
         numerator_value = as.numeric(numerator_value),
-        numerator_unit_concept_id = as.numeric(numerator_unit_concept_id),
+        numerator_unit_concept_id = as.integer(numerator_unit_concept_id),
         denominator_value = as.numeric(denominator_value),
-        denominator_unit_concept_id = as.numeric(denominator_unit_concept_id),
+        denominator_unit_concept_id = as.integer(denominator_unit_concept_id),
         valid_start_date = as.Date(valid_start_date),
         valid_end_date = as.Date(valid_end_date),
         invalid_reason = as.character(invalid_reason)
@@ -194,9 +193,7 @@ mockDrugExposure <- function(drug_exposure = NULL,
     data.frame(
       drug_exposure_id = drug_exposure_id
     )
-
   }
-
 
   #drug_exposure
   set.seed(seed)
@@ -208,7 +205,7 @@ mockDrugExposure <- function(drug_exposure = NULL,
                             drug_exposure_size,
                             replace = TRUE)) #generate number of unique patient id
       drug_concept_id <-
-        sample(
+        as.integer(sample(
           c(
             1125315,
             40162522,
@@ -220,7 +217,7 @@ mockDrugExposure <- function(drug_exposure = NULL,
           ),
           drug_exposure_size,
           replace = TRUE
-        ) #assign drug concept id to to each drug exposure
+        )) #assign drug concept id to to each drug exposure
 
       # generate drug exposure start date
       drug_exposure_start_date <-  sample(seq(as.Date("2000-01-01"),
@@ -236,19 +233,18 @@ mockDrugExposure <- function(drug_exposure = NULL,
                                                           replace = TRUE))
       # define other columns in the dataset
       verbatim_end_date <- drug_exposure_end_date
-      drug_type_concept_id <-
-        c(rep(38000177, drug_exposure_size))
-      stop_reason <- c(rep(NA, drug_exposure_size))
-      refills <- c(rep(0, drug_exposure_size))
-      quantity <- sample(1:10, drug_exposure_size, replace = TRUE)
+      drug_type_concept_id <- as.integer(c(rep(38000177, drug_exposure_size)))
+      stop_reason <- as.character(c(rep(NA, drug_exposure_size)))
+      refills <- as.integer(c(rep(0, drug_exposure_size)))
+      quantity <- as.numeric(sample(1:10, drug_exposure_size, replace = TRUE))
       days_supply <-
         as.integer(difftime(drug_exposure_end_date, drug_exposure_start_date, units = "days"))
       sig <- sample(c("TAKE 1 or 2 4 TIMES/DAY",
                       "1-2 TABLETS UP TO FOUR TIMES DAILY",
                       "1 TO 2 TABLETS UP TO FOUR TIMES DAILY AS REQUIRED"), drug_exposure_size, replace = TRUE)
-      route_concept_id <- c(rep(4132161, drug_exposure_size))
-      lot_number <- c(rep(0, drug_exposure_size))
-      provider_id <- c(rep(0, drug_exposure_size))
+      route_concept_id <- as.integer(c(rep(4132161, drug_exposure_size)))
+      lot_number <- c(rep("0", drug_exposure_size))
+      provider_id <- as.integer(c(rep(0, drug_exposure_size)))
       visit_occurrence_id <-
         as.integer(seq(1:drug_exposure_size))
       drug_source_value <-
@@ -256,8 +252,8 @@ mockDrugExposure <- function(drug_exposure = NULL,
                drug_exposure_size,
                replace = TRUE)
       drug_source_concept_id <- drug_concept_id
-      route_source_value <- c(rep(NA, drug_exposure_size))
-      dose_unit_source_value <- c(rep(NA, drug_exposure_size))
+      route_source_value <- as.character(c(rep(NA, drug_exposure_size)))
+      dose_unit_source_value <- as.character(c(rep(NA, drug_exposure_size)))
 
       # putting into drug_exposure table
       drug_exposure <-
@@ -293,8 +289,8 @@ mockDrugExposure <- function(drug_exposure = NULL,
       source_description = "DrugExposureMock",
       source_documentation_reference = "",
       cdm_etl_reference = "https://github.com/darwin-eu/DrugExposureDiagnostics",
-      source_release_date = "2022-08-12",
-      cdm_release_date = "2022-08-12",
+      source_release_date = as.Date("2022-08-12"),
+      cdm_release_date = as.Date("2022-08-12"),
       cdm_version = "5.4",
       cdm_version_concept_id = "756265",
       vocabulary_version = "v5.0 22-JUN-22"
@@ -303,18 +299,15 @@ mockDrugExposure <- function(drug_exposure = NULL,
   # person
   set.seed(seed)
   if (is.null(person)) {
-    person_id <-
-        as.integer(1:patient_size) #generate number of unique patient id
+    person_id <- as.integer(1:patient_size) #generate number of unique patient id
     gender_concept_id <- sample(
       c(8532,8507),
         patient_size,
         replace = TRUE
       ) #assign gender to each patient
-    year_of_birth <-  sample(seq(as.Date("1960-01-01"),
-                                   as.Date("2020-01-01"),
-                                   by = "day"),
-                               patient_size,
-                               replace = TRUE)
+    year_of_birth <-  sample(seq(1960, 2020),
+                             patient_size,
+                             replace = TRUE)
     race_concept_id <- sample(
       c(8527,8515),
       patient_size,
@@ -326,14 +319,13 @@ mockDrugExposure <- function(drug_exposure = NULL,
       replace = TRUE
     ) #assign ethnicity to patient
 
-    # putting into person table
     person <-
       data.frame(
         person_id = person_id,
-        gender_concept_id = gender_concept_id,
-        year_of_birth = year_of_birth,
-        race_concept_id = race_concept_id,
-        ethnicity_concept_id = ethnicity_concept_id
+        gender_concept_id = as.integer(gender_concept_id),
+        year_of_birth = as.integer(year_of_birth),
+        race_concept_id = as.integer(race_concept_id),
+        ethnicity_concept_id = as.integer(ethnicity_concept_id)
       )
   }
 

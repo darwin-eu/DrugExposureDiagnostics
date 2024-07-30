@@ -32,10 +32,13 @@ checkDrugDose <- function(cdm,
   checkmate::reportAssertions(collection = errorMessage)
 
   patterns <- utils::read.csv(system.file("pattern_assessment_for_dose_final.csv",
-                                          package = "DrugExposureDiagnostics"))
+                                          package = "DrugUtilisation"))
 
   ## can make an error that if FLAG occurs in records denominator_value, there is s.th. wrong with the pattern file
-  records <- DrugUtilisation::dailyDoseCoverage(cdm, ingredientConceptId) %>%
+  records <- DrugUtilisation::summariseDoseCoverage(cdm = cdm,
+                                                    ingredientConceptId = ingredientConceptId,
+                                                    estimates = c("count_missing", "percentage_missing", "mean", "sd",
+                                                                  "q05", "q25", "median", "q75", "q95", "min", "max")) %>%
     dplyr::filter(.data$group_level != "NA") %>%
     omopgenerics::suppress(minCellCount) %>%
     dplyr::mutate(pattern_id = as.numeric(gsub("[^0-9]", "", .data$strata_level))) %>%
