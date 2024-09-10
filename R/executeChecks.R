@@ -77,18 +77,24 @@ executeChecks <- function(cdm,
   resultList <- vector(mode = "list", length = length(ingredients))
   for (i in seq_along(ingredients)) {
     ingredient <- ingredients[i]
-    resultList[[i]] <- executeChecksSingleIngredient(cdm = cdm,
-                                                     ingredient = ingredient,
-                                                     subsetToConceptId = subsetToConceptId,
-                                                     checks = checks,
-                                                     minCellCount = minCellCount,
-                                                     sampleSize = sample,
-                                                     tablePrefix = tablePrefix,
-                                                     earliestStartDate = earliestStartDate,
-                                                     verbose = verbose,
-                                                     byConcept = byConcept)
+    ingredientResult <- NULL
+    tryCatch({
+      ingredientResult <- executeChecksSingleIngredient(cdm = cdm,
+                                                        ingredient = ingredient,
+                                                        subsetToConceptId = subsetToConceptId,
+                                                        checks = checks,
+                                                        minCellCount = minCellCount,
+                                                        sampleSize = sample,
+                                                        tablePrefix = tablePrefix,
+                                                        earliestStartDate = earliestStartDate,
+                                                        verbose = verbose,
+                                                        byConcept = byConcept)
+    }, error = function(e) {
+      warning(e)
+    })
+    resultList[[i]] <- ingredientResult
   }
-  resultList <- do.call(Map, c(f = rbind, resultList))
+  resultList <- do.call(Map, c(f = rbind, Filter(Negate(is.null), resultList)))
   return(resultList)
 }
 

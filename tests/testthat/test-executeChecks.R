@@ -259,3 +259,14 @@ test_that("empty drug_strength table gives an error", {
   DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
 })
 
+test_that("results from multiple ingredients should be joined also if there is one in between that doesn't exist", {
+  cdm <- mockDrugExposure()
+
+  result <- executeChecks(cdm = cdm,
+                          ingredients = c(1125315, 36854851, 1125315))
+  # should have 2 times result for 1125315
+  summary <- result$conceptSummary
+  expect_equal(nrow(summary), 12)
+
+  DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
+})

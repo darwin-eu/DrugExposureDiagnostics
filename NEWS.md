@@ -1,5 +1,8 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 1.0.8
+* Skip unavailable concepts (#253 and #254)
+
 # DrugExposureDiagnostics 1.0.7
 * Updates related to newest release of DrugUtilisation
 

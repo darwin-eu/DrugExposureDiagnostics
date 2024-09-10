@@ -41,7 +41,6 @@ ingredientDescendantsInDb <- function(cdm,
     messageStore = errorMessage
   )
   checkLogical(verbose, messageStore = errorMessage)
-  checkIsIngredient(cdm = cdm, conceptId = ingredient, messageStore = errorMessage)
   checkIngredientInTable(cdm = cdm, conceptId = ingredient, tableName = "drug_strength", messageStore = errorMessage)
   checkmate::reportAssertions(collection = errorMessage)
 
