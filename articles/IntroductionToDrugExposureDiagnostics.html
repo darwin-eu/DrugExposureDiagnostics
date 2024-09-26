@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">DrugExposureDiagnostics</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,7 +74,7 @@
       <h1>Introduction To DrugExposureDiagnostics</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/darwin-eu/DrugExposureDiagnostics/blob/v1.0.8/vignettes/IntroductionToDrugExposureDiagnostics.Rmd" class="external-link"><code>vignettes/IntroductionToDrugExposureDiagnostics.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/darwin-eu/DrugExposureDiagnostics/blob/main/vignettes/IntroductionToDrugExposureDiagnostics.Rmd" class="external-link"><code>vignettes/IntroductionToDrugExposureDiagnostics.Rmd</code></a></small>
       <div class="d-none name"><code>IntroductionToDrugExposureDiagnostics.Rmd</code></div>
     </div>
 
@@ -92,7 +92,9 @@ Here we use the internal mock database.</p>
 <code class="sourceCode R"><span><span class="va">cdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mockDrugExposure.html">mockDrugExposure</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Note: method with signature 'DBIConnection#Id' chosen for function 'dbExistsTable',</span></span>
 <span><span class="co">#&gt;  target signature 'duckdb_connection#Id'.</span></span>
-<span><span class="co">#&gt;  "duckdb_connection#ANY" would also be valid</span></span></code></pre></div>
+<span><span class="co">#&gt;  "duckdb_connection#ANY" would also be valid</span></span>
+<span><span class="co">#&gt; Warning: <span style="color: #BBBB00;">!</span> 1 column in <span style="font-weight: bold;">drug_strength</span> do not match expected column type:</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `box_size` is <span style="color: #0000BB;">numeric</span> but expected <span style="color: #0000BB;">integer</span></span></span></code></pre></div>
 <div class="section level3">
 <h3 id="drugs-of-interest">Drug(s) of interest<a class="anchor" aria-label="anchor" href="#drugs-of-interest"></a>
 </h3>
@@ -178,9 +180,9 @@ Multiple ingredients can be added in the vector of ´ingredients´</p>
 <span><span class="co">#&gt;   q75, q95, min, max</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Table is collected to memory as not all requested estimates are supported on</span></span>
 <span><span class="co">#&gt;   the database side</span></span>
-<span><span class="co">#&gt; → Start summary of data, at 2024-09-10 08:53:02.927598</span></span>
+<span><span class="co">#&gt; → Start summary of data, at 2024-09-26 11:35:29.835065</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Summary finished, at 2024-09-10 08:53:03.24492</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Summary finished, at 2024-09-26 11:35:30.191326</span></span></code></pre></div>
 <p>The <code>cdm</code> is the database reference of the OMOP CDM using
 the <code>CDMConnector</code> package.<br>
 The <code>ingredients</code> is a list of ingredients of interests, by
@@ -279,7 +281,7 @@ part of the diagnostics investigation.</p>
 <span>  rownames <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="datatables html-widget html-fill-item" id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"filter":"none","vertical":false,"data":[[1127078,40231925,19133768,40162522,40229134,1127433],["acetaminophen 750 MG / Hydrocodone Bitartrate","acetaminophen 325 MG / Hydrocodone Bitartrate","acetaminophen 160 MG Oral Tablet","acetaminophen 325 MG Oral Tablet","acetaminophen 21.7 MG/ML / Dextromethorphan","acetaminophen 325 MG / Oxycodone Hydrochloride"],[1125315,1125315,1125315,1125315,1125315,1125315],["acetaminophen","acetaminophen","acetaminophen","acetaminophen","acetaminophen","acetaminophen"],[19,10,14,18,12,13],[13,9,13,15,11,11],["Drug","Drug","Drug","Drug","Drug","Drug"],["RxNorm","RxNorm","RxNorm","RxNorm","RxNorm","RxNorm"],["Clinical Drug","Clinical Drug","Clinical Drug","Clinical Drug","Clinical Drug","Clinical Drug"],["S","S","S","S","S","S"],["833036","857005","282464","313782","1043400","1049221"],["1970-01-01","1970-01-01","1970-01-01","1970-01-01","1970-01-01","1970-01-01"],["2099-12-31","2099-12-31","2099-12-31","2099-12-31","2099-12-31","2099-12-31"],[null,null,null,null,null,null],[200,null,100,null,200,300],[8587,null,8587,null,8587,8587],[null,3,null,3,null,null],[null,8587,null,8587,null,null],[null,null,null,null,null,null],[null,100,null,100,null,null],[null,8576,null,8576,null,null],[null,null,null,null,null,null],[null,null,null,null,null,null],["Oral Tablet","Oral Tablet","Oral Tablet","Oral Tablet","Oral Tablet","Oral Tablet"],[false,false,false,false,false,false]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>drug_concept_id<\/th>\n      <th>drug<\/th>\n      <th>ingredient_concept_id<\/th>\n      <th>ingredient<\/th>\n      <th>n_records<\/th>\n      <th>n_patients<\/th>\n      <th>domain_id<\/th>\n      <th>vocabulary_id<\/th>\n      <th>concept_class_id<\/th>\n      <th>standard_concept<\/th>\n      <th>concept_code<\/th>\n      <th>valid_start_date<\/th>\n      <th>valid_end_date<\/th>\n      <th>invalid_reason<\/th>\n      <th>amount_value<\/th>\n      <th>amount_unit_concept_id<\/th>\n      <th>numerator_value<\/th>\n      <th>numerator_unit_concept_id<\/th>\n      <th>numerator_unit<\/th>\n      <th>denominator_value<\/th>\n      <th>denominator_unit_concept_id<\/th>\n      <th>denominator_unit<\/th>\n      <th>amount_unit<\/th>\n      <th>dose_form<\/th>\n      <th>result_obscured<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[0,2,4,5,14,15,16,17,19,20]},{"name":"drug_concept_id","targets":0},{"name":"drug","targets":1},{"name":"ingredient_concept_id","targets":2},{"name":"ingredient","targets":3},{"name":"n_records","targets":4},{"name":"n_patients","targets":5},{"name":"domain_id","targets":6},{"name":"vocabulary_id","targets":7},{"name":"concept_class_id","targets":8},{"name":"standard_concept","targets":9},{"name":"concept_code","targets":10},{"name":"valid_start_date","targets":11},{"name":"valid_end_date","targets":12},{"name":"invalid_reason","targets":13},{"name":"amount_value","targets":14},{"name":"amount_unit_concept_id","targets":15},{"name":"numerator_value","targets":16},{"name":"numerator_unit_concept_id","targets":17},{"name":"numerator_unit","targets":18},{"name":"denominator_value","targets":19},{"name":"denominator_unit_concept_id","targets":20},{"name":"denominator_unit","targets":21},{"name":"amount_unit","targets":22},{"name":"dose_form","targets":23},{"name":"result_obscured","targets":24}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><table class="table">
+<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"filter":"none","vertical":false,"data":[[40231925,40229134,19133768,40162522,1127433,1127078],["acetaminophen 325 MG / Hydrocodone Bitartrate","acetaminophen 21.7 MG/ML / Dextromethorphan","acetaminophen 160 MG Oral Tablet","acetaminophen 325 MG Oral Tablet","acetaminophen 325 MG / Oxycodone Hydrochloride","acetaminophen 750 MG / Hydrocodone Bitartrate"],[1125315,1125315,1125315,1125315,1125315,1125315],["acetaminophen","acetaminophen","acetaminophen","acetaminophen","acetaminophen","acetaminophen"],[10,12,14,18,13,19],[9,11,13,15,11,13],["Drug","Drug","Drug","Drug","Drug","Drug"],["RxNorm","RxNorm","RxNorm","RxNorm","RxNorm","RxNorm"],["Clinical Drug","Clinical Drug","Clinical Drug","Clinical Drug","Clinical Drug","Clinical Drug"],["S","S","S","S","S","S"],["857005","1043400","282464","313782","1049221","833036"],["1970-01-01","1970-01-01","1970-01-01","1970-01-01","1970-01-01","1970-01-01"],["2099-12-31","2099-12-31","2099-12-31","2099-12-31","2099-12-31","2099-12-31"],[null,null,null,null,null,null],[null,200,100,null,300,200],[null,8587,8587,null,8587,8587],[3,null,null,3,null,null],[8587,null,null,8587,null,null],[null,null,null,null,null,null],[100,null,null,100,null,null],[8576,null,null,8576,null,null],[null,null,null,null,null,null],[0,0,0,0,0,0],[null,null,null,null,null,null],["Oral Tablet","Oral Tablet","Oral Tablet","Oral Tablet","Oral Tablet","Oral Tablet"],[false,false,false,false,false,false]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>drug_concept_id<\/th>\n      <th>drug<\/th>\n      <th>ingredient_concept_id<\/th>\n      <th>ingredient<\/th>\n      <th>n_records<\/th>\n      <th>n_patients<\/th>\n      <th>domain_id<\/th>\n      <th>vocabulary_id<\/th>\n      <th>concept_class_id<\/th>\n      <th>standard_concept<\/th>\n      <th>concept_code<\/th>\n      <th>valid_start_date<\/th>\n      <th>valid_end_date<\/th>\n      <th>invalid_reason<\/th>\n      <th>amount_value<\/th>\n      <th>amount_unit_concept_id<\/th>\n      <th>numerator_value<\/th>\n      <th>numerator_unit_concept_id<\/th>\n      <th>numerator_unit<\/th>\n      <th>denominator_value<\/th>\n      <th>denominator_unit_concept_id<\/th>\n      <th>denominator_unit<\/th>\n      <th>box_size<\/th>\n      <th>amount_unit<\/th>\n      <th>dose_form<\/th>\n      <th>result_obscured<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[0,2,4,5,14,15,16,17,19,20,22]},{"name":"drug_concept_id","targets":0},{"name":"drug","targets":1},{"name":"ingredient_concept_id","targets":2},{"name":"ingredient","targets":3},{"name":"n_records","targets":4},{"name":"n_patients","targets":5},{"name":"domain_id","targets":6},{"name":"vocabulary_id","targets":7},{"name":"concept_class_id","targets":8},{"name":"standard_concept","targets":9},{"name":"concept_code","targets":10},{"name":"valid_start_date","targets":11},{"name":"valid_end_date","targets":12},{"name":"invalid_reason","targets":13},{"name":"amount_value","targets":14},{"name":"amount_unit_concept_id","targets":15},{"name":"numerator_value","targets":16},{"name":"numerator_unit_concept_id","targets":17},{"name":"numerator_unit","targets":18},{"name":"denominator_value","targets":19},{"name":"denominator_unit_concept_id","targets":20},{"name":"denominator_unit","targets":21},{"name":"box_size","targets":22},{"name":"amount_unit","targets":23},{"name":"dose_form","targets":24},{"name":"result_obscured","targets":25}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><table class="table">
 <colgroup>
 <col width="50%">
 <col width="50%">
@@ -424,8 +426,8 @@ the minimum cell count, otherwise FALSE.</td>
 <p>After running the checks, we can write the created outputs (CSV
 files) into a zip file to disk using the
 <code><a href="../reference/writeResultToDisk.html">writeResultToDisk()</a></code> function. The zip created from using
-the <code><a href="../reference/writeResultToDisk.html">writeResultToDisk()</a></code> function can be input (unzipped)
-into the correspoding Shiny Application.<br>
+the <code><a href="../reference/writeResultToDisk.html">writeResultToDisk()</a></code> function serves as the input for
+the corresponding Shiny Application.<br>
 Please replace the “your_database” with the name of your database.
 Create your designated “output_folder” at your desired location and put
 the path if not the working directory.</p>
@@ -433,6 +435,17 @@ the path if not the working directory.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/writeResultToDisk.html">writeResultToDisk</a></span><span class="op">(</span><span class="va">all_checks</span>,</span>
 <span>                  databaseId <span class="op">=</span> <span class="st">"your_database"</span>, </span>
 <span>                  outputFolder <span class="op">=</span> <span class="st">"output_folder"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="view-results-in-the-shiny-app-make-it-available-for-publishing">View results in the Shiny app &amp; make it available for
+publishing<a class="anchor" aria-label="anchor" href="#view-results-in-the-shiny-app-make-it-available-for-publishing"></a>
+</h3>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/viewResults.html">viewResults</a></span><span class="op">(</span>dataFolder <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"output_folder"</span><span class="op">)</span>,</span>
+<span>            makePublishable <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>            publishDir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"MyStudyResultsExplorer"</span><span class="op">)</span>,</span>
+<span>            overwritePublishDir <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -445,7 +458,7 @@ the path if not the working directory.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>

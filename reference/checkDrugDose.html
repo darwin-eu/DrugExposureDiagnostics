@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">DrugExposureDiagnostics</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,7 +44,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Get a summary of the daily drug dose</h1>
-      <small class="dont-index">Source: <a href="https://github.com/darwin-eu/DrugExposureDiagnostics/blob/v1.0.8/R/checkDrugDose.R" class="external-link"><code>R/checkDrugDose.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/darwin-eu/DrugExposureDiagnostics/blob/main/R/checkDrugDose.R" class="external-link"><code>R/checkDrugDose.R</code></a></small>
       <div class="d-none name"><code>checkDrugDose.Rd</code></div>
     </div>
 
@@ -54,7 +54,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">checkDrugDose</span><span class="op">(</span><span class="va">cdm</span>, <span class="va">ingredientConceptId</span>, minCellCount <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">checkDrugDose</span><span class="op">(</span><span class="va">cdm</span>, <span class="va">ingredientConceptId</span>, sampleSize <span class="op">=</span> <span class="cn">NULL</span>, minCellCount <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -67,6 +67,12 @@
 
 <dt id="arg-ingredientconceptid">ingredientConceptId<a class="anchor" aria-label="anchor" href="#arg-ingredientconceptid"></a></dt>
 <dd><p>ingredient</p></dd>
+
+
+<dt id="arg-samplesize">sampleSize<a class="anchor" aria-label="anchor" href="#arg-samplesize"></a></dt>
+<dd><p>Maximum number of records of an ingredient to estimate dose
+coverage. If an ingredient has more, a random sample equal to <code>sampleSize</code>
+will be considered. If NULL, all records will be used.</p></dd>
 
 
 <dt id="arg-mincellcount">minCellCount<a class="anchor" aria-label="anchor" href="#arg-mincellcount"></a></dt>
@@ -88,7 +94,7 @@ lower than this will be obscured. If NULL all results will be reported.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>
