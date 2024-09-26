@@ -19,7 +19,7 @@
 #'
 #' @param table the table as a tibble
 #' @param tableName the table name
-#' @param minCellCount the minimum number of counts that will be displayed. If NULL all results will be reported.
+#' @param minCellCount the minimum number of counts that will be displayed. If 0 all results will be reported.
 #' @param substitute the substitute value if values will be obscured
 #'
 #' @return the input table with results obscured if minCellCount applies
@@ -31,11 +31,11 @@ obscureCounts <- function(table,
   # checks
   errorMessage <- checkmate::makeAssertCollection()
   checkmate::assert_tibble(table, add = errorMessage)
-  checkmate::assertTRUE(is.numeric(minCellCount) || is.null(minCellCount), add = errorMessage)
+  checkmate::assertTRUE(is.numeric(minCellCount), add = errorMessage)
   checkmate::assertTRUE(is.numeric(substitute) || is.na(substitute), add = errorMessage)
   checkmate::reportAssertions(collection = errorMessage)
 
-  if (!is.null(minCellCount)) {
+  if (minCellCount > 0) {
     # initialise result_obscured as FALSE
     table$result_obscured <- FALSE
 
@@ -43,7 +43,7 @@ obscureCounts <- function(table,
                                            "ingredient_concept_id", "ingredient", "result_obscured"))
     checkColNames <- NULL
     if (grepl("drugRoutes|drugSig|drugVerbatimEndDate|drugQuantity|drugSourceConcepts|drugTypes|drugExposureDuration|missingValues|drugDaysSupply", tableName)) {
-      checkColNames <- c("n_records")
+      checkColNames <- c("n_records", "n_person")
     } else if (grepl("diagnosticsSummary|conceptSummary", tableName)) {
       checkColNames <- colNames <- c("n_records", "n_patients")
    }

@@ -30,7 +30,7 @@ If NULL, all concept IDs for an ingredient will be considered.}
 exposure duration and the quantity.}
 
 \item{minCellCount}{minimum number of events to report- results
-lower than this will be obscured. If NULL all results will be reported.}
+lower than this will be obscured. If 0 all results will be reported.}
 
 \item{sampleSize}{the number of samples, default 10.000}
 

@@ -1,6 +1,6 @@
 Package: DrugExposureDiagnostics
 Title: Diagnostics for OMOP Common Data Model Drug Records
-Version: 1.0.8
+Version: 1.0.9
 Authors@R: c(
     person("Ger", "Inberg", email = "g.inberg@erasmusmc.nl", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8993-8748")),
@@ -37,7 +37,8 @@ Imports:
     checkmate (>= 2.0.0),
     glue (>= 1.5.0),
     DrugUtilisation (>= 0.7.0),
-    omopgenerics (>= 0.2.3)
+    omopgenerics (>= 0.2.3),
+    shiny (>= 1.6.0)
 Suggests: 
     testthat (>= 3.0.0),
     duckdb,
@@ -55,7 +56,8 @@ Suggests:
     DiagrammeRsvg,
     ggplot2,
     cowplot,
-    plotly
+    plotly,
+    shinytest2
 Config/testthat/edition: 3
 URL: https://darwin-eu.github.io/DrugExposureDiagnostics/, https://github.com/darwin-eu/DrugExposureDiagnostics
 BugReports: https://github.com/darwin-eu/DrugExposureDiagnostics/issues

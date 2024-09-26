@@ -32,7 +32,7 @@ exposure duration and the quantity. Possible options are "missing",
 "verbatimEndDate", "dose", "sig", "quantity" and "diagnosticsSummary"}
 
 \item{minCellCount}{minimum number of events to report- results
-lower than this will be obscured. If NULL all results will be reported.}
+lower than this will be obscured. If 0 all results will be reported.}
 
 \item{sample}{the number of samples, default 10.000}
 

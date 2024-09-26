@@ -26,7 +26,7 @@
 #' "exposureDuration", "type", "route", "sourceConcept", "daysSupply",
 #' "verbatimEndDate", "dose", "sig", "quantity" and "diagnosticsSummary"
 #' @param minCellCount minimum number of events to report- results
-#' lower than this will be obscured. If NULL all results will be reported.
+#' lower than this will be obscured. If 0 all results will be reported.
 #' @param sample the number of samples, default 10.000
 #' @param tablePrefix The stem for the permanent tables that will
 #' be created when running the diagnostics. Permanent tables will be created using
@@ -66,7 +66,7 @@ executeChecks <- function(cdm,
   checkDbType(cdm = cdm, type = "cdm_reference", messageStore = errorMessage)
   checkmate::assertNumeric(ingredients, min.len = 1, add = errorMessage)
   checkmate::assertNumeric(subsetToConceptId, add = errorMessage, null.ok = TRUE)
-  checkmate::assertTRUE(is.numeric(minCellCount) || is.null(minCellCount), add = errorMessage)
+  checkmate::assertTRUE(is.numeric(minCellCount), add = errorMessage)
   checkmate::assertNumeric(sample, len = 1, add = errorMessage, null.ok = TRUE)
   checkSampleMinCellCount(sample, minCellCount, messageStore = errorMessage)
   checkmate::assertCharacter(tablePrefix, len = 1, add = errorMessage, null.ok = TRUE)
@@ -108,7 +108,7 @@ executeChecks <- function(cdm,
 #' @param checks the checks to be executed, by default the missing values, the
 #' exposure duration and the quantity.
 #' @param minCellCount minimum number of events to report- results
-#' lower than this will be obscured. If NULL all results will be reported.
+#' lower than this will be obscured. If 0 all results will be reported.
 #' @param sampleSize the number of samples, default 10.000
 #' @param tablePrefix The stem for the permanent tables that will
 #' be created when running the diagnostics. Permanent tables will be created using
@@ -135,7 +135,7 @@ executeChecksSingleIngredient <- function(cdm,
   checkDbType(cdm = cdm, type = "cdm_reference", messageStore = errorMessage)
   checkIsIngredient(cdm = cdm, conceptId = ingredient, messageStore = errorMessage)
   checkmate::assertNumeric(subsetToConceptId, add = errorMessage, null.ok = TRUE)
-  checkmate::assertTRUE(is.numeric(minCellCount) || is.null(minCellCount), add = errorMessage)
+  checkmate::assertTRUE(is.numeric(minCellCount), add = errorMessage)
   checkmate::assertNumeric(sampleSize, len = 1, add = errorMessage, null.ok = TRUE)
   checkSampleMinCellCount(sampleSize, minCellCount, messageStore = errorMessage)
   checkmate::assertCharacter(tablePrefix, len = 1, add = errorMessage, null.ok = TRUE)
@@ -332,7 +332,7 @@ executeChecksSingleIngredient <- function(cdm,
     if (verbose == TRUE) {
       start <- printDurationAndMessage("Progress: check drugDose", start)
     }
-    drugDose <- checkDrugDose(cdm, ingredientConceptId = ingredient, minCellCount = minCellCount) %>% dplyr::collect()
+    drugDose <- checkDrugDose(cdm, ingredientConceptId = ingredient, sampleSize = sampleSize, minCellCount = minCellCount) %>% dplyr::collect()
   }
 
   drugSig <- drugSigByConcept <- NULL

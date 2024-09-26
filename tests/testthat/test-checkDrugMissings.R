@@ -43,9 +43,9 @@ test_that("getDrugMissings overall", {
                             sampleSize = 100)
 
   expect_equal(nrow(result), 15)
-  expect_equal(ncol(result), 8)
+  expect_equal(ncol(result), 9)
   expect_equal(colnames(result), c("ingredient_concept_id", "ingredient", "variable",
-                                   "n_records", "n_sample", "n_records_not_missing_value",
+                                   "n_records", "n_sample", "n_person", "n_records_not_missing_value",
                                    "n_records_missing_value", "proportion_records_missing_value"))
   missingDaysSupply <- result %>% dplyr::filter(variable == "n_missing_days_supply")
   expect_equal(missingDaysSupply %>% dplyr::pull(n_records_missing_value), 4)
@@ -80,10 +80,10 @@ test_that("getDrugMissings byConcept", {
                             sampleSize = 100)
 
   expect_equal(nrow(result), 45)
-  expect_equal(ncol(result), 10)
+  expect_equal(ncol(result), 11)
   expect_equal(colnames(result), c("drug_concept_id", "drug",
                                    "ingredient_concept_id", "ingredient", "variable",
-                                   "n_records", "n_sample", "n_records_not_missing_value",
+                                   "n_records", "n_sample", "n_person", "n_records_not_missing_value",
                                    "n_records_missing_value", "proportion_records_missing_value"))
 
   missingDaysSupply <- result %>%

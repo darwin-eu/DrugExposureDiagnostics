@@ -44,7 +44,7 @@ test_that("summariseDrugExposureDuration test overall", {
 
   expect_equal(nrow(result), 2)
   expect_equal(ncol(result), 17)
-  expect_equal(colnames(result), c("ingredient_concept_id", "ingredient", "n_records", "n_sample","n_person",
+  expect_equal(colnames(result), c("ingredient_concept_id", "ingredient", "n_records", "n_sample", "n_person",
                                    "n_non_negative_days", "n_negative_days", "proportion_negative_days",
                                    "minimum_drug_exposure_days", "q05_drug_exposure_days",
                                    "q10_drug_exposure_days", "q25_drug_exposure_days", "median_drug_exposure_days",

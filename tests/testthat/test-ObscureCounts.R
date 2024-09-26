@@ -8,7 +8,7 @@ test_that("check for drugRoutes|drugSig|drugVerbatimEndDate|drugQuantity|drugSou
     "n_negative_days" = c(10, 12, 100, 5, 10, 10),
     "n_records" = c(10, 10, 100, 5, 6, 0),
     "n_sample" = c(100, 3, 100,100,100000,1000000),
-    "n_patients" = c(10, 10, 100, 5, 2, 0)
+    "n_person" = c(10, 10, 8, 5, 2, 0)
   )
 
   types <- c("drugRoutes", "drugSig", "drugVerbatimEndDate", "drugQuantity", "drugSourceConcepts", "drugTypes", "drugExposureDuration",
@@ -16,15 +16,15 @@ test_that("check for drugRoutes|drugSig|drugVerbatimEndDate|drugQuantity|drugSou
   lapply(types, FUN = function(type) {
     result <- obscureCounts(table, type, minCellCount = 10, substitute = NA)
 
-    expect_equal(result$result_obscured, c(FALSE, FALSE, FALSE, TRUE, TRUE, FALSE))
-    expect_equal(result$n_negative_days, c(10, 12, 100, NA, NA, 10))
-    expect_equal(result$proportion_of_records_by_drug_type, c(0.1, 0.1, 0.2, NA, NA, 0))
-    expect_equal(result$n_records, c(10, 10, 100, NA, NA, 0))
-    expect_equal(result$n_sample, c(100, 3, 100,NA, NA,1000000))
-    expect_equal(result$n_patients, c(10, 10, 100, NA, NA, 0))
+    expect_equal(result$result_obscured, c(FALSE, FALSE, TRUE, TRUE, TRUE, FALSE))
+    expect_equal(result$n_negative_days, c(10, 12, NA, NA, NA, 10))
+    expect_equal(result$proportion_of_records_by_drug_type, c(0.1, 0.1, NA, NA, NA, 0))
+    expect_equal(result$n_records, c(10, 10, NA, NA, NA, 0))
+    expect_equal(result$n_sample, c(100, 3, NA, NA, NA,1000000))
+    expect_equal(result$n_person, c(10, 10, NA, NA, NA, 0))
     expect_equal(typeof(result$result_obscured),"logical")
 
-    result <- obscureCounts(table, type, minCellCount = NULL)
+    result <- obscureCounts(table, type, minCellCount = 0)
     expect_equal(result, table)
   })
 })

@@ -3,6 +3,7 @@
 export("%>%")
 export(executeChecks)
 export(mockDrugExposure)
+export(viewResults)
 export(writeResultToDisk)
 importFrom(graphics,hist)
 importFrom(magrittr,"%>%")

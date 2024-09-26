@@ -11,7 +11,7 @@ obscureCounts(table, tableName, minCellCount = 5, substitute = NA)
 
 \item{tableName}{the table name}
 
-\item{minCellCount}{the minimum number of counts that will be displayed. If NULL all results will be reported.}
+\item{minCellCount}{the minimum number of counts that will be displayed. If 0 all results will be reported.}
 
 \item{substitute}{the substitute value if values will be obscured}
 }

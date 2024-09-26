@@ -18,27 +18,40 @@
 #'
 #' @param cdm CDMConnector reference object
 #' @param ingredientConceptId ingredient
+#' @param sampleSize Maximum number of records of an ingredient to estimate dose
+#'  coverage. If an ingredient has more, a random sample equal to `sampleSize`
+#'  will be considered. If NULL, all records will be used.
 #' @param minCellCount minimum number of events to report- results
 #' lower than this will be obscured. If NULL all results will be reported.
 #'
 #' @return a table with the stats about the daily dose
 checkDrugDose <- function(cdm,
                           ingredientConceptId,
+                          sampleSize = NULL,
                           minCellCount = 5) {
 
   errorMessage <- checkmate::makeAssertCollection()
   checkDbType(cdm = cdm, messageStore = errorMessage)
-  checkmate::assertTRUE(is.numeric(minCellCount) || is.null(minCellCount), add = errorMessage)
+  checkmate::assertTRUE(is.numeric(minCellCount), add = errorMessage)
   checkmate::reportAssertions(collection = errorMessage)
 
   patterns <- utils::read.csv(system.file("pattern_assessment_for_dose_final.csv",
                                           package = "DrugUtilisation"))
 
-  ## can make an error that if FLAG occurs in records denominator_value, there is s.th. wrong with the pattern file
+  # adjust sampleSize if needed to prevent error in DUS
+  if (!is.null(sampleSize)) {
+    drugRecordCount <- cdm[["ingredient_drug_records"]] %>%
+      dplyr::tally() %>%
+      dplyr::pull(.data$n)
+    if (sampleSize > drugRecordCount) {
+      sampleSize <- drugRecordCount
+    }
+  }
   records <- DrugUtilisation::summariseDoseCoverage(cdm = cdm,
                                                     ingredientConceptId = ingredientConceptId,
                                                     estimates = c("count_missing", "percentage_missing", "mean", "sd",
-                                                                  "q05", "q25", "median", "q75", "q95", "min", "max")) %>%
+                                                                  "q05", "q25", "median", "q75", "q95", "min", "max"),
+                                                    sampleSize = sampleSize) %>%
     dplyr::filter(.data$group_level != "NA") %>%
     omopgenerics::suppress(minCellCount) %>%
     dplyr::mutate(pattern_id = as.numeric(gsub("[^0-9]", "", .data$strata_level))) %>%

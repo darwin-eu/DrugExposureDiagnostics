@@ -1,5 +1,10 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 1.0.9
+* Integrate shiny app in package
+* Fix bug in obscuring results
+* Use sample size in dose check
+
 # DrugExposureDiagnostics 1.0.8
 * Skip unavailable concepts (#253 and #254)
 

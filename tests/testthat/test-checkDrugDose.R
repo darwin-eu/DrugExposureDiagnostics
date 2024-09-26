@@ -54,13 +54,7 @@ getInputDb <- function() {
 
 }
 
-test_that("checkDrugDose overall", {
-  testData <- getInputDb()
-  ingredient = 1125315
-  minCellCount = 0
-
-  result <- checkDrugDose(testData, ingredientConceptId = ingredient, minCellCount = minCellCount)
-
+checkResult <- function(testData, result, sampleSize = NULL) {
   expect_equal(nrow(result), 48)
   expect_equal(ncol(result), 16)
   expect_equal(colnames(result), c(
@@ -69,22 +63,40 @@ test_that("checkDrugDose overall", {
     "additional_level","pattern_name","ingredient","ingredient_concept_id"
   ))
   expect_true(result$group_level[1] == "acetaminophen")
+  expectedCount <- ifelse(is.null(sampleSize), nrow(dplyr::collect(testData$drug_exposure)), sampleSize)
   expect_equal(result %>%
                  dplyr::filter(.data$estimate_name == "count" & .data$strata_level == "overall") %>%
-                 dplyr::pull(estimate_value), "7")
+                 dplyr::pull(estimate_value), as.character(expectedCount))
+  expectedMedian <- ifelse(is.null(sampleSize), 882, 139)
   expect_equal(round(as.numeric(result %>%
-                   dplyr::filter(.data$estimate_name == "median" & .data$strata_level == "overall") %>%
-                   dplyr::pull(estimate_value),0)), 882)
+                                  dplyr::filter(.data$estimate_name == "median" & .data$strata_level == "overall") %>%
+                                  dplyr::pull(estimate_value),0)), expectedMedian)
   expect_true(!is.na(result %>%
-                  dplyr::filter(.data$estimate_name == "min" & .data$strata_level == "overall") %>%
-                  dplyr::pull(estimate_value)))
+                       dplyr::filter(.data$estimate_name == "min" & .data$strata_level == "overall") %>%
+                       dplyr::pull(estimate_value)))
   expect_equal(result %>%
                  dplyr::filter(.data$strata_level %in% c("milligram")) %>%
                  dplyr::pull(strata_level),
                result %>%
                  dplyr::filter(.data$strata_level %in% c("milligram")) %>%
                  dplyr::pull(pattern_name))
+}
+
+test_that("checkDrugDose overall", {
+  testData <- getInputDb()
+  ingredient <- 1125315
+  minCellCount <- 0
+  sampleSize <- NULL
+
+  result <- checkDrugDose(testData, ingredientConceptId = ingredient, sampleSize = sampleSize, minCellCount = minCellCount)
+
+  checkResult(testData, result, sampleSize)
+
+  # check sampleSize
+  sampleSize <- 5
+  result <- checkDrugDose(testData, ingredientConceptId = ingredient, sampleSize = sampleSize, minCellCount = minCellCount)
+
+  checkResult(testData, result, sampleSize)
 
   DBI::dbDisconnect(attr(testData, "dbcon"), shutdown = TRUE)
-
 })

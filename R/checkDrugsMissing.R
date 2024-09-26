@@ -52,6 +52,7 @@ getDrugMissings <- function(cdm,
     dplyr::summarise(
       n_records = as.integer(dplyr::n()),
       n_sample = .env$sampleSize,
+      n_person = dplyr::n_distinct(.data$person_id),
       n_missing_drug_exposure_id =
         sum(dplyr::case_when(
           .data$drug_exposure_id == 0 ~ 1, TRUE ~ 0), na.rm = T),
@@ -105,7 +106,8 @@ getDrugMissings <- function(cdm,
     dplyr::collect() %>%
     tidyr::pivot_longer(!tidyselect::any_of(c("drug_concept_id", "drug",
                                               "ingredient_concept_id",
-                                              "ingredient","n_records","n_sample")),
+                                              "ingredient","n_records",
+                                              "n_sample", "n_person")),
                         names_to = "variable",
                         values_to = "n_records_missing_value")
 
@@ -114,6 +116,7 @@ getDrugMissings <- function(cdm,
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
     dplyr::relocate("n_records", .after = "variable") %>%
     dplyr::relocate("n_sample", .after = "n_records") %>%
+    dplyr::relocate("n_person", .after = "n_sample") %>%
     dplyr::mutate(n_records_not_missing_value = .data$n_records - .data$n_records_missing_value) %>%
     dplyr::mutate(proportion_records_missing_value = .data$n_records_missing_value / .data$n_records) %>%
     dplyr::relocate("n_records_missing_value", .after = "n_records_not_missing_value")

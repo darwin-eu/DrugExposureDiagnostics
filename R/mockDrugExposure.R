@@ -174,6 +174,7 @@ mockDrugExposure <- function(drug_exposure = NULL,
         numerator_unit_concept_id = as.integer(numerator_unit_concept_id),
         denominator_value = as.numeric(denominator_value),
         denominator_unit_concept_id = as.integer(denominator_unit_concept_id),
+        box_size = 0,
         valid_start_date = as.Date(valid_start_date),
         valid_end_date = as.Date(valid_end_date),
         invalid_reason = as.character(invalid_reason)

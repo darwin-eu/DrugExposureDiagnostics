@@ -154,7 +154,7 @@ result_obscured | TRUE if count has been suppressed due to being below the minim
 ### Saving the diagnostic output
 
 After running the checks, we can write the created outputs (CSV files) into a zip file to disk using the `writeResultToDisk()` function. 
-The zip created from using the `writeResultToDisk()` function can be input (unzipped) into the correspoding Shiny Application. \
+The zip created from using the `writeResultToDisk()` function serves as the input for the corresponding Shiny Application. \
 Please replace the "your_database" with the name of your database. 
 Create your designated "output_folder" at your desired location and put the path if not the working directory.
 ```{r eval=FALSE}
@@ -163,6 +163,14 @@ writeResultToDisk(all_checks,
                   outputFolder = "output_folder")
 ```
 
+### View results in the Shiny app & make it available for publishing
+```{r eval=FALSE}
+viewResults(dataFolder = file.path(getwd(), "output_folder"),
+            makePublishable = TRUE,
+            publishDir = file.path(getwd(), "MyStudyResultsExplorer"),
+            overwritePublishDir = TRUE
+)
+```
 
 ```{r, echo=FALSE}
   DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)

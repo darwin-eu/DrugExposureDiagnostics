@@ -7,6 +7,14 @@ test_that("execute default checks, default ingredient, verbose", {
   # checks
   expect_equal(length(result), 7)
   expect_equal(nrow(result$conceptSummary), 6)
+  expect_equal(ncol(result$conceptSummary), 26)
+  expect_equal(colnames(result$conceptSummary), c("drug_concept_id", "drug", "ingredient_concept_id",
+                                                  "ingredient", "n_records", "n_patients", "domain_id", "vocabulary_id", "concept_class_id",
+                                                  "standard_concept", "concept_code", "valid_start_date", "valid_end_date", "invalid_reason", "amount_value",
+                                                  "amount_unit_concept_id", "numerator_value", "numerator_unit_concept_id", "numerator_unit", "denominator_value",
+                                                  "denominator_unit_concept_id", "denominator_unit", "box_size", "amount_unit", "dose_form",
+                                                  "result_obscured"))
+
   expect_true(any(grepl("acetaminophen", result$conceptSummary$drug)))
   # check that all colnames don't have any uppercase characters (this might not be supported on some databases)
   allColnames <- unlist(lapply(names(result), FUN = function(name)  {

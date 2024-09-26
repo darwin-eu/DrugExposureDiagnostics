@@ -4,12 +4,16 @@
 \alias{checkDrugDose}
 \title{Get a summary of the daily drug dose}
 \usage{
-checkDrugDose(cdm, ingredientConceptId, minCellCount = 5)
+checkDrugDose(cdm, ingredientConceptId, sampleSize = NULL, minCellCount = 5)
 }
 \arguments{
 \item{cdm}{CDMConnector reference object}
 
 \item{ingredientConceptId}{ingredient}
+
+\item{sampleSize}{Maximum number of records of an ingredient to estimate dose
+coverage. If an ingredient has more, a random sample equal to \code{sampleSize}
+will be considered. If NULL, all records will be used.}
 
 \item{minCellCount}{minimum number of events to report- results
 lower than this will be obscured. If NULL all results will be reported.}
