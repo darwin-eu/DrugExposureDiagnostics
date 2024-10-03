@@ -42,11 +42,13 @@ obscureCounts <- function(table,
     colNames <- setdiff(colnames(table), c("drug_concept_id", "drug",
                                            "ingredient_concept_id", "ingredient", "result_obscured"))
     checkColNames <- NULL
-    if (grepl("drugRoutes|drugSig|drugVerbatimEndDate|drugQuantity|drugSourceConcepts|drugTypes|drugExposureDuration|missingValues|drugDaysSupply", tableName)) {
+    if (grepl("drugRoutes|drugSig|drugVerbatimEndDate|drugQuantity|drugSourceConcepts|drugTypes|drugExposureDuration|drugDaysSupply", tableName)) {
       checkColNames <- c("n_records", "n_person")
+    } else if (grepl("missingValues", tableName)) {
+      checkColNames <- c("n_records", "n_person", "n_records_not_missing_value", "n_records_missing_value")
     } else if (grepl("diagnosticsSummary|conceptSummary", tableName)) {
       checkColNames <- colNames <- c("n_records", "n_patients")
-   }
+    }
 
     # if any count col is less than minCellCount and larger than zero, replace colNames with substitute
     if (!is.null(checkColNames)) {
