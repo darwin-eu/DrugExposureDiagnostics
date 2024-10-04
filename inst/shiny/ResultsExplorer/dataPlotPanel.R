@@ -224,7 +224,7 @@ dataPlotPanelServer <- function(id, data, dataByConcept, downloadFilename, descr
           dplyr::select(-c("pattern_name")) %>%
           omopgenerics::newSummarisedResult() %>%
           dplyr::mutate(pattern_name = patterns) %>%
-          dplyr::left_join(settings(.), by = "result_id") %>%
+          dplyr::left_join(omopgenerics::settings(.), by = "result_id") %>%
           createDoseChart(colour = "database_id", x = "group_level", facet = "pattern_name")
       } else if (id == "drugExposureDuration") {
         data %>%
