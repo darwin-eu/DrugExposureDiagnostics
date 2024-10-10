@@ -94,7 +94,7 @@ executeChecks <- function(cdm,
     })
     resultList[[i]] <- ingredientResult
   }
-  resultList <- do.call(Map, c(f = rbind, Filter(Negate(is.null), resultList)))
+  resultList <- do.call(Map, c(f = dplyr::bind_rows, Filter(Negate(is.null), resultList)))
   return(resultList)
 }
 
