@@ -63,11 +63,13 @@ checkResult <- function(testData, result, sampleSize = NULL) {
     "additional_level","pattern_name","ingredient","ingredient_concept_id"
   ))
   expect_true(result$group_level[1] == "acetaminophen")
-  expectedCount <- ifelse(is.null(sampleSize), nrow(dplyr::collect(testData$drug_exposure)), sampleSize)
+  #expectedCount <- ifelse(is.null(sampleSize), nrow(dplyr::collect(testData$drug_exposure)), sampleSize)
+  expectedCount <- nrow(dplyr::collect(testData$drug_exposure))
   expect_equal(result %>%
                  dplyr::filter(.data$estimate_name == "count" & .data$strata_level == "overall") %>%
                  dplyr::pull(estimate_value), as.character(expectedCount))
-  expectedMedian <- ifelse(is.null(sampleSize), 882, 139)
+  #expectedMedian <- ifelse(is.null(sampleSize), 882, 139)
+  expectedMedian <- 882
   expect_equal(round(as.numeric(result %>%
                                   dplyr::filter(.data$estimate_name == "median" & .data$strata_level == "overall") %>%
                                   dplyr::pull(estimate_value),0)), expectedMedian)

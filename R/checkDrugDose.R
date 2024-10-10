@@ -50,8 +50,8 @@ checkDrugDose <- function(cdm,
   records <- DrugUtilisation::summariseDoseCoverage(cdm = cdm,
                                                     ingredientConceptId = ingredientConceptId,
                                                     estimates = c("count_missing", "percentage_missing", "mean", "sd",
-                                                                  "q05", "q25", "median", "q75", "q95", "min", "max"),
-                                                    sampleSize = sampleSize) %>%
+                                                                  "q05", "q25", "median", "q75", "q95", "min", "max")) %>%
+                                                    #sampleSize = sampleSize) %>%
     dplyr::filter(.data$group_level != "NA") %>%
     omopgenerics::suppress(minCellCount) %>%
     dplyr::mutate(pattern_id = as.numeric(gsub("[^0-9]", "", .data$strata_level))) %>%
