@@ -42,7 +42,8 @@ checkDrugDose <- function(cdm,
   if (!is.null(sampleSize)) {
     drugRecordCount <- cdm[["ingredient_drug_records"]] %>%
       dplyr::tally() %>%
-      dplyr::pull(.data$n)
+      dplyr::pull(.data$n) %>%
+      as.numeric()
     if (sampleSize > drugRecordCount) {
       sampleSize <- drugRecordCount
     }
