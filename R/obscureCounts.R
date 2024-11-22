@@ -27,7 +27,6 @@ obscureCounts <- function(table,
                           tableName,
                           minCellCount = 5,
                           substitute = NA) {
-
   # checks
   errorMessage <- checkmate::makeAssertCollection()
   checkmate::assert_tibble(table, add = errorMessage)
@@ -39,14 +38,18 @@ obscureCounts <- function(table,
     # initialise result_obscured as FALSE
     table$result_obscured <- FALSE
 
-    colNames <- setdiff(colnames(table), c("drug_concept_id", "drug",
-                                           "ingredient_concept_id", "ingredient", "result_obscured"))
+    colNames <- setdiff(colnames(table), c(
+      "drug_concept_id", "drug",
+      "ingredient_concept_id", "ingredient", "result_obscured"
+    ))
     checkColNames <- NULL
-    if (grepl("drugRoutes|drugSig|drugVerbatimEndDate|drugQuantity|drugSourceConcepts|drugTypes|drugExposureDuration|missingValues|drugDaysSupply", tableName)) {
+    if (grepl("drugRoutes|drugSig|drugVerbatimEndDate|drugQuantity|drugSourceConcepts|drugTypes|drugExposureDuration|drugDaysSupply", tableName)) {
       checkColNames <- c("n_records", "n_person")
+    } else if (grepl("missingValues", tableName)) {
+      checkColNames <- c("n_records", "n_person", "n_records_not_missing_value", "n_records_missing_value")
     } else if (grepl("diagnosticsSummary|conceptSummary", tableName)) {
       checkColNames <- colNames <- c("n_records", "n_patients")
-   }
+    }
 
     # if any count col is less than minCellCount and larger than zero, replace colNames with substitute
     if (!is.null(checkColNames)) {

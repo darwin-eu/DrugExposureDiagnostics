@@ -26,25 +26,29 @@ checkVerbatimEndDate <- function(cdm,
                                  drugRecordsTable = "ingredient_drug_records",
                                  byConcept = TRUE,
                                  sampleSize = 10000) {
-
   errorMessage <- checkmate::makeAssertCollection()
   checkDbType(cdm = cdm, messageStore = errorMessage)
-  checkTableExists(cdm = cdm, tableName = drugRecordsTable,
-                   messageStore = errorMessage)
+  checkTableExists(
+    cdm = cdm, tableName = drugRecordsTable,
+    messageStore = errorMessage
+  )
   checkLogical(byConcept, messageStore = errorMessage)
   checkmate::reportAssertions(collection = errorMessage)
 
   if (isTRUE(byConcept)) {
-    grouping <- c("drug_concept_id",
-                  "drug",
-                  "ingredient_concept_id",
-                  "ingredient")
+    grouping <- c(
+      "drug_concept_id",
+      "drug",
+      "ingredient_concept_id",
+      "ingredient"
+    )
   } else {
     grouping <- c("ingredient_concept_id", "ingredient")
   }
 
   total <- cdm[[drugRecordsTable]] %>%
-    dplyr::summarise(total = dplyr::n()) %>% dplyr::pull()
+    dplyr::summarise(total = dplyr::n()) %>%
+    dplyr::pull()
 
   records <- cdm[[drugRecordsTable]] %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
@@ -56,19 +60,23 @@ checkVerbatimEndDate <- function(cdm,
       n_person = dplyr::n_distinct(.data$person_id),
       n_missing_verbatim_end_date = sum(dplyr::case_when(
         is.na(.data$verbatim_end_date) ~ 1,
-        !is.na(.data$verbatim_end_date) ~ 0), na.rm = T),
+        !is.na(.data$verbatim_end_date) ~ 0
+      ), na.rm = T),
       n_not_missing_verbatim_end_date = sum(dplyr::case_when(
         !is.na(.data$verbatim_end_date) ~ 1,
-        is.na(.data$verbatim_end_date) ~ 0), na.rm = T),
+        is.na(.data$verbatim_end_date) ~ 0
+      ), na.rm = T),
       n_verbatim_end_date_equal_to_drug_exposure_end_date = sum(dplyr::case_when(
-          .data$drug_exposure_end_date == .data$verbatim_end_date ~ 1,
-          .data$drug_exposure_end_date != .data$verbatim_end_date ~ 0,
-          is.na(.data$drug_exposure_end_date) | is.na(.data$verbatim_end_date) ~ 0), na.rm = T),
+        .data$drug_exposure_end_date == .data$verbatim_end_date ~ 1,
+        .data$drug_exposure_end_date != .data$verbatim_end_date ~ 0,
+        is.na(.data$drug_exposure_end_date) | is.na(.data$verbatim_end_date) ~ 0
+      ), na.rm = T),
       n_verbatim_end_date_and_drug_exposure_end_date_differ = sum(dplyr::case_when(
         .data$drug_exposure_end_date != .data$verbatim_end_date ~ 1,
         .data$drug_exposure_end_date == .data$verbatim_end_date ~ 0,
-        is.na(.data$drug_exposure_end_date) | is.na(.data$verbatim_end_date) ~ 0), na.rm = T)
-      )
+        is.na(.data$drug_exposure_end_date) | is.na(.data$verbatim_end_date) ~ 0
+      ), na.rm = T)
+    )
 
   records <- records %>%
     dplyr::mutate(

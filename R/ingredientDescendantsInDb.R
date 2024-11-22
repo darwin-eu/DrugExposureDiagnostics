@@ -32,7 +32,6 @@ ingredientDescendantsInDb <- function(cdm,
                                       drugRecordsTable = "drug_exposure",
                                       tablePrefix = NULL,
                                       verbose = FALSE) {
-
   # checks
   errorMessage <- checkmate::makeAssertCollection()
   checkDbType(cdm = cdm, messageStore = errorMessage)
@@ -57,45 +56,53 @@ ingredientDescendantsInDb <- function(cdm,
     )
 
   # store result
-  dbConceptsTable <- computeDBQuery(table = dbConceptsTable,
-                                    tablePrefix = tablePrefix,
-                                    tableName = "_DED_concepts_1",
-                                    cdm = cdm)
+  dbConceptsTable <- computeDBQuery(
+    table = dbConceptsTable,
+    tablePrefix = tablePrefix,
+    tableName = "_DED_concepts_1",
+    cdm = cdm
+  )
 
   if (verbose == TRUE) {
     message("Progress: adding drug strength info")
   }
   dbConceptsTable <- dbConceptsTable %>%
-    dplyr::left_join(cdm$drug_strength %>%
-      dplyr::filter(.data$ingredient_concept_id == .env$ingredient) %>%
-      dplyr::select(!c(
-        "valid_start_date",
-        "valid_end_date",
-        "invalid_reason"
-      )),
-    by = c("concept_id" = "drug_concept_id")
+    dplyr::left_join(
+      cdm$drug_strength %>%
+        dplyr::filter(.data$ingredient_concept_id == .env$ingredient) %>%
+        dplyr::select(!c(
+          "valid_start_date",
+          "valid_end_date",
+          "invalid_reason"
+        )),
+      by = c("concept_id" = "drug_concept_id")
     )
   # store result
-  dbConceptsTable <- computeDBQuery(table = dbConceptsTable,
-                                    tablePrefix = tablePrefix,
-                                    tableName = "_DED_concepts_2",
-                                    cdm = cdm)
+  dbConceptsTable <- computeDBQuery(
+    table = dbConceptsTable,
+    tablePrefix = tablePrefix,
+    tableName = "_DED_concepts_2",
+    cdm = cdm
+  )
 
   if (verbose == TRUE) {
     message("Progress: limiting to concepts in the db")
   }
   dbConceptsTable <- dbConceptsTable %>%
-    dplyr::inner_join(cdm[[drugRecordsTable]] %>%
-      dplyr::select("drug_concept_id") %>%
-      dplyr::distinct(),
-    by = c("concept_id" = "drug_concept_id")
+    dplyr::inner_join(
+      cdm[[drugRecordsTable]] %>%
+        dplyr::select("drug_concept_id") %>%
+        dplyr::distinct(),
+      by = c("concept_id" = "drug_concept_id")
     ) %>%
     dplyr::distinct()
   # store result
-  dbConceptsTable <- computeDBQuery(table = dbConceptsTable,
-                                    tablePrefix = tablePrefix,
-                                    tableName = "_DED_concepts_3",
-                                    cdm = cdm)
+  dbConceptsTable <- computeDBQuery(
+    table = dbConceptsTable,
+    tablePrefix = tablePrefix,
+    tableName = "_DED_concepts_3",
+    cdm = cdm
+  )
 
   if (verbose == TRUE) {
     message("Progress: adding concept names")
@@ -146,23 +153,28 @@ ingredientDescendantsInDb <- function(cdm,
       by = "concept_id"
     )
   # store result
-  dbConceptsTable <- computeDBQuery(table = dbConceptsTable,
-                                    tablePrefix = tablePrefix,
-                                    tableName = "_DED_concepts_4",
-                                    cdm = cdm)
+  dbConceptsTable <- computeDBQuery(
+    table = dbConceptsTable,
+    tablePrefix = tablePrefix,
+    tableName = "_DED_concepts_4",
+    cdm = cdm
+  )
 
   # add rxnorm dose form
   drugConceptForm <- dbConceptsTable %>%
     dplyr::select("concept_id") %>%
-    dplyr::left_join(cdm$concept_relationship %>%
-                dplyr::filter(.data$relationship_id ==
-                                "RxNorm has dose form") %>%
-                dplyr::left_join(cdm$concept,
-                                 by = c("concept_id_2"= "concept_id")) %>%
-                dplyr::select("concept_id_1", "concept_id_2", "concept_name") %>%
-                dplyr::distinct(),
-              by = c("concept_id"= "concept_id_1")) %>%
-    dplyr::select("concept_id","concept_name") %>%
+    dplyr::left_join(
+      cdm$concept_relationship %>%
+        dplyr::filter(.data$relationship_id ==
+          "RxNorm has dose form") %>%
+        dplyr::left_join(cdm$concept,
+          by = c("concept_id_2" = "concept_id")
+        ) %>%
+        dplyr::select("concept_id_1", "concept_id_2", "concept_name") %>%
+        dplyr::distinct(),
+      by = c("concept_id" = "concept_id_1")
+    ) %>%
+    dplyr::select("concept_id", "concept_name") %>%
     dplyr::rename("dose_form" = "concept_name") %>%
     dplyr::collect()
 
@@ -182,7 +194,7 @@ ingredientDescendantsInDb <- function(cdm,
           na.rm = TRUE
         )
     } else {
-        names(drugConceptForm)[2] <- "dose_form"
+      names(drugConceptForm)[2] <- "dose_form"
     }
 
     drugConceptFormTblName <- CDMConnector::uniqueTableName()
@@ -191,16 +203,19 @@ ingredientDescendantsInDb <- function(cdm,
     )
     dbConceptsTable <- dbConceptsTable %>%
       dplyr::left_join(cdm[[drugConceptFormTblName]],
-                       by="concept_id")
+        by = "concept_id"
+      )
   } else {
     dbConceptsTable <- dbConceptsTable %>%
       dplyr::mutate(dose_form = NA)
   }
   # store result
-  dbConceptsTable <- computeDBQuery(table = dbConceptsTable,
-                                    tablePrefix = tablePrefix,
-                                    tableName = "_DED_concepts_5",
-                                    cdm = cdm)
+  dbConceptsTable <- computeDBQuery(
+    table = dbConceptsTable,
+    tablePrefix = tablePrefix,
+    tableName = "_DED_concepts_5",
+    cdm = cdm
+  )
 
   if (verbose == TRUE) {
     duration <- abs(as.numeric(Sys.time() - start_collect, units = "secs"))

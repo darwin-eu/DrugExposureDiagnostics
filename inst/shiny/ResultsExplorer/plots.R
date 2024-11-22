@@ -2,32 +2,42 @@
 
 # Copied from CohortCharacteristics. The new version of this function doesn't work with our data
 # and we rather not import another package for a single function
-plotCharacteristics <- function (data, x = "variable_name", plotStyle = "barplot", facet = NULL,
-                                 colour = NULL, colourName = NULL, .options = list()) {
+plotCharacteristics <- function(data, x = "variable_name", plotStyle = "barplot", facet = NULL,
+                                colour = NULL, colourName = NULL, .options = list()) {
   xAxis <- x
   yAxis <- "estimate_value"
   vertical_x <- FALSE
-  nVariableNames <- length(dplyr::pull(dplyr::distinct(dplyr::select(data,
-                                                                     "variable_name"))))
+  nVariableNames <- length(dplyr::pull(dplyr::distinct(dplyr::select(
+    data,
+    "variable_name"
+  ))))
   if (nVariableNames != 1) {
-    emptyPlot("Only one variable name can be plotted at a time.",
-              "Please filter variable_name column in results before passing to plotCharacteristics()")
+    emptyPlot(
+      "Only one variable name can be plotted at a time.",
+      "Please filter variable_name column in results before passing to plotCharacteristics()"
+    )
   }
   data <- dplyr::mutate(data, estimate_type = dplyr::if_else(.data$estimate_type ==
-                                                               "integer", "numeric", .data$estimate_type))
-  estimateType <- dplyr::pull(dplyr::distinct(dplyr::select(data,
-                                                            "estimate_type")))
+    "integer", "numeric", .data$estimate_type))
+  estimateType <- dplyr::pull(dplyr::distinct(dplyr::select(
+    data,
+    "estimate_type"
+  )))
   nEstimateTypes <- length(estimateType)
   if (nEstimateTypes != 1) {
-    emptyPlot("Only one estimate type can be plotted at a time.",
-              "Please filter estimate_type column in results before passing to plotCharacteristics()")
+    emptyPlot(
+      "Only one estimate type can be plotted at a time.",
+      "Please filter estimate_type column in results before passing to plotCharacteristics()"
+    )
   }
   if (!estimateType %in% c("numeric", "percentage")) {
     emptyPlot(paste0(estimateType, " not currently supported by plotCharacteristics()"))
   }
-  gg <- plotfunction(data, xAxis, yAxis, plotStyle = plotStyle,
-                     facetVarX = NULL, facetVarY = NULL, colorVars = colour,
-                     vertical_x, facet = facet, .options = .options)
+  gg <- plotfunction(data, xAxis, yAxis,
+    plotStyle = plotStyle,
+    facetVarX = NULL, facetVarY = NULL, colorVars = colour,
+    vertical_x, facet = facet, .options = .options
+  )
   gg <- gg + ggplot2::theme_bw()
   if (estimateType == "numeric") {
     var <- unique(data$variable_name)
@@ -49,8 +59,7 @@ plotCharacteristics <- function (data, x = "variable_name", plotStyle = "barplot
   gg <- gg + ggplot2::theme_bw() + ggplot2::theme(legend.position = "top")
   if (!is.null(colourName)) {
     gg <- gg + ggplot2::labs(color = colourName, fill = colourName)
-  }
-  else {
+  } else {
     gg <- gg + ggplot2::labs(color = "", fill = "")
   }
   gg
@@ -79,8 +88,8 @@ plotfunction <- function(data,
 
   if (nrow(data) == 0) {
     return(ggplot2::ggplot() +
-             ggplot2::theme_void() +
-             ggplot2::labs(title = "Empty Data Provided", subtitle = "No data available for plotting."))
+      ggplot2::theme_void() +
+      ggplot2::labs(title = "Empty Data Provided", subtitle = "No data available for plotting."))
   }
 
   if (plotStyle == "boxplot") {
@@ -117,8 +126,8 @@ plotfunction <- function(data,
   if (!is.null(facet)) {
     data <- data |>
       tidyr::unite("facet_var",
-                   c(dplyr::all_of(.env$facet)),
-                   remove = FALSE, sep = "; "
+        c(dplyr::all_of(.env$facet)),
+        remove = FALSE, sep = "; "
       )
   }
 
@@ -135,8 +144,8 @@ plotfunction <- function(data,
         dplyr::mutate(
           estimate_value =
             dplyr::if_else(.data$estimate_name == "percentage",
-                           .data$estimate_value / 100,
-                           .data$estimate_value
+              .data$estimate_value / 100,
+              .data$estimate_value
             )
         )
     }
@@ -250,7 +259,7 @@ plotfunction <- function(data,
             names()
 
           data$group_identifier <- interaction(data |>
-                                                 dplyr::select(dplyr::all_of(group_columns)))
+            dplyr::select(dplyr::all_of(group_columns)))
 
           density_data_wide <- data |>
             dplyr::mutate(estimate_value = as.list(.data$estimate_value)) |>
@@ -291,16 +300,16 @@ plotfunction <- function(data,
         # Create plots
         p_percent <- if (nrow(df_percent) > 0) {
           create_bar_plot(df_percent,
-                          plotStyle = "barplot",
-                          is_percent = TRUE
+            plotStyle = "barplot",
+            is_percent = TRUE
           )
         } else {
           NULL
         }
         p_non_percent <- if (nrow(df_non_percent) > 0) {
           create_bar_plot(df_non_percent,
-                          plotStyle = "barplot",
-                          is_percent = FALSE
+            plotStyle = "barplot",
+            is_percent = FALSE
           )
         } else {
           NULL
@@ -309,8 +318,8 @@ plotfunction <- function(data,
         p_percent <- NULL
         p_non_percent <- if (nrow(df_non_percent) > 0) {
           create_bar_plot(df_non_percent,
-                          is_percent = FALSE,
-                          plotStyle = "density"
+            is_percent = FALSE,
+            plotStyle = "density"
           )
         }
       }
@@ -347,7 +356,7 @@ plotfunction <- function(data,
 
       if (length(non_numeric_cols) > 0) {
         df_non_dates_wide$group_identifier <- interaction(df_non_dates_wide |>
-                                                            dplyr::select(dplyr::all_of(non_numeric_cols)))
+          dplyr::select(dplyr::all_of(non_numeric_cols)))
       } else {
         df_non_dates_wide$group_identifier <- "overall"
       }
@@ -361,17 +370,17 @@ plotfunction <- function(data,
       df_dates_wide <- df_dates |>
         tidyr::pivot_wider(
           id_cols = dplyr::all_of(colnames(df_dates |>
-                                             dplyr::select(-c(
-                                               "estimate_name",
-                                               "estimate_value"
-                                             )))),
+            dplyr::select(-c(
+              "estimate_name",
+              "estimate_value"
+            )))),
           names_from = "estimate_name", values_from = "estimate_value"
         )
       if (length(non_numeric_cols) > 0) {
         df_dates_wide$group_identifier <- interaction(df_dates_wide |>
-                                                        dplyr::select(
-                                                          dplyr::all_of(non_numeric_cols)
-                                                        ))
+          dplyr::select(
+            dplyr::all_of(non_numeric_cols)
+          ))
       } else {
         df_dates_wide$group_identifier <- "overall"
       }
@@ -765,8 +774,8 @@ plotfunction <- function(data,
     }
     p <- p +
       ggplot2::facet_wrap(ggplot2::vars(.data$facet_var),
-                          ncol = facetNcols,
-                          scales = facetScales
+        ncol = facetNcols,
+        scales = facetScales
       )
   }
 
@@ -816,14 +825,16 @@ getUniqueCombinationsSr <- function(x) {
       xUniques |>
         dplyr::rename(
           "cohort_name_reference" = "cohort_name_comparator",
-          "cohort_name_comparator" = "cohort_name_reference"),
+          "cohort_name_comparator" = "cohort_name_reference"
+        ),
       by = c("cohort_name_comparator", "cohort_name_reference"),
       suffix = c("_x", "_y")
     ) |>
     dplyr::filter(.data$id_x < .data$id_y) |>
     dplyr::select("cohort_name_comparator", "cohort_name_reference") |>
     visOmopResults::uniteGroup(
-      cols = c("cohort_name_reference", "cohort_name_comparator"))
+      cols = c("cohort_name_reference", "cohort_name_comparator")
+    )
   x <- x |>
     dplyr::inner_join(pairs, by = c("group_name", "group_level"))
   return(x)

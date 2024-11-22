@@ -1,5 +1,10 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 1.0.10
+* Fix sample is null bug
+* Fix too many rows in diagnostics summary
+* Add metadata section to shiny app
+
 # DrugExposureDiagnostics 1.0.9
 * Integrate shiny app in package
 * Fix bug in obscuring results

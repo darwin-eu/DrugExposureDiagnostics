@@ -26,7 +26,7 @@
 summariseQuantity <- function(cdm,
                               drugRecordsTable = "ingredient_drug_records",
                               byConcept = TRUE,
-                              sampleSize = sampleSize){
+                              sampleSize = sampleSize) {
   errorMessage <- checkmate::makeAssertCollection()
   checkDbType(cdm = cdm, messageStore = errorMessage)
   checkTableExists(
@@ -37,8 +37,10 @@ summariseQuantity <- function(cdm,
   checkmate::reportAssertions(collection = errorMessage)
 
   if (isTRUE(byConcept)) {
-    grouping <- c("drug_concept_id", "drug",
-                  "ingredient_concept_id", "ingredient")
+    grouping <- c(
+      "drug_concept_id", "drug",
+      "ingredient_concept_id", "ingredient"
+    )
   } else {
     grouping <- c("ingredient_concept_id", "ingredient")
   }
@@ -63,31 +65,37 @@ summariseQuantity <- function(cdm,
       n_records = as.integer(dplyr::n()),
       n_sample = .env$sampleSize,
       n_person = dplyr::n_distinct(.data$person_id),
-      minimum_drug_exposure_quantity =  min(.data$quantity, na.rm = T),
+      minimum_drug_exposure_quantity = min(.data$quantity, na.rm = T),
       q05_drug_exposure_quantity = stats::quantile(
         .data$quantity,
-        0.05, na.rm = T
+        0.05,
+        na.rm = T
       ),
       q10_drug_exposure_quantity = stats::quantile(
         .data$quantity,
-        0.10, na.rm = T
+        0.10,
+        na.rm = T
       ),
       q25_drug_exposure_quantity = stats::quantile(
         .data$quantity,
-        0.25, na.rm = T
+        0.25,
+        na.rm = T
       ),
       median_drug_exposure_quantity = stats::median(.data$quantity, na.rm = T),
       q75_drug_exposure_quantity = stats::quantile(
         .data$quantity,
-        0.75, na.rm = T
+        0.75,
+        na.rm = T
       ),
       q90_drug_exposure_quantity = stats::quantile(
         .data$quantity,
-        0.90, na.rm = T
+        0.90,
+        na.rm = T
       ),
       q95_drug_exposure_quantity = stats::quantile(
         .data$quantity,
-        0.95, na.rm = T
+        0.95,
+        na.rm = T
       ),
       maximum_drug_exposure_quantity = max(.data$quantity, na.rm = T)
     )

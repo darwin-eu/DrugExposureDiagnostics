@@ -44,7 +44,7 @@ used throughout.}
 
 \item{verbose}{verbose, default FALSE}
 
-\item{byConcept}{boolean argument whether to return restults by Concept or overall only}
+\item{byConcept}{boolean argument whether to return results by Concept or overall only}
 }
 \value{
 named list with results

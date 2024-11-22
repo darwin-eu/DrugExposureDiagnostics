@@ -12,7 +12,7 @@ checkResultOnDisk <- function(resultList, outFolder, filename) {
   outputZipFile <- list.files(outFolder, full.names = TRUE, pattern = paste0(filename, ".zip"))
   expect_true(endsWith(outputZipFile, paste0(filename, ".zip")))
   outputCsvFolder <- file.path(outFolder, "csv")
-  zip::unzip(zipfile = outputZipFile,  exdir = outputCsvFolder)
+  zip::unzip(zipfile = outputZipFile, exdir = outputCsvFolder)
   unzippedFolder <- file.path(outputCsvFolder, "test")
   outputCsvFiles <- list.files(unzippedFolder, pattern = "*.csv")
   expect_equal(outputCsvFiles, c("item1.csv", "item2.csv"))
@@ -28,25 +28,35 @@ checkResultOnDisk <- function(resultList, outFolder, filename) {
 
 test_that("check writeResultToDisk", {
   outFolder <- tempdir()
-  resultList <- list("item1" = mtcars,
-                     "item2" = iris)
+  resultList <- list(
+    "item1" = mtcars,
+    "item2" = iris
+  )
 
   dbId <- "test"
-  filename <- paste0(c(dbId,
-                       "DrugDiagnostics",
-                       format(Sys.Date(), format="%Y%m%d")),
-                     collapse = "_")
+  filename <- paste0(
+    c(
+      dbId,
+      "DrugDiagnostics",
+      format(Sys.Date(), format = "%Y%m%d")
+    ),
+    collapse = "_"
+  )
 
-  result <- writeResultToDisk(resultList = resultList,
-                              databaseId = dbId,
-                              outputFolder = outFolder,
-                              filename = filename)
+  result <- writeResultToDisk(
+    resultList = resultList,
+    databaseId = dbId,
+    outputFolder = outFolder,
+    filename = filename
+  )
   checkResultOnDisk(resultList, outFolder, filename)
 
   # no filename given, default to 'dbId'.zip
-  result <- writeResultToDisk(resultList = resultList,
-                              databaseId = dbId,
-                              outputFolder = outFolder)
+  result <- writeResultToDisk(
+    resultList = resultList,
+    databaseId = dbId,
+    outputFolder = outFolder
+  )
 
   checkResultOnDisk(resultList, outFolder, dbId)
   unlink(outFolder)
@@ -73,4 +83,4 @@ test_that("checkIsIngredient", {
 
 
   DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
-  })
+})

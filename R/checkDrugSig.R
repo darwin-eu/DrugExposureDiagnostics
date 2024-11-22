@@ -26,8 +26,7 @@
 checkDrugSig <- function(cdm,
                          drugRecordsTable = "ingredient_drug_records",
                          byConcept = TRUE,
-                         sampleSize = 10000)
-{
+                         sampleSize = 10000) {
   errorMessage <- checkmate::makeAssertCollection()
   checkDbType(cdm = cdm, messageStore = errorMessage)
   checkTableExists(
@@ -37,16 +36,21 @@ checkDrugSig <- function(cdm,
   checkmate::reportAssertions(collection = errorMessage)
 
   if (isTRUE(byConcept)) {
-    grouping <- c("drug_concept_id", "drug",
-                  "ingredient_concept_id",
-                  "ingredient", "sig")
+    grouping <- c(
+      "drug_concept_id", "drug",
+      "ingredient_concept_id",
+      "ingredient", "sig"
+    )
   } else {
-    grouping <- c("ingredient_concept_id",
-                  "ingredient", "sig")
+    grouping <- c(
+      "ingredient_concept_id",
+      "ingredient", "sig"
+    )
   }
 
   total <- cdm[[drugRecordsTable]] %>%
-    dplyr::summarise(total = dplyr::n()) %>% dplyr::pull()
+    dplyr::summarise(total = dplyr::n()) %>%
+    dplyr::pull()
 
   records <- cdm[[drugRecordsTable]] %>%
     dplyr::select(
@@ -55,18 +59,24 @@ checkDrugSig <- function(cdm,
       "ingredient_concept_id",
       "ingredient",
       "sig",
-      "person_id") %>%
+      "person_id"
+    ) %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
-    dplyr::summarise(n_records = as.integer(dplyr::n()),
-                     n_sample = .env$sampleSize,
-                     n_person = dplyr::n_distinct(.data$person_id)) %>%
+    dplyr::summarise(
+      n_records = as.integer(dplyr::n()),
+      n_sample = .env$sampleSize,
+      n_person = dplyr::n_distinct(.data$person_id)
+    ) %>%
     dplyr::compute() %>%
     dplyr::mutate(proportion_records = .data$n_records / .env$total) %>%
-        dplyr::select(tidyselect::any_of(
-      c("drug_concept_id", "drug",
+    dplyr::select(tidyselect::any_of(
+      c(
+        "drug_concept_id", "drug",
         "ingredient_concept_id",
         "ingredient", "sig",
-        "n_records", "n_sample","n_person","proportion_records")))
+        "n_records", "n_sample", "n_person", "proportion_records"
+      )
+    ))
 
   return(records)
 }

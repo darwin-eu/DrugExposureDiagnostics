@@ -11,7 +11,8 @@ vignette: >
 options(rmarkdown.html_vignette.check_title = FALSE)
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>")
+  comment = "#>"
+)
 ```
 
 ```{r setup,message= FALSE, warning=FALSE}
@@ -65,16 +66,19 @@ Multiple ingredients can be added in the vector of ´ingredients´
 
 ```{r executeChecks}
 all_checks <- executeChecks(cdm,
-                            ingredients = c(1125315),
-                            subsetToConceptId = NULL,
-                            checks = c("missing", "exposureDuration", "type", "route", "sourceConcept", "daysSupply", 
-                                       "verbatimEndDate", "dose", "sig", "quantity", "diagnosticsSummary"), 
-                            minCellCount = 5,
-                            sample = 10000,
-                            tablePrefix = NULL,
-                            earliestStartDate = "2010-01-01",
-                            verbose = FALSE,
-                            byConcept = TRUE)
+  ingredients = c(1125315),
+  subsetToConceptId = NULL,
+  checks = c(
+    "missing", "exposureDuration", "type", "route", "sourceConcept", "daysSupply",
+    "verbatimEndDate", "dose", "sig", "quantity", "diagnosticsSummary"
+  ),
+  minCellCount = 5,
+  sample = 10000,
+  tablePrefix = NULL,
+  earliestStartDate = "2010-01-01",
+  verbose = FALSE,
+  byConcept = TRUE
+)
 ```
 
 The `cdm` is the database reference of the OMOP CDM using the `CDMConnector` package.    
@@ -159,19 +163,21 @@ Please replace the "your_database" with the name of your database.
 Create your designated "output_folder" at your desired location and put the path if not the working directory.
 ```{r eval=FALSE}
 writeResultToDisk(all_checks,
-                  databaseId = "your_database", 
-                  outputFolder = "output_folder")
+  databaseId = "your_database",
+  outputFolder = "output_folder"
+)
 ```
 
 ### View results in the Shiny app & make it available for publishing
 ```{r eval=FALSE}
-viewResults(dataFolder = file.path(getwd(), "output_folder"),
-            makePublishable = TRUE,
-            publishDir = file.path(getwd(), "MyStudyResultsExplorer"),
-            overwritePublishDir = TRUE
+viewResults(
+  dataFolder = file.path(getwd(), "output_folder"),
+  makePublishable = TRUE,
+  publishDir = file.path(getwd(), "MyStudyResultsExplorer"),
+  overwritePublishDir = TRUE
 )
 ```
 
 ```{r, echo=FALSE}
-  DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
+DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
 ```

@@ -27,6 +27,7 @@ resultList <- list("mtcars" = mtcars)
 result <- writeResultToDisk(
   resultList = resultList,
   databaseId = "mtcars",
-  outputFolder = here::here())
+  outputFolder = here::here()
+)
 }
 }

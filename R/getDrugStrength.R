@@ -49,15 +49,20 @@ getDrugStrength <- function(cdm,
 
   records <- cdm[[drugStrengthTable]] %>%
     dplyr::filter(.data$ingredient_concept_id == .env$ingredient) %>%
-    dplyr::inner_join(cdm[[includedConceptsTable]] %>%
-                        dplyr::select("concept_id", "numerator_unit",
-                                      "denominator_unit", "amount_unit"),
-                      by = c("drug_concept_id" = "concept_id")
+    dplyr::inner_join(
+      cdm[[includedConceptsTable]] %>%
+        dplyr::select(
+          "concept_id", "numerator_unit",
+          "denominator_unit", "amount_unit"
+        ),
+      by = c("drug_concept_id" = "concept_id")
     )
   # store result
-  records <- computeDBQuery(table = records,
-                            tablePrefix = tablePrefix,
-                            tableName = "_DED_drug_strength",
-                            cdm = cdm)
+  records <- computeDBQuery(
+    table = records,
+    tablePrefix = tablePrefix,
+    tableName = "_DED_drug_strength",
+    cdm = cdm
+  )
   return(records)
 }

@@ -3,6 +3,7 @@
 export("%>%")
 export(executeChecks)
 export(mockDrugExposure)
+export(runBenchmarkExecuteSingleIngredient)
 export(viewResults)
 export(writeResultToDisk)
 importFrom(graphics,hist)

@@ -26,7 +26,6 @@ getDrugMissings <- function(cdm,
                             drugRecordsTable = "ingredient_drug_records",
                             byConcept = TRUE,
                             sampleSize = 10000) {
-
   # checks
   errorMessage <- checkmate::makeAssertCollection()
   checkDbType(cdm = cdm, messageStore = errorMessage)
@@ -38,10 +37,12 @@ getDrugMissings <- function(cdm,
   checkmate::reportAssertions(collection = errorMessage)
 
   if (isTRUE(byConcept)) {
-    grouping <- c("drug_concept_id","drug",
-                  "ingredient_concept_id", "ingredient")
+    grouping <- c(
+      "drug_concept_id", "drug",
+      "ingredient_concept_id", "ingredient"
+    )
   } else {
-    grouping <- c("ingredient_concept_id","ingredient")
+    grouping <- c("ingredient_concept_id", "ingredient")
   }
 
   records <- cdm[[drugRecordsTable]]
@@ -55,61 +56,80 @@ getDrugMissings <- function(cdm,
       n_person = dplyr::n_distinct(.data$person_id),
       n_missing_drug_exposure_id =
         sum(dplyr::case_when(
-          .data$drug_exposure_id == 0 ~ 1, TRUE ~ 0), na.rm = T),
+          .data$drug_exposure_id == 0 ~ 1, TRUE ~ 0
+        ), na.rm = T),
       n_missing_person_id =
         sum(dplyr::case_when(
           is.na(.data$person_id) |
-            .data$person_id == 0 ~ 1, TRUE ~ 0), na.rm = T),
+            .data$person_id == 0 ~ 1, TRUE ~ 0
+        ), na.rm = T),
       n_missing_drug_concept_id =
         sum(dplyr::case_when(
-          is.na(.data$drug_concept_id ) |
-            .data$drug_concept_id == 0 ~ 1, TRUE ~ 0), na.rm = T),
+          is.na(.data$drug_concept_id) |
+            .data$drug_concept_id == 0 ~ 1, TRUE ~ 0
+        ), na.rm = T),
       n_missing_drug_exposure_start_date =
         sum(dplyr::case_when(
-          is.na(.data$drug_exposure_start_date) ~ 1, TRUE ~ 0), na.rm = T),
+          is.na(.data$drug_exposure_start_date) ~ 1, TRUE ~ 0
+        ), na.rm = T),
       n_missing_drug_exposure_end_date =
         sum(dplyr::case_when(
-          is.na(.data$drug_exposure_end_date) ~ 1, TRUE ~ 0), na.rm = T),
+          is.na(.data$drug_exposure_end_date) ~ 1, TRUE ~ 0
+        ), na.rm = T),
       n_missing_verbatim_end_date =
         sum(dplyr::case_when(
-          is.na(.data$verbatim_end_date) ~ 1, TRUE ~ 0), na.rm = T),
+          is.na(.data$verbatim_end_date) ~ 1, TRUE ~ 0
+        ), na.rm = T),
       n_missing_drug_type_concept_id =
         sum(dplyr::case_when(
           is.na(.data$drug_type_concept_id) |
-            .data$drug_type_concept_id == 0 ~ 1, TRUE ~ 0), na.rm = T),
+            .data$drug_type_concept_id == 0 ~ 1, TRUE ~ 0
+        ), na.rm = T),
       n_missing_quantity =
         sum(dplyr::case_when(
-          is.na(.data$quantity) ~ 1, TRUE ~ 0), na.rm = T),
+          is.na(.data$quantity) ~ 1, TRUE ~ 0
+        ), na.rm = T),
       n_missing_days_supply =
         sum(dplyr::case_when(
-          is.na(.data$days_supply) ~ 1, TRUE ~ 0), na.rm = T),
+          is.na(.data$days_supply) ~ 1, TRUE ~ 0
+        ), na.rm = T),
       n_missing_sig =
         sum(dplyr::case_when(
-          is.na(.data$sig) ~ 1, TRUE ~ 0), na.rm = T),
+          is.na(.data$sig) ~ 1, TRUE ~ 0
+        ), na.rm = T),
       n_missing_route_concept_id =
         sum(dplyr::case_when(
           is.na(.data$route_concept_id) |
-            .data$route_concept_id == 0 ~ 1, TRUE ~ 0), na.rm = T),
+            .data$route_concept_id == 0 ~ 1, TRUE ~ 0
+        ), na.rm = T),
       n_missing_drug_source_value =
         sum(dplyr::case_when(
-          is.na(.data$drug_source_value) ~ 1, TRUE ~ 0), na.rm = T),
+          is.na(.data$drug_source_value) ~ 1, TRUE ~ 0
+        ), na.rm = T),
       n_missing_drug_source_concept_id =
         sum(dplyr::case_when(
-          is.na(.data$drug_source_concept_id) ~ 1, TRUE ~ 0), na.rm = T),
+          is.na(.data$drug_source_concept_id) ~ 1, TRUE ~ 0
+        ), na.rm = T),
       n_missing_route_source_value =
         sum(dplyr::case_when(
-          is.na(.data$route_source_value) ~ 1, TRUE ~ 0), na.rm = T),
+          is.na(.data$route_source_value) ~ 1, TRUE ~ 0
+        ), na.rm = T),
       n_missing_dose_unit_source_value =
         sum(dplyr::case_when(
-          is.na(.data$dose_unit_source_value) ~ 1, TRUE ~ 0), na.rm = T)
+          is.na(.data$dose_unit_source_value) ~ 1, TRUE ~ 0
+        ), na.rm = T)
     ) %>%
     dplyr::collect() %>%
-    tidyr::pivot_longer(!tidyselect::any_of(c("drug_concept_id", "drug",
-                                              "ingredient_concept_id",
-                                              "ingredient","n_records",
-                                              "n_sample", "n_person")),
-                        names_to = "variable",
-                        values_to = "n_records_missing_value")
+    tidyr::pivot_longer(
+      !tidyselect::any_of(c(
+        "drug_concept_id", "drug",
+        "ingredient_concept_id",
+        "ingredient", "n_records",
+        "n_sample", "n_person"
+      )),
+      names_to = "variable",
+      values_to = "n_records_missing_value"
+    )
 
   # add prop
   summMissings <- summMissings %>%

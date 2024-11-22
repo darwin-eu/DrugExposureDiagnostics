@@ -13,8 +13,8 @@ library(glue)
 library(ggplot2)
 library(plotly)
 library(shinyjs)
-library(CohortCharacteristics)
 source("dataPlotPanel.R")
+source("metaDataPanel.R")
 source("utils.R")
 source("plots.R")
 
@@ -113,11 +113,18 @@ if (exists("drugdose")) {
     dplyr::mutate(result_id = as.integer(result_id))
 }
 
+metaData <- data.frame()
+if (exists("metadata")) {
+  metaData <- metadata
+}
+
 # show/hide columns
-ingredientConceptsColumnsToHide <- c("concept_code", "valid_start_date", "valid_end_date",
-                                     "invalid_reason", "amount_value", "amount_unit_concept_id", "numerator_value",
-                                     "numerator_unit_concept_id", "numerator_unit", "denominator_value",
-                                     "denominator_unit_concept_id", "denominator_unit", "box_size", "amount_unit")
+ingredientConceptsColumnsToHide <- c(
+  "concept_code", "valid_start_date", "valid_end_date",
+  "invalid_reason", "amount_value", "amount_unit_concept_id", "numerator_value",
+  "numerator_unit_concept_id", "numerator_unit", "denominator_value",
+  "denominator_unit_concept_id", "denominator_unit", "box_size", "amount_unit"
+)
 ingredientConceptColumnsSelected <- colnames(ingredientConcepts)
 ingredientConceptColumnsSelected <- setdiff(ingredientConceptColumnsSelected, ingredientConceptsColumnsToHide)
 

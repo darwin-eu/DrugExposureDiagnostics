@@ -10,27 +10,28 @@ loadFile <- function(file, folder, overwrite, i) {
   if (grepl("drugVerbatimEndDate", file)) {
     data <- data %>%
       dplyr::mutate(minimum_verbatim_end_date = ifelse(class(minimum_verbatim_end_date) %in% c("numeric", "integer"),
-                                                       format(as.Date(as.POSIXct(minimum_verbatim_end_date, origin="1970-01-01"))),
-                                                       minimum_verbatim_end_date)) %>%
+        format(as.Date(as.POSIXct(minimum_verbatim_end_date, origin = "1970-01-01"))),
+        minimum_verbatim_end_date
+      )) %>%
       dplyr::mutate(maximum_verbatim_end_date = ifelse(class(maximum_verbatim_end_date) %in% c("numeric", "integer"),
-                                                       format(as.Date(as.POSIXct(maximum_verbatim_end_date, origin="1970-01-01"))),
-                                                       maximum_verbatim_end_date))
-  }
-  else if (grepl("conceptSummary", file)) {
+        format(as.Date(as.POSIXct(maximum_verbatim_end_date, origin = "1970-01-01"))),
+        maximum_verbatim_end_date
+      ))
+  } else if (grepl("conceptSummary", file)) {
     data <- data %>%
       dplyr::mutate(concept_code = as.character(concept_code)) %>%
       dplyr::mutate(valid_start_date = ifelse(class(valid_start_date) == "integer",
-                                              format(as.Date(valid_start_date, origin="1970-01-01")),
-                                              valid_start_date)) %>%
+        format(as.Date(valid_start_date, origin = "1970-01-01")),
+        valid_start_date
+      )) %>%
       dplyr::mutate(valid_end_date = ifelse(class(valid_end_date) == "integer",
-                                            format(as.Date(valid_end_date, origin="1970-01-01")),
-                                            valid_end_date))
-  }
-  else if (grepl("drugDose", file)) {
+        format(as.Date(valid_end_date, origin = "1970-01-01")),
+        valid_end_date
+      ))
+  } else if (grepl("drugDose", file)) {
     data <- data %>%
       dplyr::mutate(result_id = i)
-  }
-  else if (grepl("drugSourceConceptsOverall", file)) {
+  } else if (grepl("drugSourceConceptsOverall", file)) {
     data <- data %>%
       dplyr::mutate(drug_source_value = as.character(.data$drug_source_value))
   }
@@ -39,18 +40,20 @@ loadFile <- function(file, folder, overwrite, i) {
     existingData <- get(camelCaseName, envir = .GlobalEnv)
     if (nrow(existingData) > 0) {
       if (nrow(data) > 0 &&
-          all(colnames(existingData) %in% colnames(data)) &&
-          all(colnames(data) %in% colnames(existingData))) {
+        all(colnames(existingData) %in% colnames(data)) &&
+        all(colnames(data) %in% colnames(existingData))) {
         data <- data[, colnames(existingData)]
       }
 
       if (!isTRUE(all.equal(colnames(data), colnames(existingData), check.attributes = FALSE))) {
-        stop("Table columns do no match previously seen columns. Columns in ",
-             file,
-             ":\n",
-             paste(colnames(data), collapse = ", "),
-             "\nPrevious columns:\n",
-             paste(colnames(existingData), collapse = ", "))
+        stop(
+          "Table columns do no match previously seen columns. Columns in ",
+          file,
+          ":\n",
+          paste(colnames(data), collapse = ", "),
+          "\nPrevious columns:\n",
+          paste(colnames(existingData), collapse = ", ")
+        )
       }
     }
     data <- rbind(existingData, data)
@@ -65,10 +68,12 @@ formatResult <- function(result) {
   if (nrow(result) > 0) {
     result <- result %>%
       dplyr::rename(any_of(c(ingredient_id = "ingredient_concept_id"))) %>%
-      dplyr::mutate_at(vars(starts_with("proportion_")), ~ 100*.) %>%
-      dplyr::rename_with(~gsub("proportion_", "perc_", .x)) %>%
-      dplyr::mutate_at(vars(which(sapply(., is.numeric) & !names(.) %in% c("ingredient_id", "drug_concept_id","n"))),
-                       ~signif(., 4))
+      dplyr::mutate_at(vars(starts_with("proportion_")), ~ 100 * .) %>%
+      dplyr::rename_with(~ gsub("proportion_", "perc_", .x)) %>%
+      dplyr::mutate_at(
+        vars(which(sapply(., is.numeric) & !names(.) %in% c("ingredient_id", "drug_concept_id", "n"))),
+        ~ signif(., 4)
+      )
   }
   return(result)
 }

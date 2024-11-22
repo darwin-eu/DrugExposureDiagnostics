@@ -28,9 +28,11 @@ library(DT)
 # acetaminophen concept id is 1125315
 acetaminophen <- 1125315
 cdm <- mockDrugExposure()
-acetaminophen_checks <- executeChecks(cdm = cdm, 
-                                      ingredients = acetaminophen, 
-                                      checks = "verbatimEndDate")
+acetaminophen_checks <- executeChecks(
+  cdm = cdm,
+  ingredients = acetaminophen,
+  checks = "verbatimEndDate"
+)
 ```
 
 ## Drug verbatim end date Overall

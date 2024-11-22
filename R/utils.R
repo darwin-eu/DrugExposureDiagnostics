@@ -23,7 +23,8 @@
 checkDbType <- function(cdm, type = "cdm_reference", messageStore) {
   dbInheritsCheck <- inherits(cdm, type)
   checkmate::assertTRUE(dbInheritsCheck,
-                        add = messageStore)
+    add = messageStore
+  )
   if (!isTRUE(dbInheritsCheck)) {
     messageStore$push(glue::glue("- cdm must be a CDMConnector {type} object"))
   }
@@ -53,8 +54,9 @@ checkSampleMinCellCount <- function(sampleSize, minCellCount, messageStore) {
 #'
 checkLogical <- function(input, messageStore, null.ok = TRUE) {
   checkmate::assert_logical(input,
-                            add = messageStore,
-                            null.ok = null.ok)
+    add = messageStore,
+    null.ok = null.ok
+  )
 }
 
 #' Check if given table exists in cdm.
@@ -64,7 +66,7 @@ checkLogical <- function(input, messageStore, null.ok = TRUE) {
 #' @param messageStore the message store
 #'
 checkTableExists <- function(cdm, tableName, messageStore) {
-  table_exists <- inherits(cdm[[tableName]], 'tbl_dbi')
+  table_exists <- inherits(cdm[[tableName]], "tbl_dbi")
   checkmate::assertTRUE(table_exists, add = messageStore)
   if (!isTRUE(table_exists)) {
     messageStore$push(glue::glue("- {tableName} is not found"))
@@ -79,25 +81,25 @@ checkTableExists <- function(cdm, tableName, messageStore) {
 #'
 checkIsIngredient <- function(cdm, conceptId, messageStore) {
   ingredientConcepts <- cdm$concept %>%
-      dplyr::filter(.data$concept_id == .env$conceptId) %>%
-      dplyr::select("concept_class_id") %>%
+    dplyr::filter(.data$concept_id == .env$conceptId) %>%
+    dplyr::select("concept_class_id") %>%
     dplyr::collect()
 
   ingredientCheckResult <- TRUE
   ingredientCheckMessage <- NULL
   if (nrow(ingredientConcepts) > 0) {
     ingredientCheckResult <- all(ingredientConcepts %>%
-        dplyr::pull() == "Ingredient")
+      dplyr::pull() == "Ingredient")
     if (!isTRUE(ingredientCheckResult)) {
       ingredientCheckMessage <- glue::glue("- ingredient concept ({conceptId}) does not have concept_class_id of Ingredient")
     }
   } else {
     ingredientCheckResult <- FALSE
     ingredientCheckMessage <- glue::glue("- ingredient concept ({conceptId}) could not be found in concept table")
-
   }
   checkmate::assertTRUE(ingredientCheckResult,
-                        add = messageStore)
+    add = messageStore
+  )
   if (!isTRUE(ingredientCheckResult)) {
     messageStore$push(ingredientCheckMessage)
   }
@@ -136,13 +138,13 @@ getDuration <- function(cdm,
                         startDateCol = "drug_exposure_start_date",
                         endDateCol = "drug_exposure_end_date",
                         colName = "duration") {
-
   cdm[[tableName]] %>%
     dplyr::mutate(
       !!colName := !!CDMConnector::datediff(
         start = startDateCol,
         end = endDateCol,
-        interval = "day") + 1
+        interval = "day"
+      ) + 1
     )
 }
 
@@ -180,10 +182,12 @@ computeDBQuery <- function(table, tablePrefix, tableName, cdm, overwrite = TRUE)
       dplyr::compute()
   } else {
     table <- table %>%
-      dplyr::compute(name = paste0(tablePrefix, tableName),
-                     temporary = FALSE,
-                     schema = attr(cdm, "write_schema"),
-                     overwrite = TRUE)
+      dplyr::compute(
+        name = paste0(tablePrefix, tableName),
+        temporary = FALSE,
+        schema = attr(cdm, "write_schema"),
+        overwrite = TRUE
+      )
   }
   return(table)
 }
@@ -205,7 +209,8 @@ computeDBQuery <- function(table, tablePrefix, tableName, cdm, overwrite = TRUE)
 #' result <- writeResultToDisk(
 #'   resultList = resultList,
 #'   databaseId = "mtcars",
-#'   outputFolder = here::here())
+#'   outputFolder = here::here()
+#' )
 #' }
 writeResultToDisk <- function(resultList, databaseId, outputFolder, filename = NULL) {
   if (!dir.exists(outputFolder)) {
@@ -221,19 +226,23 @@ writeResultToDisk <- function(resultList, databaseId, outputFolder, filename = N
   # write results to disk
   lapply(names(resultList), FUN = function(checkResultName) {
     checkResult <- resultList[[checkResultName]]
-    checkResult <- dplyr::bind_cols(database_id = databaseId,
-                                    checkResult)
+    checkResult <- dplyr::bind_cols(
+      database_id = databaseId,
+      checkResult
+    )
     utils::write.csv(checkResult,
-                     file = file.path(
-                       tempDir,
-                       paste0(checkResultName, ".csv")
-                     ),
-                     row.names = FALSE
+      file = file.path(
+        tempDir,
+        paste0(checkResultName, ".csv")
+      ),
+      row.names = FALSE
     )
   })
   filename <- ifelse(is.null(filename), databaseId, filename)
-  zip::zip(zipfile = file.path(outputFolder, paste0(filename, ".zip")),
-           files = list.files(tempDir, full.names = TRUE))
+  zip::zip(
+    zipfile = file.path(outputFolder, paste0(filename, ".zip")),
+    files = list.files(tempDir, full.names = TRUE)
+  )
   if (tempDirCreated) {
     unlink(tempDir, recursive = TRUE)
   }
