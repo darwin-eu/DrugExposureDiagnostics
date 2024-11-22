@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">DrugExposureDiagnostics</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.10</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -93,6 +93,8 @@ Here we use the internal mock database.</p>
 <span><span class="co">#&gt; Note: method with signature 'DBIConnection#Id' chosen for function 'dbExistsTable',</span></span>
 <span><span class="co">#&gt;  target signature 'duckdb_connection#Id'.</span></span>
 <span><span class="co">#&gt;  "duckdb_connection#ANY" would also be valid</span></span>
+<span><span class="co">#&gt; Warning: <span style="color: #BBBB00;">!</span> 1 column in <span style="font-weight: bold;">vocabulary</span> do not match expected column type:</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `vocabulary_concept_id` is <span style="color: #0000BB;">numeric</span> but expected <span style="color: #0000BB;">integer</span></span></span>
 <span><span class="co">#&gt; Warning: <span style="color: #BBBB00;">!</span> 1 column in <span style="font-weight: bold;">drug_strength</span> do not match expected column type:</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `box_size` is <span style="color: #0000BB;">numeric</span> but expected <span style="color: #0000BB;">integer</span></span></span></code></pre></div>
 <div class="section level3">
@@ -164,25 +166,28 @@ results of each check.<br>
 Multiple ingredients can be added in the vector of ´ingredients´</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">all_checks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/executeChecks.html">executeChecks</a></span><span class="op">(</span><span class="va">cdm</span>,</span>
-<span>                            ingredients <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1125315</span><span class="op">)</span>,</span>
-<span>                            subsetToConceptId <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>                            checks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"missing"</span>, <span class="st">"exposureDuration"</span>, <span class="st">"type"</span>, <span class="st">"route"</span>, <span class="st">"sourceConcept"</span>, <span class="st">"daysSupply"</span>, </span>
-<span>                                       <span class="st">"verbatimEndDate"</span>, <span class="st">"dose"</span>, <span class="st">"sig"</span>, <span class="st">"quantity"</span>, <span class="st">"diagnosticsSummary"</span><span class="op">)</span>, </span>
-<span>                            minCellCount <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>                            sample <span class="op">=</span> <span class="fl">10000</span>,</span>
-<span>                            tablePrefix <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>                            earliestStartDate <span class="op">=</span> <span class="st">"2010-01-01"</span>,</span>
-<span>                            verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>                            byConcept <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  ingredients <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1125315</span><span class="op">)</span>,</span>
+<span>  subsetToConceptId <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  checks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"missing"</span>, <span class="st">"exposureDuration"</span>, <span class="st">"type"</span>, <span class="st">"route"</span>, <span class="st">"sourceConcept"</span>, <span class="st">"daysSupply"</span>,</span>
+<span>    <span class="st">"verbatimEndDate"</span>, <span class="st">"dose"</span>, <span class="st">"sig"</span>, <span class="st">"quantity"</span>, <span class="st">"diagnosticsSummary"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  minCellCount <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  sample <span class="op">=</span> <span class="fl">10000</span>,</span>
+<span>  tablePrefix <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  earliestStartDate <span class="op">=</span> <span class="st">"2010-01-01"</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  byConcept <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; population after earliestStartDate smaller than sample, sampling ignored</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> The following estimates will be computed:</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> daily_dose: count_missing, percentage_missing, mean, sd, q05, q25, median,</span></span>
 <span><span class="co">#&gt;   q75, q95, min, max</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Table is collected to memory as not all requested estimates are supported on</span></span>
 <span><span class="co">#&gt;   the database side</span></span>
-<span><span class="co">#&gt; → Start summary of data, at 2024-11-18 15:59:48.330318</span></span>
+<span><span class="co">#&gt; → Start summary of data, at 2024-11-22 18:48:39.294191</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Summary finished, at 2024-11-18 15:59:48.629099</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Summary finished, at 2024-11-22 18:48:39.59653</span></span></code></pre></div>
 <p>The <code>cdm</code> is the database reference of the OMOP CDM using
 the <code>CDMConnector</code> package.<br>
 The <code>ingredients</code> is a list of ingredients of interests, by
@@ -254,7 +259,8 @@ The check “diagnosticsSummary” outputs a summary called
 <span><span class="co">#&gt; [13] "drugVerbatimEndDate"           "drugVerbatimEndDateByConcept" </span></span>
 <span><span class="co">#&gt; [15] "drugDose"                      "drugSig"                      </span></span>
 <span><span class="co">#&gt; [17] "drugSigByConcept"              "drugQuantity"                 </span></span>
-<span><span class="co">#&gt; [19] "drugQuantityByConcept"         "diagnosticsSummary"</span></span></code></pre></div>
+<span><span class="co">#&gt; [19] "drugQuantityByConcept"         "diagnosticsSummary"           </span></span>
+<span><span class="co">#&gt; [21] "metadata"</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="assessing-the-drug-concepts-of-interest">Assessing the drug concepts (of interest)<a class="anchor" aria-label="anchor" href="#assessing-the-drug-concepts-of-interest"></a>
@@ -433,18 +439,20 @@ Create your designated “output_folder” at your desired location and put
 the path if not the working directory.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/writeResultToDisk.html">writeResultToDisk</a></span><span class="op">(</span><span class="va">all_checks</span>,</span>
-<span>                  databaseId <span class="op">=</span> <span class="st">"your_database"</span>, </span>
-<span>                  outputFolder <span class="op">=</span> <span class="st">"output_folder"</span><span class="op">)</span></span></code></pre></div>
+<span>  databaseId <span class="op">=</span> <span class="st">"your_database"</span>,</span>
+<span>  outputFolder <span class="op">=</span> <span class="st">"output_folder"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="view-results-in-the-shiny-app-make-it-available-for-publishing">View results in the Shiny app &amp; make it available for
 publishing<a class="anchor" aria-label="anchor" href="#view-results-in-the-shiny-app-make-it-available-for-publishing"></a>
 </h3>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/viewResults.html">viewResults</a></span><span class="op">(</span>dataFolder <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"output_folder"</span><span class="op">)</span>,</span>
-<span>            makePublishable <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>            publishDir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"MyStudyResultsExplorer"</span><span class="op">)</span>,</span>
-<span>            overwritePublishDir <span class="op">=</span> <span class="cn">TRUE</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/viewResults.html">viewResults</a></span><span class="op">(</span></span>
+<span>  dataFolder <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"output_folder"</span><span class="op">)</span>,</span>
+<span>  makePublishable <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  publishDir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"MyStudyResultsExplorer"</span><span class="op">)</span>,</span>
+<span>  overwritePublishDir <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">DrugExposureDiagnostics</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.10</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,9 +91,11 @@
 <span><span class="co"># acetaminophen concept id is 1125315</span></span>
 <span><span class="va">acetaminophen</span> <span class="op">&lt;-</span> <span class="fl">1125315</span></span>
 <span><span class="va">cdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mockDrugExposure.html">mockDrugExposure</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">acetaminophen_checks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/executeChecks.html">executeChecks</a></span><span class="op">(</span>cdm <span class="op">=</span> <span class="va">cdm</span>, </span>
-<span>                                      ingredients <span class="op">=</span> <span class="va">acetaminophen</span>, </span>
-<span>                                      checks <span class="op">=</span> <span class="st">"quantity"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">acetaminophen_checks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/executeChecks.html">executeChecks</a></span><span class="op">(</span></span>
+<span>  cdm <span class="op">=</span> <span class="va">cdm</span>,</span>
+<span>  ingredients <span class="op">=</span> <span class="va">acetaminophen</span>,</span>
+<span>  checks <span class="op">=</span> <span class="st">"quantity"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="quantity-overall">Quantity Overall<a class="anchor" aria-label="anchor" href="#quantity-overall"></a>
