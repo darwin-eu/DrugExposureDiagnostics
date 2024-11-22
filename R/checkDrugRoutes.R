@@ -26,7 +26,6 @@ getDrugRoutes <- function(cdm,
                           drugRecordsTable = "ingredient_drug_records",
                           byConcept = TRUE,
                           sampleSize = 10000) {
-
   # checks
   errorMessage <- checkmate::makeAssertCollection()
   checkDbType(cdm = cdm, messageStore = errorMessage)
@@ -35,35 +34,47 @@ getDrugRoutes <- function(cdm,
   checkmate::reportAssertions(collection = errorMessage)
 
   if (isTRUE(byConcept)) {
-    grouping <- c("drug_concept_id", "drug",
-                  "ingredient_concept_id",
-                  "ingredient", "route_concept_id")
+    grouping <- c(
+      "drug_concept_id", "drug",
+      "ingredient_concept_id",
+      "ingredient", "route_concept_id"
+    )
   } else {
-    grouping <- c("ingredient_concept_id", "ingredient",
-                  "route_concept_id")
+    grouping <- c(
+      "ingredient_concept_id", "ingredient",
+      "route_concept_id"
+    )
   }
 
   total <- cdm[[drugRecordsTable]] %>%
-    dplyr::summarise(total = dplyr::n()) %>% dplyr::pull()
+    dplyr::summarise(total = dplyr::n()) %>%
+    dplyr::pull()
 
   summ <- cdm[[drugRecordsTable]] %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
-    dplyr::summarise(n_records = as.integer(dplyr::n()),
-                     n_sample = .env$sampleSize,
-                     n_person = dplyr::n_distinct(.data$person_id)
-                     ) %>%
+    dplyr::summarise(
+      n_records = as.integer(dplyr::n()),
+      n_sample = .env$sampleSize,
+      n_person = dplyr::n_distinct(.data$person_id)
+    ) %>%
     dplyr::compute() %>%
     dplyr::mutate(proportion_records = .data$n_records / .env$total) %>%
-    dplyr::left_join(cdm$concept %>%
-                       dplyr::rename("route_concept_id" = "concept_id",
-                                     "route_type" = "concept_name") %>%
-                       dplyr::select("route_concept_id", "route_type"),
-                     by = "route_concept_id") %>%
+    dplyr::left_join(
+      cdm$concept %>%
+        dplyr::rename(
+          "route_concept_id" = "concept_id",
+          "route_type" = "concept_name"
+        ) %>%
+        dplyr::select("route_concept_id", "route_type"),
+      by = "route_concept_id"
+    ) %>%
     dplyr::select(tidyselect::any_of(
-      c("drug_concept_id", "drug",
+      c(
+        "drug_concept_id", "drug",
         "ingredient_concept_id", "ingredient",
         "route_concept_id", "route_type",
-        "n_records", "n_sample","n_person","proportion_records")
+        "n_records", "n_sample", "n_person", "proportion_records"
+      )
     ))
 
   return(summ)

@@ -27,44 +27,59 @@ summariseChecks <- function(resultList) {
     dplyr::filter(!is.na(.data$present_dose_form)) %>%
     dplyr::group_by(.data$ingredient, .data$ingredient_concept_id) %>%
     dplyr::summarise(
-      n_dose_form = sum(.data$n_records))
+      n_dose_form = sum(.data$n_records)
+    )
 
   diagnosticsSummary <- resultList$conceptSummary %>%
     dplyr::group_by(.data$ingredient, .data$ingredient_concept_id) %>%
-    dplyr::mutate(total_records = sum(.data$n_records),
-                  present_dose_form = dplyr::if_else(!is.na(.data$dose_form),1,NA)) %>%
+    dplyr::mutate(
+      total_records = sum(.data$n_records),
+      present_dose_form = dplyr::if_else(!is.na(.data$dose_form), 1, NA)
+    ) %>%
     dplyr::summarise(
       n_records = sum(.data$n_records),
       n_patients = sum(.data$n_patients)
     ) %>%
-    dplyr::left_join(dose_form_table, by = c("ingredient","ingredient_concept_id"))
+    dplyr::left_join(dose_form_table, by = c("ingredient", "ingredient_concept_id"))
 
   # proportion with rxnorm dose form per ingredient
   diagnosticsSummary <- diagnosticsSummary %>%
     dplyr::mutate(n_dose_form = ifelse(is.na(.data$n_dose_form), 0, .data$n_dose_form)) %>%
-    dplyr::mutate(proportion_of_records_with_dose_form =
-                    glue::glue("{.data$n_dose_form} ({round(100 * .data$n_dose_form / .data$n_records, 1)}%)")) %>%
+    dplyr::mutate(
+      proportion_of_records_with_dose_form =
+        glue::glue("{.data$n_dose_form} ({round(100 * .data$n_dose_form / .data$n_records, 1)}%)")
+    ) %>%
     dplyr::select(-.data$n_dose_form)
 
   # missingness
-  if (!is.null(resultList$missingValuesOverall) && nrow(resultList$missingValuesOverall >1)) {
+  if (!is.null(resultList$missingValuesOverall) && nrow(resultList$missingValuesOverall) > 1) {
     diagnosticsSummary <- diagnosticsSummary %>%
       dplyr::left_join(
         resultList$missingValuesOverall %>% dplyr::ungroup() %>%
-          dplyr::select("ingredient_concept_id", "variable", "n_records_missing_value",
-                        "proportion_records_missing_value") %>%
-          dplyr::filter(.data$variable %in% c("n_missing_quantity", "n_missing_drug_exposure_start_date",
-                                        "n_missing_drug_exposure_end_date", "n_missing_days_supply")
-          ) %>% dplyr::mutate(missing =
-            glue::glue("
+          dplyr::select(
+            "ingredient_concept_id", "variable", "n_records_missing_value",
+            "proportion_records_missing_value"
+          ) %>%
+          dplyr::filter(.data$variable %in% c(
+            "n_missing_quantity", "n_missing_drug_exposure_start_date",
+            "n_missing_drug_exposure_end_date", "n_missing_days_supply"
+          )) %>%
+          dplyr::mutate(n_records_missing_value = dplyr::if_else(is.na(.data$n_records_missing_value), 0, .data$n_records_missing_value)) %>%
+          dplyr::mutate(proportion_records_missing_value = dplyr::if_else(is.na(.data$proportion_records_missing_value), 0, .data$proportion_records_missing_value)) %>%
+          dplyr::mutate(
+            missing =
+              glue::glue("
         {.data$n_records_missing_value} ({.data$proportion_records_missing_value}%)")
-            ) %>% tidyr::pivot_wider(names_from = .data$variable, values_from = .data$missing) %>%
-      dplyr::mutate(missing_quantity_exp_start_end_days_supply =
-                      glue::glue("
+          ) %>%
+          dplyr::select(-c("n_records_missing_value", "proportion_records_missing_value")) %>%
+          tidyr::pivot_wider(names_from = .data$variable, values_from = .data$missing) %>%
+          dplyr::mutate(
+            missing_quantity_exp_start_end_days_supply =
+              glue::glue("
         {.data$n_missing_quantity}, {.data$n_missing_drug_exposure_start_date}, {.data$n_missing_drug_exposure_end_date}, {.data$n_missing_days_supply}")
-                    ) %>%
-          dplyr::select("missing_quantity_exp_start_end_days_supply","ingredient_concept_id"),
-      by = "ingredient_concept_id"
+          ) %>%
+          dplyr::select("missing_quantity_exp_start_end_days_supply", "ingredient_concept_id"),
+        by = "ingredient_concept_id"
       )
   }
 
@@ -91,7 +106,8 @@ summariseChecks <- function(resultList) {
     diagnosticsSummary <- diagnosticsSummary %>% dplyr::left_join(
       resultList$drugExposureDurationOverall %>%
         dplyr::mutate(median_drug_exposure_days_q05_q95 = glue::glue(paste(
-          "{.data$median_drug_exposure_days} ({.data$q05_drug_exposure_days}-{.data$q95_drug_exposure_days})")))
+          "{.data$median_drug_exposure_days} ({.data$q05_drug_exposure_days}-{.data$q95_drug_exposure_days})"
+        )))
         %>%
         dplyr::mutate(proportion_negative_days = glue::glue("
           {.data$n_negative_days} ({round(100 * .data$proportion_negative_days, 1)}%)")) %>%
@@ -110,7 +126,8 @@ summariseChecks <- function(resultList) {
     diagnosticsSummary <- diagnosticsSummary %>% dplyr::left_join(
       resultList$drugQuantity %>%
         dplyr::mutate(median_quantity_q05_q95 = glue::glue(paste(
-          "{.data$median_drug_exposure_quantity} ({.data$q05_drug_exposure_quantity}-{.data$q95_drug_exposure_quantity})")))
+          "{.data$median_drug_exposure_quantity} ({.data$q05_drug_exposure_quantity}-{.data$q95_drug_exposure_quantity})"
+        )))
         %>%
         dplyr::select(
           "ingredient_concept_id",
@@ -130,15 +147,18 @@ summariseChecks <- function(resultList) {
           "estimate_name",
           "estimate_value",
           "group_name"
-        ) %>% dplyr::mutate (
-          estimate_value = round(as.numeric(.data$estimate_value),1)
-          ) %>%
-        dplyr::filter(.data$strata_name == "overall",
-                      .data$estimate_name %in% c("count", "count_missing", "percentage_missing")
-        ) %>%  tidyr::pivot_wider(names_from = .data$estimate_name, values_from = .data$estimate_value) %>%
-        dplyr::mutate(n_dose_and_missingness =
-                        glue::glue(paste("{.data$count} ({.data$count_missing}, {.data$percentage_missing}%)"))) %>%
-        dplyr::select("ingredient_concept_id","n_dose_and_missingness"),
+        ) %>% dplyr::mutate(
+          estimate_value = round(as.numeric(.data$estimate_value), 1)
+        ) %>%
+        dplyr::filter(
+          .data$strata_name == "overall",
+          .data$estimate_name %in% c("count", "count_missing", "percentage_missing")
+        ) %>% tidyr::pivot_wider(names_from = .data$estimate_name, values_from = .data$estimate_value) %>%
+        dplyr::mutate(
+          n_dose_and_missingness =
+            glue::glue(paste("{.data$count} ({.data$count_missing}, {.data$percentage_missing}%)"))
+        ) %>%
+        dplyr::select("ingredient_concept_id", "n_dose_and_missingness"),
       by = "ingredient_concept_id"
     )
 
@@ -152,10 +172,12 @@ summariseChecks <- function(resultList) {
       dplyr::filter(.data$strata_name == "unit") %>%
       dplyr::group_by(.data$ingredient_concept_id) %>%
       dplyr::distinct(.data$strata_level) %>%
-      tidyr::pivot_wider(names_from = .data$strata_level,values_from = .data$strata_level, names_prefix = "unit_") %>%
+      tidyr::pivot_wider(names_from = .data$strata_level, values_from = .data$strata_level, names_prefix = "unit_") %>%
       dplyr::rowwise() %>%
       dplyr::mutate(unit = paste(
-        dplyr::c_across(dplyr::starts_with("unit_")), collapse = "//")) %>%
+        dplyr::c_across(dplyr::starts_with("unit_")),
+        collapse = "//"
+      )) %>%
       dplyr::ungroup()
 
 
@@ -169,34 +191,40 @@ summariseChecks <- function(resultList) {
           "estimate_name",
           "estimate_value"
         ) %>%
-        dplyr::filter(.data$strata_name == "overall",
-                      .data$estimate_name %in% c("q05","median","q95")
+        dplyr::filter(
+          .data$strata_name == "overall",
+          .data$estimate_name %in% c("q05", "median", "q95")
         ) %>%
-        dplyr::mutate (
-          estimate_value = round(as.numeric(.data$estimate_value),4)
+        dplyr::mutate(
+          estimate_value = round(as.numeric(.data$estimate_value), 4)
         ) %>%
         tidyr::pivot_wider(names_from = .data$estimate_name, values_from = .data$estimate_value) %>%
         dplyr::left_join(
           units %>%
-            dplyr::select("ingredient_concept_id","unit"), by = "ingredient_concept_id"
+            dplyr::select("ingredient_concept_id", "unit"),
+          by = "ingredient_concept_id"
         ) %>%
-        dplyr::mutate(median_daily_dose_q05_q95 =
-                        glue::glue(paste("{.data$median} ({.data$q05}-{.data$q95}) [{.data$unit}]"))) %>%
-        dplyr::select("ingredient_concept_id","median_daily_dose_q05_q95"),
+        dplyr::mutate(
+          median_daily_dose_q05_q95 =
+            glue::glue(paste("{.data$median} ({.data$q05}-{.data$q95}) [{.data$unit}]"))
+        ) %>%
+        dplyr::select("ingredient_concept_id", "median_daily_dose_q05_q95"),
       by = "ingredient_concept_id"
     )
   }
 
   diagnosticsSummary <- diagnosticsSummary %>%
-    dplyr::select(tidyselect::any_of(c("ingredient", "ingredient_concept_id", "n_records", "n_patients",
-                                       "proportion_of_records_by_drug_type",
-                                       "proportion_of_records_by_route_type",
-                                       "proportion_of_records_with_dose_form",
-                                       "missing_quantity_exp_start_end_days_supply",
-                                       "n_dose_and_missingness",
-                                       "median_daily_dose_q05_q95",
-                                       "median_quantity_q05_q95",
-                                       "median_drug_exposure_days_q05_q95",
-                                       "proportion_of_records_with_negative_drug_exposure_days")))
+    dplyr::select(tidyselect::any_of(c(
+      "ingredient", "ingredient_concept_id", "n_records", "n_patients",
+      "proportion_of_records_by_drug_type",
+      "proportion_of_records_by_route_type",
+      "proportion_of_records_with_dose_form",
+      "missing_quantity_exp_start_end_days_supply",
+      "n_dose_and_missingness",
+      "median_daily_dose_q05_q95",
+      "median_quantity_q05_q95",
+      "median_drug_exposure_days_q05_q95",
+      "proportion_of_records_with_negative_drug_exposure_days"
+    )))
   return(diagnosticsSummary)
 }

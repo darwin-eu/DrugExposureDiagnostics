@@ -26,7 +26,6 @@ summariseDrugExposureDuration <- function(cdm,
                                           drugRecordsTable = "ingredient_drug_records",
                                           byConcept = TRUE,
                                           sampleSize = 10000) {
-
   # checks
   errorMessage <- checkmate::makeAssertCollection()
   checkDbType(cdm = cdm, messageStore = errorMessage)
@@ -38,11 +37,13 @@ summariseDrugExposureDuration <- function(cdm,
   checkmate::reportAssertions(collection = errorMessage)
 
   if (isTRUE(byConcept)) {
-    grouping <- c("drug_concept_id", "drug",
-                  "ingredient_concept_id",
-                  "ingredient")
+    grouping <- c(
+      "drug_concept_id", "drug",
+      "ingredient_concept_id",
+      "ingredient"
+    )
   } else {
-    grouping <- c("ingredient_concept_id",  "ingredient")
+    grouping <- c("ingredient_concept_id", "ingredient")
   }
 
   records <- cdm[[drugRecordsTable]]
@@ -61,8 +62,8 @@ summariseDrugExposureDuration <- function(cdm,
     dplyr::mutate(
       drug_exposure_days =
         as.numeric(difftime(.data$drug_exposure_end_date,
-                            .data$drug_exposure_start_date,
-                            units = "days"
+          .data$drug_exposure_start_date,
+          units = "days"
         )) + 1
     )
 
@@ -78,28 +79,34 @@ summariseDrugExposureDuration <- function(cdm,
       minimum_drug_exposure_days = min(.data$drug_exposure_days, na.rm = T),
       q05_drug_exposure_days = stats::quantile(
         .data$drug_exposure_days,
-        0.05, na.rm = T
+        0.05,
+        na.rm = T
       ),
       q10_drug_exposure_days = stats::quantile(
         .data$drug_exposure_days,
-        0.10, na.rm = T
+        0.10,
+        na.rm = T
       ),
       q25_drug_exposure_days = stats::quantile(
         .data$drug_exposure_days,
-        0.25, na.rm = T
+        0.25,
+        na.rm = T
       ),
       median_drug_exposure_days = stats::median(.data$drug_exposure_days, na.rm = T),
       q75_drug_exposure_days = stats::quantile(
         .data$drug_exposure_days,
-        0.75, na.rm = T
+        0.75,
+        na.rm = T
       ),
       q90_drug_exposure_days = stats::quantile(
         .data$drug_exposure_days,
-        0.90, na.rm = T
+        0.90,
+        na.rm = T
       ),
       q95_drug_exposure_days = stats::quantile(
         .data$drug_exposure_days,
-        0.95, na.rm = T
+        0.95,
+        na.rm = T
       ),
       maximum_drug_exposure_days = max(.data$drug_exposure_days, na.rm = T)
     )

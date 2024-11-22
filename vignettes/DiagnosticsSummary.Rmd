@@ -31,9 +31,11 @@ library(dplyr)
 # acetaminophen concept id is 1125315
 acetaminophen <- 1125315
 cdm <- mockDrugExposure()
-acetaminophen_checks <- executeChecks(cdm = cdm, 
-                                      ingredients = acetaminophen, 
-                                      checks = c("missing", "exposureDuration", "type","route","dose","quantity", "diagnosticsSummary"))
+acetaminophen_checks <- executeChecks(
+  cdm = cdm,
+  ingredients = acetaminophen,
+  checks = c("missing", "exposureDuration", "type", "route", "dose", "quantity", "diagnosticsSummary")
+)
 ```
 
 Let's have a look at the diagnostics summary

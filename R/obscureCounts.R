@@ -27,7 +27,6 @@ obscureCounts <- function(table,
                           tableName,
                           minCellCount = 5,
                           substitute = NA) {
-
   # checks
   errorMessage <- checkmate::makeAssertCollection()
   checkmate::assert_tibble(table, add = errorMessage)
@@ -39,8 +38,10 @@ obscureCounts <- function(table,
     # initialise result_obscured as FALSE
     table$result_obscured <- FALSE
 
-    colNames <- setdiff(colnames(table), c("drug_concept_id", "drug",
-                                           "ingredient_concept_id", "ingredient", "result_obscured"))
+    colNames <- setdiff(colnames(table), c(
+      "drug_concept_id", "drug",
+      "ingredient_concept_id", "ingredient", "result_obscured"
+    ))
     checkColNames <- NULL
     if (grepl("drugRoutes|drugSig|drugVerbatimEndDate|drugQuantity|drugSourceConcepts|drugTypes|drugExposureDuration|drugDaysSupply", tableName)) {
       checkColNames <- c("n_records", "n_person")

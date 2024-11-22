@@ -2,7 +2,8 @@
 
 allTabsList <- list(
   dataPlotPanelViewer("ingredientConcepts", "Ingredient concepts", byConcept = FALSE),
-  widths = c(2, 10))
+  widths = c(2, 10)
+)
 
 # add tabs depending on if the data is available
 if (nrow(drugRoutes) > 0) {
@@ -35,10 +36,16 @@ if (nrow(drugVerbatimEndDate) > 0) {
 if (nrow(drugDailyDose) > 0) {
   allTabsList[[length(allTabsList) + 1]] <- dataPlotPanelViewer("drugDailyDose", "Drug daily dose")
 }
+if (nrow(metaData) > 0) {
+  allTabsList[[length(allTabsList) + 1]] <- metaDataViewer("metaData", "Metadata")
+}
 
-fluidPage(theme = bs_theme(version = "5", bootswatch = "spacelab"),
-          useShinyjs(),
-          titlePanel(title = h2("Drug Exposure Diagnostics Dashboard", align = "center"),
-                     windowTitle = "Drug Exposure Diagnostics Dashboard"),
-          do.call(navlistPanel, allTabsList))
-
+fluidPage(
+  theme = bs_theme(version = "5", bootswatch = "spacelab"),
+  useShinyjs(),
+  titlePanel(
+    title = h2("Drug Exposure Diagnostics Dashboard", align = "center"),
+    windowTitle = "Drug Exposure Diagnostics Dashboard"
+  ),
+  do.call(navlistPanel, allTabsList)
+)

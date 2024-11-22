@@ -1,9 +1,9 @@
 # Module to filter data and display data and a plot
 
 # @file tableFilterPanel
-# Copyright 2022 DARWIN EU®
+# Copyright 2024 DARWIN EU®
 #
-# This file is part of IncidencePrevalence
+# This file is part of DrugExposureDiagnostics
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -44,14 +44,16 @@ dataPlotPanelViewer <- function(id, title, byConcept = TRUE, plotPercentage = FA
   plotFilterRow <- fluidRow(
     column(width = 3, uiOutput(ns("plotDbPickerUI"))),
     column(width = 3, uiOutput(ns("plotIngredientPickerUI"))),
-    topNCol)
+    topNCol
+  )
 
   if (plotPercentage) {
     plotFilterRow <- fluidRow(
       column(width = 3, uiOutput(ns("plotDbPickerUI"))),
       column(width = 3, uiOutput(ns("plotIngredientPickerUI"))),
       topNCol,
-      column(width = 3, tags$br(), tags$br(), checkboxInput(ns("perc"), label = "Percentage", value = TRUE)))
+      column(width = 3, tags$br(), tags$br(), checkboxInput(ns("perc"), label = "Percentage", value = TRUE))
+    )
   }
 
   if (byConcept) {
@@ -70,23 +72,26 @@ dataPlotPanelViewer <- function(id, title, byConcept = TRUE, plotPercentage = FA
       )
     )
   }
-  tabPanel(title,
-           tabsetPanel(
-             tabPanel("Data",
-                      filterRow,
-                      fluidRow(column(width = 12, uiOutput(ns("tableDescription")))),
-                      tags$hr(),
-                      withSpinner(DT::dataTableOutput(ns("mainTable"))),
-                      tags$hr(),
-                      uiOutput(ns("downloadButtonUI"))
-             ),
-             tabPanel("Plot",
-                      plotFilterRow,
-                      fluidRow(column(width = 12, uiOutput(ns("plotDescription")))),
-                      tags$hr(),
-                      withSpinner(uiOutput(ns('plotUI'), height = "700px"))
-             )
-          )
+  tabPanel(
+    title,
+    tabsetPanel(
+      tabPanel(
+        "Data",
+        filterRow,
+        fluidRow(column(width = 12, uiOutput(ns("tableDescription")))),
+        tags$hr(),
+        withSpinner(DT::dataTableOutput(ns("mainTable"))),
+        tags$hr(),
+        uiOutput(ns("downloadButtonUI"))
+      ),
+      tabPanel(
+        "Plot",
+        plotFilterRow,
+        fluidRow(column(width = 12, uiOutput(ns("plotDescription")))),
+        tags$hr(),
+        withSpinner(uiOutput(ns("plotUI"), height = "700px"))
+      )
+    )
   )
 }
 
@@ -109,23 +114,27 @@ dataPlotPanelServer <- function(id, data, dataByConcept, downloadFilename, descr
   createBarChart <- function(data, x = "count", y = "variable", fill = "ingredient", xLabel = "count") {
     if (!is.null(data) && nrow(data) > 0) {
       data %>%
-         ggplot(aes_string(x = x, y = y, fill = fill))+
-         geom_bar(stat = 'identity', position = position_dodge())+
-         theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5),
-               plot.title = element_text(hjust = 0.5))+
-         facet_wrap(.~database_id) +
-         ggtitle(description) +
-         labs(x = xLabel)
+        ggplot(aes_string(x = x, y = y, fill = fill)) +
+        geom_bar(stat = "identity", position = position_dodge()) +
+        theme(
+          axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+          plot.title = element_text(hjust = 0.5)
+        ) +
+        facet_wrap(. ~ database_id) +
+        ggtitle(description) +
+        labs(x = xLabel)
     }
   }
 
   addBoxPlotTheme <- function(plot, fontSize = 16) {
     plot +
-      theme(axis.text.x = element_text(angle = 45, vjust = 0.5, size = fontSize),
-            axis.text.y = element_text(size = (fontSize - 4)),
-            axis.title = element_text(size = fontSize),
-            plot.title = element_text(hjust = 0.5, size = fontSize),
-            strip.text = element_text(size = fontSize))
+      theme(
+        axis.text.x = element_text(angle = 45, vjust = 0.5, size = fontSize),
+        axis.text.y = element_text(size = (fontSize - 4)),
+        axis.title = element_text(size = fontSize),
+        plot.title = element_text(hjust = 0.5, size = fontSize),
+        strip.text = element_text(size = fontSize)
+      )
   }
   # Box chart for quantiles data
   createBoxChart <- function(data) {
@@ -133,7 +142,7 @@ dataPlotPanelServer <- function(id, data, dataByConcept, downloadFilename, descr
       addBoxPlotTheme(data %>%
         ggplot(aes(x = ingredient, ymin = y0, lower = y25, middle = y50, upper = y75, ymax = y100)) +
         geom_boxplot(stat = "identity") +
-        facet_wrap(.~database_id) +
+        facet_wrap(. ~ database_id) +
         ggtitle(description))
     }
   }
@@ -177,11 +186,13 @@ dataPlotPanelServer <- function(id, data, dataByConcept, downloadFilename, descr
           createBarChart()
       } else if (id == "drugDaysSupply") {
         data %>%
-          dplyr::rename(y0 = minimum_drug_exposure_days_supply,
-                        y25 = q25_drug_exposure_days_supply,
-                        y50 = median_drug_exposure_days_supply,
-                        y75 = q75_drug_exposure_days_supply,
-                        y100 = maximum_drug_exposure_days_supply) %>%
+          dplyr::rename(
+            y0 = minimum_drug_exposure_days_supply,
+            y25 = q25_drug_exposure_days_supply,
+            y50 = median_drug_exposure_days_supply,
+            y75 = q75_drug_exposure_days_supply,
+            y100 = maximum_drug_exposure_days_supply
+          ) %>%
           createBoxChart()
       } else if (id == "drugRoutes") {
         data %>%
@@ -211,9 +222,11 @@ dataPlotPanelServer <- function(id, data, dataByConcept, downloadFilename, descr
           filterTopN(topN) %>%
           createBarChart(xLabel = xLabel)
       } else if (id == "drugVerbatimEndDate") {
-        cols <- colnames(data)[!colnames(data) %in% c("database_id", "ingredient_concept_id", "ingredient_id", "result_obscured",
-                                                      "ingredient", "minimum_verbatim_end_date", "maximum_verbatim_end_date",
-                                                      "n_records", "n_sample")]
+        cols <- colnames(data)[!colnames(data) %in% c(
+          "database_id", "ingredient_concept_id", "ingredient_id", "result_obscured",
+          "ingredient", "minimum_verbatim_end_date", "maximum_verbatim_end_date",
+          "n_records", "n_sample"
+        )]
         data %>%
           tidyr::pivot_longer(all_of(cols), names_to = "variable", values_to = "count") %>%
           filterTopN(topN) %>%
@@ -228,19 +241,23 @@ dataPlotPanelServer <- function(id, data, dataByConcept, downloadFilename, descr
           createDoseChart(colour = "database_id", x = "group_level", facet = "pattern_name")
       } else if (id == "drugExposureDuration") {
         data %>%
-          dplyr::rename(y0 = minimum_drug_exposure_days,
-                        y25 = q25_drug_exposure_days,
-                        y50 = median_drug_exposure_days,
-                        y75 = q75_drug_exposure_days,
-                        y100 = maximum_drug_exposure_days) %>%
+          dplyr::rename(
+            y0 = minimum_drug_exposure_days,
+            y25 = q25_drug_exposure_days,
+            y50 = median_drug_exposure_days,
+            y75 = q75_drug_exposure_days,
+            y100 = maximum_drug_exposure_days
+          ) %>%
           createBoxChart()
       } else if (id == "drugQuantity") {
         data %>%
-          dplyr::rename(y0 = minimum_drug_exposure_quantity,
-                        y25 = q25_drug_exposure_quantity,
-                        y50 = median_drug_exposure_quantity,
-                        y75 = q75_drug_exposure_quantity,
-                        y100 = maximum_drug_exposure_quantity) %>%
+          dplyr::rename(
+            y0 = minimum_drug_exposure_quantity,
+            y25 = q25_drug_exposure_quantity,
+            y50 = median_drug_exposure_quantity,
+            y75 = q75_drug_exposure_quantity,
+            y100 = maximum_drug_exposure_quantity
+          ) %>%
           createBoxChart()
       }
     }
@@ -253,11 +270,10 @@ dataPlotPanelServer <- function(id, data, dataByConcept, downloadFilename, descr
   shiny::moduleServer(
     id,
     function(input, output, session) {
-
-      requiredCols          <- c("database_id", "ingredient_id", "ingredient")
+      requiredCols <- c("database_id", "ingredient_id", "ingredient")
       requiredColsByConcept <- c(requiredCols, "drug_concept_id", "drug")
-      ingredientCols        <- requiredCols[2:3]
-      referenceTabId        <- "ingredientConcepts"
+      ingredientCols <- requiredCols[2:3]
+      referenceTabId <- "ingredientConcepts"
 
       if (nrow(data) > 0) {
         databases <- unique(data$database_id)
@@ -288,38 +304,46 @@ dataPlotPanelServer <- function(id, data, dataByConcept, downloadFilename, descr
           }
         })
 
-        observeEvent(input[["ingredientPicker"]], {
-          if (id == referenceTabId) {
-            commonInputs$ingredients <- input$ingredientPicker
-          }
-        }, ignoreNULL = FALSE, ignoreInit = TRUE)
+        observeEvent(input[["ingredientPicker"]],
+          {
+            if (id == referenceTabId) {
+              commonInputs$ingredients <- input$ingredientPicker
+            }
+          },
+          ignoreNULL = FALSE,
+          ignoreInit = TRUE
+        )
 
         # update ingredients when db changes
-        observeEvent(input[["dbPicker"]], {
-          databases <- input$dbPicker
-          if (id == referenceTabId) {
-            commonInputs$databases <- databases
-            if (!is.null(databases)) {
-              ingredientIds <- data %>%
-                filter(database_id %in% databases) %>%
-                pull(ingredient_id)
+        observeEvent(input[["dbPicker"]],
+          {
+            databases <- input$dbPicker
+            if (id == referenceTabId) {
+              commonInputs$databases <- databases
+              if (!is.null(databases)) {
+                ingredientIds <- data %>%
+                  filter(database_id %in% databases) %>%
+                  pull(ingredient_id)
 
-              ingredients <- data %>%
-                dplyr::filter(ingredient_id %in% .env$ingredientIds) %>%
-                dplyr::mutate(ingredient = str_to_title(.data$ingredient)) %>%
-                dplyr::select(all_of(ingredientCols)) %>%
-                dplyr::distinct()
+                ingredients <- data %>%
+                  dplyr::filter(ingredient_id %in% .env$ingredientIds) %>%
+                  dplyr::mutate(ingredient = str_to_title(.data$ingredient)) %>%
+                  dplyr::select(all_of(ingredientCols)) %>%
+                  dplyr::distinct()
 
-              ingredients <- do.call(paste, ingredients)
-              updatePickerInput(
-                session = session,
-                inputId = "ingredientPicker",
-                choices = ingredients,
-                selected = ingredients
-              )
+                ingredients <- do.call(paste, ingredients)
+                updatePickerInput(
+                  session = session,
+                  inputId = "ingredientPicker",
+                  choices = ingredients,
+                  selected = ingredients
+                )
+              }
             }
-          }
-        }, ignoreNULL = FALSE, ignoreInit = TRUE)
+          },
+          ignoreNULL = FALSE,
+          ignoreInit = TRUE
+        )
 
         observe({
           req(commonInputs)
@@ -329,7 +353,8 @@ dataPlotPanelServer <- function(id, data, dataByConcept, downloadFilename, descr
               updatePickerInput(
                 session = session,
                 inputId = "ingredientPicker",
-                selected = ingredients)
+                selected = ingredients
+              )
             }
 
             if (!identical(commonInputs$databases, commonInputsInitValue)) {
@@ -337,7 +362,8 @@ dataPlotPanelServer <- function(id, data, dataByConcept, downloadFilename, descr
               updatePickerInput(
                 session = session,
                 inputId = "dbPicker",
-                selected = databases)
+                selected = databases
+              )
             }
           }
         })
@@ -401,8 +427,9 @@ dataPlotPanelServer <- function(id, data, dataByConcept, downloadFilename, descr
           data <- getData()
           if (!is.null(data) && nrow(data) > 0) {
             downloadBttn(ns("downloadButton"),
-                         size = "xs",
-                         label = "Download")
+              size = "xs",
+              label = "Download"
+            )
           }
         })
 
@@ -424,23 +451,27 @@ dataPlotPanelServer <- function(id, data, dataByConcept, downloadFilename, descr
         # plotting
         output$plotDbPickerUI <- renderUI({
           databases <- commonInputs$databases
-          pickerInput <- pickerInput(inputId = ns('plotDbPicker'),
-                                     label = 'Databases',
-                                     choices = databases,
-                                     options = list(`actions-box` = TRUE),
-                                     multiple = T,
-                                     selected = databases)
+          pickerInput <- pickerInput(
+            inputId = ns("plotDbPicker"),
+            label = "Databases",
+            choices = databases,
+            options = list(`actions-box` = TRUE),
+            multiple = T,
+            selected = databases
+          )
           pickerInput <- disabled(pickerInput)
           pickerInput
         })
 
         output$plotIngredientPickerUI <- renderUI({
-          pickerInput(inputId = ns('plotIngredientPicker'),
-                      label = 'Ingredients',
-                      choices = ingredients,
-                      options = list(`actions-box` = TRUE),
-                      multiple = F,
-                      selected = ingredients)
+          pickerInput(
+            inputId = ns("plotIngredientPicker"),
+            label = "Ingredients",
+            choices = ingredients,
+            options = list(`actions-box` = TRUE),
+            multiple = F,
+            selected = ingredients
+          )
         })
 
 
@@ -466,7 +497,7 @@ dataPlotPanelServer <- function(id, data, dataByConcept, downloadFilename, descr
               createChart(getPlotData(), input$top_n)
             })
           } else {
-            result <- plotlyOutput(ns('plot'), height = "700px")
+            result <- plotlyOutput(ns("plot"), height = "700px")
             output$plot <- renderPlotly({
               createChart(getPlotData(), input$top_n, input$perc)
             })

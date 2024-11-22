@@ -5,13 +5,13 @@ test_that("check working example with defaults", {
   expect_true(cdmCheck)
 
   expect_true(nrow(db$drug_exposure %>%
-                     dplyr::collect()) >= 1)
+    dplyr::collect()) >= 1)
   expect_true(nrow(db$concept %>%
-                     dplyr::collect()) >= 1)
+    dplyr::collect()) >= 1)
   expect_true(nrow(db$concept_ancestor %>%
-                     dplyr::collect()) >= 1)
+    dplyr::collect()) >= 1)
   expect_true(nrow(db$drug_strength %>%
-                     dplyr::collect()) >= 1)
+    dplyr::collect()) >= 1)
 
 
   ancestor_conceptDbNames <- c(
@@ -19,10 +19,10 @@ test_that("check working example with defaults", {
     "max_levels_of_separation"
   )
   ancestor_conceptNamesCheck <- all(ancestor_conceptDbNames %in%
-                            names(db$concept_ancestor %>%
-                                    utils::head(1) %>%
-                                    dplyr::collect() %>%
-                                    dplyr::rename_with(tolower)))
+    names(db$concept_ancestor %>%
+      utils::head(1) %>%
+      dplyr::collect() %>%
+      dplyr::rename_with(tolower)))
 
   drugstrengthNames <- c(
     "drug_concept_id",
@@ -38,10 +38,10 @@ test_that("check working example with defaults", {
     "invalid_reason"
   )
   drugstrengthNamesCheck <- all(drugstrengthNames %in%
-                               names(db$drug_strength %>%
-                                       utils::head(1) %>%
-                                       dplyr::collect() %>%
-                                       dplyr::rename_with(tolower)))
+    names(db$drug_strength %>%
+      utils::head(1) %>%
+      dplyr::collect() %>%
+      dplyr::rename_with(tolower)))
   expect_true(drugstrengthNamesCheck)
 
   conceptNames <- c(
@@ -57,10 +57,10 @@ test_that("check working example with defaults", {
     "invalid_reason"
   )
   conceptNamesCheck <- all(conceptNames %in%
-                                  names(db$concept %>%
-                                          utils::head(1) %>%
-                                          dplyr::collect() %>%
-                                          dplyr::rename_with(tolower)))
+    names(db$concept %>%
+      utils::head(1) %>%
+      dplyr::collect() %>%
+      dplyr::rename_with(tolower)))
   expect_true(conceptNamesCheck)
 
   drug_exposureNames <- c(
@@ -85,10 +85,10 @@ test_that("check working example with defaults", {
     "dose_unit_source_value"
   )
   drug_exposureNamesCheck <- all(drug_exposureNames %in%
-                             names(db$drug_exposure %>%
-                                     utils::head(1) %>%
-                                     dplyr::collect() %>%
-                                     dplyr::rename_with(tolower)))
+    names(db$drug_exposure %>%
+      utils::head(1) %>%
+      dplyr::collect() %>%
+      dplyr::rename_with(tolower)))
   expect_true(conceptNamesCheck)
 
 
@@ -111,17 +111,17 @@ test_that("check working example with drug_strength", {
   db <- mockDrugExposure(drug_strength = drug_strength)
 
   expect_true(nrow(db$drug_strength %>%
-                     dplyr::collect()) == 1)
+    dplyr::collect()) == 1)
 
   drug_strengthDbNames <- c(
     "drug_concept_id", "ingredient_concept_id",
     "ingredient_concept_id", "valid_start_date"
   )
   drug_strengthCheck <- all(drug_strengthDbNames %in%
-                             names(db$drug_strength %>%
-                                     utils::head(1) %>%
-                                     dplyr::collect() %>%
-                                     dplyr::rename_with(tolower)))
+    names(db$drug_strength %>%
+      utils::head(1) %>%
+      dplyr::collect() %>%
+      dplyr::rename_with(tolower)))
   expect_true(drug_strengthCheck)
 
   DBI::dbDisconnect(attr(db, "dbcon"), shutdown = TRUE)
@@ -144,17 +144,17 @@ test_that("check working example with drug drug_exposure", {
   db <- mockDrugExposure(drug_exposure = drug_exposure)
 
   expect_true(nrow(db$drug_exposure %>%
-                     dplyr::collect()) == 1)
+    dplyr::collect()) == 1)
 
   drug_exposureDbNames <- c(
     "drug_exposure_id", "drug_exposure_start_date",
     "drug_exposure_end_date"
   )
   drug_exposureCheck <- all(drug_exposureDbNames %in%
-                              names(db$drug_exposure %>%
-                                      utils::head(1) %>%
-                                      dplyr::collect() %>%
-                                      dplyr::rename_with(tolower)))
+    names(db$drug_exposure %>%
+      utils::head(1) %>%
+      dplyr::collect() %>%
+      dplyr::rename_with(tolower)))
   expect_true(drug_exposureCheck)
 
 
@@ -164,23 +164,25 @@ test_that("check working example with drug drug_exposure", {
 test_that("check working example with drug_exposure options", {
   db <- mockDrugExposure(drug_exposure_size = 1, patient_size = 1)
   expect_true(nrow(db$drug_exposure %>%
-                     dplyr::collect()) == 1)
+    dplyr::collect()) == 1)
   DBI::dbDisconnect(attr(db, "dbcon"), shutdown = TRUE)
   db <- mockDrugExposure(drug_exposure_size = 2, patient_size = 1)
   expect_true(nrow(db$drug_exposure %>%
-                     dplyr::collect()) == 2)
+    dplyr::collect()) == 2)
   DBI::dbDisconnect(attr(db, "dbcon"), shutdown = TRUE)
 })
 
 test_that("check working example with drug_strength default options", {
-  db <- mockDrugExposure(drug_exposure_size = 20,
-                         patient_size = 10, amount_val = c(100,200), denom_unit = NA, num_unit= NA)
+  db <- mockDrugExposure(
+    drug_exposure_size = 20,
+    patient_size = 10, amount_val = c(100, 200), denom_unit = NA, num_unit = NA
+  )
   expect_true(nrow(db$drug_strength %>%
-                     dplyr::select("amount_value")%>%dplyr::distinct()%>%dplyr::collect()) == 2)
+    dplyr::select("amount_value") %>% dplyr::distinct() %>% dplyr::collect()) == 2)
   expect_true(nrow(db$drug_strength %>%
-                     dplyr::select("denominator_value")%>%dplyr::distinct()%>%dplyr::collect()) == 1)
+    dplyr::select("denominator_value") %>% dplyr::distinct() %>% dplyr::collect()) == 1)
   expect_true(nrow(db$drug_strength %>%
-                     dplyr::select("numerator_value")%>%dplyr::distinct()%>%dplyr::collect()) == 1)
+    dplyr::select("numerator_value") %>% dplyr::distinct() %>% dplyr::collect()) == 1)
 
   DBI::dbDisconnect(attr(db, "dbcon"), shutdown = TRUE)
 })
@@ -189,18 +191,17 @@ test_that("check working example with drug_strength default options", {
 test_that("check working example with drug_strength num_denom only", {
   db <- mockDrugExposure(amount_val = NA, amount_unit = NA)
   expect_true(nrow(db$drug_strength %>%
-                        dplyr::select("amount_value")%>%dplyr::distinct()%>%dplyr::collect()) == 1)
+    dplyr::select("amount_value") %>% dplyr::distinct() %>% dplyr::collect()) == 1)
   expect_true(nrow(db$drug_strength %>%
-                     dplyr::select("denominator_value")%>%dplyr::distinct()%>%dplyr::collect()) == 1)
+    dplyr::select("denominator_value") %>% dplyr::distinct() %>% dplyr::collect()) == 1)
   expect_true(nrow(db$drug_strength %>%
-                     dplyr::select("numerator_value")%>%dplyr::distinct()%>%dplyr::collect()) == 1)
+    dplyr::select("numerator_value") %>% dplyr::distinct() %>% dplyr::collect()) == 1)
 
   DBI::dbDisconnect(attr(db, "dbcon"), shutdown = TRUE)
 })
 
 test_that("check expected errors", {
-
-    testthat::expect_error(
+  testthat::expect_error(
     mockDrugExposure(drug_exposure_size = "x")
   )
   testthat::expect_error(
@@ -212,5 +213,4 @@ test_that("check expected errors", {
   testthat::expect_error(
     mockDrugExposure(patient_size = -1)
   )
-
 })

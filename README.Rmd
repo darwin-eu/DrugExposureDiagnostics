@@ -59,10 +59,14 @@ Let´s look at the ingredient acetaminophen (https://athena.ohdsi.org/search-ter
 We can run all the checks available in ´DrugExposureDiagnostics´ using the ´executeChecks´ function. 
 
 ```{r}
-all_checks <- executeChecks(cdm = cdm, 
-                            ingredients = 1125315, 
-                            checks = c("missing", "exposureDuration", "type", "route", "sourceConcept", "daysSupply", 
-                                       "verbatimEndDate", "dose", "sig", "quantity", "diagnosticsSummary"))
+all_checks <- executeChecks(
+  cdm = cdm,
+  ingredients = 1125315,
+  checks = c(
+    "missing", "exposureDuration", "type", "route", "sourceConcept", "daysSupply",
+    "verbatimEndDate", "dose", "sig", "quantity", "diagnosticsSummary"
+  )
+)
 ```
 
 The output is a list which contains the following set of tibbles:
@@ -73,7 +77,7 @@ names(all_checks)
 The first item contains information on the concept ids that are used in the database for a given ingredient. 
 ```{r}
 glimpse(all_checks$conceptSummary)
-all_checks$conceptSummary %>% 
+all_checks$conceptSummary %>%
   select("drug_concept_id", "drug")
 ```
 
@@ -96,11 +100,12 @@ For further information on the checks performed please see the package vignettes
 After running the checks we can write the CSVs to disk using the `writeResultToDisk` function.
 ```{r}
 writeResultToDisk(all_checks,
-                  databaseId = "Synthea", 
-                  outputFolder =tempdir())
+  databaseId = "Synthea",
+  outputFolder = tempdir()
+)
 ```
 
 
 ```{r, echo=FALSE}
-  DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
+DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
 ```
