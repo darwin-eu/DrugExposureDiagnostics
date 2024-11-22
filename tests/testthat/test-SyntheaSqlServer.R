@@ -2,7 +2,7 @@ library(testthat)
 library(dplyr, warn.conflicts = FALSE)
 
 test_that("test methods against test server", {
-  skip_if(Sys.getenv("TESTDB_USER99") == "")
+  skip_if(Sys.getenv("TESTDB_USER") == "")
 
   con <- DBI::dbConnect(odbc::odbc(),
     Driver   = Sys.getenv("TESTDB_DRIVER"),
