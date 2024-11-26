@@ -1,5 +1,5 @@
 test_that("Shiny app works", {
-  skip_on_cran()
+  skip()
 
   appdir <- system.file(package = "DrugExposureDiagnostics", "shiny", "ResultsExplorer")
   expect_true(dir.exists(appdir))

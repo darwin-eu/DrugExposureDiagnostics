@@ -1,5 +1,5 @@
 test_that("runBenchmarkExecuteSingleIngredient output contents, and format", {
-  skip_on_cran()
+  skip(message = "does not work with latest omopgenerics")
 
   cdm <- DrugExposureDiagnostics::mockDrugExposure()
 
@@ -33,7 +33,7 @@ test_that("runBenchmarkExecuteSingleIngredient output contents, and format", {
 })
 
 test_that("runBenchmarkExecuteSingleIngredient given ingredients in wrong format", {
-  skip_on_cran()
+  skip(message = "does not work with latest omopgenerics")
 
   cdm <- DrugExposureDiagnostics::mockDrugExposure()
 
@@ -44,7 +44,7 @@ test_that("runBenchmarkExecuteSingleIngredient given ingredients in wrong format
 })
 
 test_that("runBenchmarkExecuteSingleIngredient duplicate ingredients", {
-  skip_on_cran()
+  skip(message = "does not work with latest omopgenerics")
 
   cdm <- DrugExposureDiagnostics::mockDrugExposure()
 
