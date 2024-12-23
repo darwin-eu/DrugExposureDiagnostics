@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">DrugExposureDiagnostics</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,7 +91,7 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Inberg G, Burn E, Burkard T (????). _DrugExposureDiagnostics:</span></span>
 <span><span class="co">#&gt;   Diagnostics for OMOP Common Data Model Drug Records_. R package</span></span>
-<span><span class="co">#&gt;   version 1.0.10, https://github.com/darwin-eu/DrugExposureDiagnostics,</span></span>
+<span><span class="co">#&gt;   version 1.1.0, https://github.com/darwin-eu/DrugExposureDiagnostics,</span></span>
 <span><span class="co">#&gt;   &lt;https://darwin-eu.github.io/DrugExposureDiagnostics/&gt;.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; A BibTeX entry for LaTeX users is</span></span>
@@ -99,7 +99,7 @@
 <span><span class="co">#&gt;   @Manual{,</span></span>
 <span><span class="co">#&gt;     title = {DrugExposureDiagnostics: Diagnostics for OMOP Common Data Model Drug Records},</span></span>
 <span><span class="co">#&gt;     author = {Ger Inberg and Edward Burn and Theresa Burkard},</span></span>
-<span><span class="co">#&gt;     note = {R package version 1.0.10, https://github.com/darwin-eu/DrugExposureDiagnostics},</span></span>
+<span><span class="co">#&gt;     note = {R package version 1.1.0, https://github.com/darwin-eu/DrugExposureDiagnostics},</span></span>
 <span><span class="co">#&gt;     url = {https://darwin-eu.github.io/DrugExposureDiagnostics/},</span></span>
 <span><span class="co">#&gt;   }</span></span></code></pre></div>
 </div>
@@ -114,11 +114,7 @@
 <code class="sourceCode R"><span><span class="va">cdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mockDrugExposure.html">mockDrugExposure</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Note: method with signature 'DBIConnection#Id' chosen for function 'dbExistsTable',</span></span>
 <span><span class="co">#&gt;  target signature 'duckdb_connection#Id'.</span></span>
-<span><span class="co">#&gt;  "duckdb_connection#ANY" would also be valid</span></span>
-<span><span class="co">#&gt; Warning: ! 1 column in vocabulary do not match expected column type:</span></span>
-<span><span class="co">#&gt; • `vocabulary_concept_id` is numeric but expected integer</span></span>
-<span><span class="co">#&gt; Warning: ! 1 column in drug_strength do not match expected column type:</span></span>
-<span><span class="co">#&gt; • `box_size` is numeric but expected integer</span></span></code></pre></div>
+<span><span class="co">#&gt;  "duckdb_connection#ANY" would also be valid</span></span></code></pre></div>
 <p>Let´s look at the ingredient acetaminophen (<a href="https://athena.ohdsi.org/search-terms/terms/1125315" class="external-link uri">https://athena.ohdsi.org/search-terms/terms/1125315</a>).</p>
 <p>We can run all the checks available in ´DrugExposureDiagnostics´ using the ´executeChecks´ function.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -136,9 +132,15 @@
 <span><span class="co">#&gt;   q75, q95, min, max</span></span>
 <span><span class="co">#&gt; ! Table is collected to memory as not all requested estimates are supported on</span></span>
 <span><span class="co">#&gt;   the database side</span></span>
-<span><span class="co">#&gt; → Start summary of data, at 2024-11-22 17:54:36.629726</span></span>
+<span><span class="co">#&gt; → Start summary of data, at 2024-12-19 18:52:57.147139</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ✔ Summary finished, at 2024-11-22 17:54:36.777694</span></span></code></pre></div>
+<span><span class="co">#&gt; Registered S3 method overwritten by 'visOmopResults':</span></span>
+<span><span class="co">#&gt;   method                 from        </span></span>
+<span><span class="co">#&gt;   tidy.summarised_result omopgenerics</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ✔ Summary finished, at 2024-12-19 18:52:57.302844</span></span>
+<span><span class="co">#&gt; `sample_size` casted to character.</span></span>
+<span><span class="co">#&gt; `sample_size` eliminated from settings as all elements are NA.</span></span></code></pre></div>
 <p>The output is a list which contains the following set of tibbles:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">all_checks</span><span class="op">)</span></span>
@@ -159,27 +161,27 @@
 <span><span class="co">#&gt; Rows: 6</span></span>
 <span><span class="co">#&gt; Columns: 26</span></span>
 <span><span class="co">#&gt; Rowwise: </span></span>
-<span><span class="co">#&gt; $ drug_concept_id             &lt;int&gt; 40229134, 1127078, 1127433, 40162522, 1913…</span></span>
-<span><span class="co">#&gt; $ drug                        &lt;chr&gt; "acetaminophen 21.7 MG/ML / Dextromethorph…</span></span>
+<span><span class="co">#&gt; $ drug_concept_id             &lt;int&gt; 1127078, 40162522, 40229134, 40231925, 191…</span></span>
+<span><span class="co">#&gt; $ drug                        &lt;chr&gt; "acetaminophen 750 MG / Hydrocodone Bitart…</span></span>
 <span><span class="co">#&gt; $ ingredient_concept_id       &lt;int&gt; 1125315, 1125315, 1125315, 1125315, 112531…</span></span>
 <span><span class="co">#&gt; $ ingredient                  &lt;chr&gt; "acetaminophen", "acetaminophen", "acetami…</span></span>
-<span><span class="co">#&gt; $ n_records                   &lt;int&gt; 12, 19, 13, 18, 14, 10</span></span>
-<span><span class="co">#&gt; $ n_patients                  &lt;int&gt; 11, 13, 11, 15, 13, 9</span></span>
+<span><span class="co">#&gt; $ n_records                   &lt;int&gt; 19, 18, 12, 10, 14, 13</span></span>
+<span><span class="co">#&gt; $ n_patients                  &lt;int&gt; 13, 15, 11, 9, 13, 11</span></span>
 <span><span class="co">#&gt; $ domain_id                   &lt;chr&gt; "Drug", "Drug", "Drug", "Drug", "Drug", "D…</span></span>
 <span><span class="co">#&gt; $ vocabulary_id               &lt;chr&gt; "RxNorm", "RxNorm", "RxNorm", "RxNorm", "R…</span></span>
 <span><span class="co">#&gt; $ concept_class_id            &lt;chr&gt; "Clinical Drug", "Clinical Drug", "Clinica…</span></span>
 <span><span class="co">#&gt; $ standard_concept            &lt;chr&gt; "S", "S", "S", "S", "S", "S"</span></span>
-<span><span class="co">#&gt; $ concept_code                &lt;chr&gt; "1043400", "833036", "1049221", "313782", …</span></span>
+<span><span class="co">#&gt; $ concept_code                &lt;chr&gt; "833036", "313782", "1043400", "857005", "…</span></span>
 <span><span class="co">#&gt; $ valid_start_date            &lt;date&gt; 1970-01-01, 1970-01-01, 1970-01-01, 1970-0…</span></span>
 <span><span class="co">#&gt; $ valid_end_date              &lt;date&gt; 2099-12-31, 2099-12-31, 2099-12-31, 2099-1…</span></span>
 <span><span class="co">#&gt; $ invalid_reason              &lt;chr&gt; NA, NA, NA, NA, NA, NA</span></span>
-<span><span class="co">#&gt; $ amount_value                &lt;dbl&gt; 300, 100, NA, 100, 300, 200</span></span>
-<span><span class="co">#&gt; $ amount_unit_concept_id      &lt;int&gt; 9655, 9655, NA, 9655, 9655, 9655</span></span>
-<span><span class="co">#&gt; $ numerator_value             &lt;dbl&gt; NA, NA, 2, NA, NA, NA</span></span>
-<span><span class="co">#&gt; $ numerator_unit_concept_id   &lt;int&gt; NA, NA, 8587, NA, NA, NA</span></span>
+<span><span class="co">#&gt; $ amount_value                &lt;dbl&gt; 200, NA, NA, 300, 200, 200</span></span>
+<span><span class="co">#&gt; $ amount_unit_concept_id      &lt;int&gt; 9655, NA, NA, 9655, 9655, 9655</span></span>
+<span><span class="co">#&gt; $ numerator_value             &lt;dbl&gt; NA, 1, 1, NA, NA, NA</span></span>
+<span><span class="co">#&gt; $ numerator_unit_concept_id   &lt;int&gt; NA, 8576, 8576, NA, NA, NA</span></span>
 <span><span class="co">#&gt; $ numerator_unit              &lt;chr&gt; NA, NA, NA, NA, NA, NA</span></span>
-<span><span class="co">#&gt; $ denominator_value           &lt;dbl&gt; NA, NA, 10, NA, NA, NA</span></span>
-<span><span class="co">#&gt; $ denominator_unit_concept_id &lt;int&gt; NA, NA, 8587, NA, NA, NA</span></span>
+<span><span class="co">#&gt; $ denominator_value           &lt;dbl&gt; NA, 10, 10, NA, NA, NA</span></span>
+<span><span class="co">#&gt; $ denominator_unit_concept_id &lt;int&gt; NA, 8576, 8576, NA, NA, NA</span></span>
 <span><span class="co">#&gt; $ denominator_unit            &lt;chr&gt; NA, NA, NA, NA, NA, NA</span></span>
 <span><span class="co">#&gt; $ box_size                    &lt;dbl&gt; 0, 0, 0, 0, 0, 0</span></span>
 <span><span class="co">#&gt; $ amount_unit                 &lt;chr&gt; NA, NA, NA, NA, NA, NA</span></span>
@@ -191,12 +193,12 @@
 <span><span class="co">#&gt; # Rowwise: </span></span>
 <span><span class="co">#&gt;   drug_concept_id drug                                          </span></span>
 <span><span class="co">#&gt;             &lt;int&gt; &lt;chr&gt;                                         </span></span>
-<span><span class="co">#&gt; 1        40229134 acetaminophen 21.7 MG/ML / Dextromethorphan   </span></span>
-<span><span class="co">#&gt; 2         1127078 acetaminophen 750 MG / Hydrocodone Bitartrate </span></span>
-<span><span class="co">#&gt; 3         1127433 acetaminophen 325 MG / Oxycodone Hydrochloride</span></span>
-<span><span class="co">#&gt; 4        40162522 acetaminophen 325 MG Oral Tablet              </span></span>
+<span><span class="co">#&gt; 1         1127078 acetaminophen 750 MG / Hydrocodone Bitartrate </span></span>
+<span><span class="co">#&gt; 2        40162522 acetaminophen 325 MG Oral Tablet              </span></span>
+<span><span class="co">#&gt; 3        40229134 acetaminophen 21.7 MG/ML / Dextromethorphan   </span></span>
+<span><span class="co">#&gt; 4        40231925 acetaminophen 325 MG / Hydrocodone Bitartrate </span></span>
 <span><span class="co">#&gt; 5        19133768 acetaminophen 160 MG Oral Tablet              </span></span>
-<span><span class="co">#&gt; 6        40231925 acetaminophen 325 MG / Hydrocodone Bitartrate</span></span></code></pre></div>
+<span><span class="co">#&gt; 6         1127433 acetaminophen 325 MG / Oxycodone Hydrochloride</span></span></code></pre></div>
 <p>Other tibbles then contain information from the various checks performed.</p>
 <p>For example, we can see a summary of missingness for the ingredient-related records in the drug exposure table, both overall and by concept.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -228,16 +230,16 @@
 <span><span class="co">#&gt; # Rowwise:  drug_concept_id, drug, ingredient_concept_id, ingredient</span></span>
 <span><span class="co">#&gt;    drug_concept_id drug      ingredient_concept_id ingredient variable n_records</span></span>
 <span><span class="co">#&gt;              &lt;int&gt; &lt;chr&gt;                     &lt;int&gt; &lt;chr&gt;      &lt;chr&gt;        &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1        40162522 acetamin…               1125315 acetamino… n_missi…        12</span></span>
-<span><span class="co">#&gt;  2        40162522 acetamin…               1125315 acetamino… n_missi…        12</span></span>
-<span><span class="co">#&gt;  3        40162522 acetamin…               1125315 acetamino… n_missi…        12</span></span>
-<span><span class="co">#&gt;  4        40162522 acetamin…               1125315 acetamino… n_missi…        12</span></span>
-<span><span class="co">#&gt;  5        40162522 acetamin…               1125315 acetamino… n_missi…        12</span></span>
-<span><span class="co">#&gt;  6        40162522 acetamin…               1125315 acetamino… n_missi…        12</span></span>
-<span><span class="co">#&gt;  7        40162522 acetamin…               1125315 acetamino… n_missi…        12</span></span>
-<span><span class="co">#&gt;  8        40162522 acetamin…               1125315 acetamino… n_missi…        12</span></span>
-<span><span class="co">#&gt;  9        40162522 acetamin…               1125315 acetamino… n_missi…        12</span></span>
-<span><span class="co">#&gt; 10        40162522 acetamin…               1125315 acetamino… n_missi…        12</span></span>
+<span><span class="co">#&gt;  1        40229134 acetamin…               1125315 acetamino… n_missi…         6</span></span>
+<span><span class="co">#&gt;  2        40229134 acetamin…               1125315 acetamino… n_missi…         6</span></span>
+<span><span class="co">#&gt;  3        40229134 acetamin…               1125315 acetamino… n_missi…         6</span></span>
+<span><span class="co">#&gt;  4        40229134 acetamin…               1125315 acetamino… n_missi…         6</span></span>
+<span><span class="co">#&gt;  5        40229134 acetamin…               1125315 acetamino… n_missi…         6</span></span>
+<span><span class="co">#&gt;  6        40229134 acetamin…               1125315 acetamino… n_missi…         6</span></span>
+<span><span class="co">#&gt;  7        40229134 acetamin…               1125315 acetamino… n_missi…         6</span></span>
+<span><span class="co">#&gt;  8        40229134 acetamin…               1125315 acetamino… n_missi…         6</span></span>
+<span><span class="co">#&gt;  9        40229134 acetamin…               1125315 acetamino… n_missi…         6</span></span>
+<span><span class="co">#&gt; 10        40229134 acetamin…               1125315 acetamino… n_missi…         6</span></span>
 <span><span class="co">#&gt; # ℹ 80 more rows</span></span>
 <span><span class="co">#&gt; # ℹ 6 more variables: n_sample &lt;dbl&gt;, n_person &lt;dbl&gt;,</span></span>
 <span><span class="co">#&gt; #   n_records_not_missing_value &lt;dbl&gt;, n_records_missing_value &lt;dbl&gt;,</span></span>
