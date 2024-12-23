@@ -192,6 +192,117 @@ computeDBQuery <- function(table, tablePrefix, tableName, cdm, overwrite = TRUE)
   return(table)
 }
 
+#' Write a result to a file on disk.
+#'
+#' @param result check result
+#' @param resultName name of the result
+#' @param databaseId database identifier
+#' @param dbDir output directory for current db
+#'
+#' @return No return value, called for side effects
+#'
+#' @examples
+#' \dontrun{
+#' resultList <- list("mtcars" = mtcars)
+#' result <- writeZipToDisk(
+#'   metadata = metadata,
+#'   databaseId = "mtcars",
+#'   outputFolder = here::here()
+#' )
+#' }
+writeFile <- function(result, resultName, databaseId, dbDir) {
+  result <- dplyr::bind_cols(
+    database_id = databaseId,
+    result
+  )
+
+  fileName <- file.path(
+    dbDir,
+    paste0(resultName, ".csv")
+  )
+  # if file exist, append new result
+  if (file.exists(fileName)) {
+    oldResult <- tibble::as_tibble(utils::read.csv(fileName))
+    if (nrow(oldResult) > 0) {
+      result <- rbind(oldResult,
+                      result)
+    }
+  }
+  utils::write.csv(result,
+                   file = fileName,
+                   row.names = FALSE
+  )
+}
+
+#' Write (ingredient) diagnostics results on disk in given output folder.
+#'
+#' @param resultList named list with results
+#' @param databaseId database identifier
+#' @param outputFolder folder to write to
+#' @param clearDBDir if database directory should be cleared
+#'
+#' @return No return value, called for side effects
+#'
+#' @examples
+#' \dontrun{
+#' resultList <- list("mtcars" = mtcars)
+#' result <- writeIngredientResultToDisk(
+#'   resultList = resultList,
+#'   databaseId = "mtcars",
+#'   outputFolder = here::here()
+#' )
+#' }
+writeIngredientResultToDisk <- function(resultList, databaseId, outputFolder, clearDBDir = FALSE) {
+  if (!dir.exists(outputFolder)) {
+    dir.create(outputFolder)
+  }
+  dbDir <- file.path(outputFolder, databaseId)
+  if (!dir.exists(dbDir)) {
+    dir.create(dbDir)
+  } else {
+    if (clearDBDir) {
+      unlink(paste0(dbDir, "/*"))
+    }
+  }
+
+  # write results to disk
+  lapply(names(resultList), FUN = function(checkResultName) {
+    checkResult <- resultList[[checkResultName]]
+    writeFile(checkResult, checkResultName, databaseId, dbDir)
+  })
+}
+
+#' Write (ingredient) diagnostics results on disk in given output folder.
+#'
+#' @param metadata metadata results
+#' @param databaseId database identifier
+#' @param outputFolder folder to write to
+#' @param filename output filename for the zip file
+#'
+#' @return No return value, called for side effects
+#'
+#' @examples
+#' \dontrun{
+#' resultList <- list("mtcars" = mtcars)
+#' result <- writeZipToDisk(
+#'   metadata = metadata,
+#'   databaseId = "mtcars",
+#'   outputFolder = here::here()
+#' )
+#' }
+writeZipToDisk <- function(metadata, databaseId, outputFolder, filename = NULL) {
+  dbDir <- file.path(outputFolder, databaseId)
+  writeFile(metadata, "metadata", databaseId, dbDir)
+
+  filename <- ifelse(is.null(filename), databaseId, filename)
+  utils::zip(
+    zipfile = file.path(outputFolder, paste0(filename, ".zip")),
+    files = list.files(dbDir, full.names = TRUE),
+    extras = "-j"
+  )
+  unlink(dbDir, recursive = TRUE)
+}
+
 #' Write diagnostics results to a zip file on disk in given output folder.
 #'
 #' @param resultList named list with results

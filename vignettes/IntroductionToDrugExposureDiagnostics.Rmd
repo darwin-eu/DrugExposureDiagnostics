@@ -62,7 +62,10 @@ Here is a brief look at this ingredient.
 ### Running the diagnostics
 
 We can run all available checks at the same time using the ´executeChecks()´ function. This will return a list which contains the results of each check.\
-Multiple ingredients can be added in the vector of ´ingredients´
+Multiple ingredients can be added in the vector of ´ingredients´. \
+If the parameter ´outputFolder´ is specified, the results will be saved to disk. The created outputs (CSV files) will be zipped and saved to a file ´filename´.zip
+This zip file serves as the input for the corresponding Shiny Application. If the parameter ´outputFolder´ is not specified and you want to save results to disk,
+it is needed to call ´writeResultToDisk´ (see below). If ´outputFolder´ is not specified, results are only stored in memory.
 
 ```{r executeChecks}
 all_checks <- executeChecks(cdm,
@@ -77,7 +80,9 @@ all_checks <- executeChecks(cdm,
   tablePrefix = NULL,
   earliestStartDate = "2010-01-01",
   verbose = FALSE,
-  byConcept = TRUE
+  byConcept = TRUE,
+  outputFolder = "output_folder",
+  filename = "your_database"
 )
 ```
 
@@ -92,7 +97,10 @@ The `minCellCount` is minimum number of events to report, numbers lower than thi
 The `tablePrefix` is an optional value for database tables that will be created during executeChecks.
 `earliestStartDate` is the earliest data from which drug records will be included.
 `verbose` is a parameter that enables the printing of messages to the console.
-`byConcept` is a boolean that determines if only overall results should be returned or also by drug concept.\
+`byConcept` is a boolean that determines if only overall results should be returned or also by drug concept.
+`outputFolder` is the folder to write to. If NULL, results will not be written to disk, but just saved in memory.
+`databaseId` is the database identifier. This is an optional parameter used to create the name of a temporary directory to store results.
+`fileName` is the output file name. If NULL, it will be set to the databaseId. \
 
 
 The check "missing" outputs the `missingValuesOverall` if `byConcept = FALSE` and additionally `missingValuesbyConcept` if `byConcept = TRUE` \
@@ -157,7 +165,8 @@ result_obscured | TRUE if count has been suppressed due to being below the minim
 
 ### Saving the diagnostic output
 
-After running the checks, we can write the created outputs (CSV files) into a zip file to disk using the `writeResultToDisk()` function. 
+After running the checks, we can write the created outputs (CSV files) into a zip file to disk using the `writeResultToDisk()` function. Note: this is only needed
+if the `outputFolder` argument is not added to `executeChecks`!
 The zip created from using the `writeResultToDisk()` function serves as the input for the corresponding Shiny Application. \
 Please replace the "your_database" with the name of your database. 
 Create your designated "output_folder" at your desired location and put the path if not the working directory.

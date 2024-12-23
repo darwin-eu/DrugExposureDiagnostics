@@ -1,7 +1,32 @@
+# execute checks function with some defaults
+executeChecksMock <- function(cdm,
+                              ingredients = c(1125315),
+                              subsetToConceptId = NULL,
+                              checks = c("missing", "exposureDuration", "quantity"),
+                              sample = 10000,
+                              tablePrefix = NULL,
+                              earliestStartDate = "2010-01-01",
+                              verbose = FALSE,
+                              minCellCount = 5,
+                              outputFolder = NULL,
+                              databaseId = CDMConnector::cdmName(cdm)) {
+  executeChecks(cdm,
+                ingredients = ingredients,
+                subsetToConceptId = subsetToConceptId,
+                checks = checks,
+                sample = sample,
+                tablePrefix = tablePrefix,
+                earliestStartDate = earliestStartDate,
+                verbose = verbose,
+                minCellCount = minCellCount,
+                outputFolder = outputFolder,
+                databaseId = databaseId)
+}
+
 test_that("execute default checks, default ingredient, verbose", {
   cdm <- mockDrugExposure()
 
-  result <- executeChecks(cdm, verbose = TRUE)
+  result <- executeChecksMock(cdm, verbose = TRUE)
 
   # checks
   expect_equal(length(result), 8)
@@ -33,7 +58,7 @@ test_that("execute default checks, default ingredient, verbose", {
 test_that("execute all checks, given ingredient", {
   cdm <- mockDrugExposure()
 
-  result <- executeChecks(
+  result <- executeChecksMock(
     cdm = cdm,
     ingredients = 1125315, # acetaminophen
     checks = c(
@@ -53,7 +78,7 @@ test_that("execute all checks, given ingredient", {
 test_that("execute some checks, given ingredient", {
   cdm <- mockDrugExposure()
 
-  result <- executeChecks(cdm = cdm, ingredients = 1125315, checks = c("missing", "verbatimEndDate")) # acetaminophen
+  result <- executeChecksMock(cdm = cdm, ingredients = 1125315, checks = c("missing", "verbatimEndDate")) # acetaminophen
 
   # checks
   expect_equal(length(result), 6)
@@ -70,9 +95,9 @@ test_that("execute some checks, given ingredient", {
 test_that("execute all checks: expected errors", {
   cdm <- mockDrugExposure()
 
-  expect_error(executeChecks(cdm = "a", 1125315))
-  expect_error(executeChecks(cdm, "a"))
-  expect_error(executeChecks(cdm, 33)) # not an ingredient
+  expect_error(executeChecksMock(cdm = "a", 1125315))
+  expect_error(executeChecksMock(cdm, "a"))
+  expect_error(executeChecksMock(cdm, 33)) # not an ingredient
 
   DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
 })
@@ -156,7 +181,7 @@ test_that("get number of Days_supply that are incorrect", {
 test_that("sampling", {
   cdm <- mockDrugExposure()
 
-  result <- executeChecks(
+  result <- executeChecksMock(
     cdm = cdm, ingredients = 1125315, # acetaminophen
     sample = 50
   )
@@ -166,12 +191,12 @@ test_that("sampling", {
   # checks where sampling should have been implemented
   expect_true(max(result$missingValuesOverall$n_records_missing_value, na.rm = TRUE) <= 50)
 
-  expect_message(executeChecks(
+  expect_message(executeChecksMock(
     cdm = cdm, ingredients = 1125315, # acetaminophen
     sample = 50, earliestStartDate = Sys.Date()
   ))
 
-  expect_error(executeChecks(
+  expect_error(executeChecksMock(
     cdm = cdm, ingredients = 1125315, # acetaminophen
     sample = 50, earliestStartDate = -1
   ))
@@ -181,7 +206,7 @@ test_that("sampling", {
 
 test_that("summary", {
   cdm <- mockDrugExposure()
-  result <- executeChecks(cdm = cdm, ingredients = 1125315, checks = c(
+  result <- executeChecksMock(cdm = cdm, ingredients = 1125315, checks = c(
     "missing", "type",
     "exposureDuration", "dose", "route", "quantity", "diagnosticsSummary"
   ))
@@ -208,7 +233,7 @@ test_that("summary", {
 
 test_that("subset on specific concepts", {
   cdm <- mockDrugExposure()
-  result_all <- executeChecks(
+  result_all <- executeChecksMock(
     cdm = cdm,
     ingredients = 1125315,
     subsetToConceptId = NULL
@@ -218,7 +243,7 @@ test_that("subset on specific concepts", {
     c(40162522, 19133768, 1127433, 1127078, 40229134, 40231925)))
 
 
-  result_subset <- executeChecks(
+  result_subset <- executeChecksMock(
     cdm = cdm,
     ingredients = 1125315,
     subsetToConceptId = 40162522
@@ -226,7 +251,7 @@ test_that("subset on specific concepts", {
   expect_true(all(result_subset$conceptSummary$drug_concept_id %in%
     c(40162522)))
 
-  result_subset2 <- executeChecks(
+  result_subset2 <- executeChecksMock(
     cdm = cdm,
     ingredients = 1125315,
     subsetToConceptId = c(40162522, 1127078)
@@ -236,7 +261,7 @@ test_that("subset on specific concepts", {
     c(40162522, 1127078)))
 
   # check exclude
-  result_subset3 <- executeChecks(
+  result_subset3 <- executeChecksMock(
     cdm = cdm,
     ingredients = 1125315,
     subsetToConceptId = c(-40162522, -19133768, -1127433, -40229134, -40231925)
@@ -245,7 +270,7 @@ test_that("subset on specific concepts", {
   expect_true(all(result_subset3$conceptSummary$drug_concept_id == 1127078))
 
   # combine exclude and include
-  result_subset4 <- executeChecks(
+  result_subset4 <- executeChecksMock(
     cdm = cdm,
     ingredients = 1125315,
     subsetToConceptId = c(-40162522, -19133768, -1127433, -40229134, -40231925, 1127078)
@@ -254,7 +279,7 @@ test_that("subset on specific concepts", {
   expect_true(identical(result_subset3, result_subset4))
 
   # exclude and include same ID -> error
-  expect_error(executeChecks(
+  expect_error(executeChecksMock(
     cdm = cdm,
     ingredients = 1125315,
     subsetToConceptId = c(-40162522, 40162522)
@@ -265,7 +290,7 @@ test_that("subset on specific concepts", {
 
 test_that("obscuring results by minCellCount", {
   cdm <- mockDrugExposure()
-  result_all <- executeChecks(
+  result_all <- executeChecksMock(
     cdm = cdm,
     ingredients = 1125315,
     minCellCount = 13
@@ -280,7 +305,7 @@ test_that("obscuring results by minCellCount", {
 
 test_that("use tablePrefix", {
   cdm <- mockDrugExposure()
-  expect_no_error(executeChecks(
+  expect_no_error(executeChecksMock(
     cdm = cdm,
     ingredients = 1125315,
     tablePrefix = "pre"
@@ -294,7 +319,7 @@ test_that("empty drug_strength table gives an error", {
   cdm$drug_strength <- cdm$drug_strength %>%
     dplyr::filter(ingredient_concept_id != 1125315)
 
-  expect_error(executeChecks(
+  expect_error(executeChecksMock(
     cdm = cdm,
     ingredients = 1125315
   ))
@@ -305,7 +330,7 @@ test_that("empty drug_strength table gives an error", {
 test_that("results from multiple ingredients should be joined also if there is one in between that doesn't exist", {
   cdm <- mockDrugExposure()
 
-  result <- executeChecks(
+  result <- executeChecksMock(
     cdm = cdm,
     ingredients = c(1125315, 36854851, 1125315)
   )
@@ -333,7 +358,7 @@ test_that("sampleSize is null, no sampling must take place, all data from ingred
     dplyr::tally() %>%
     dplyr::pull(.data$n)
 
-  result <- executeChecks(
+  result <- executeChecksMock(
     cdm = cdm,
     checks = c("missing", "exposureDuration", "type", "route", "dose", "quantity", "diagnosticsSummary"),
     ingredients = ingredients,
@@ -364,7 +389,7 @@ test_that("package version and name are included in the results", {
 
   cdm <- mockDrugExposure()
 
-  result <- executeChecks(
+  result <- executeChecksMock(
     cdm = cdm,
     ingredients = ingredients,
     sample = NULL

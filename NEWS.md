@@ -1,5 +1,8 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 1.1.0
+* Add params to executeChecks so it will write results to disk, no need to separately call writeResultToDisk
+
 # DrugExposureDiagnostics 1.0.10
 * Fix sample is null bug
 * Fix too many rows in diagnostics summary

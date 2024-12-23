@@ -36,6 +36,9 @@
 #' @param earliestStartDate the earliest date from which a record can be included
 #' @param verbose verbose, default FALSE
 #' @param byConcept boolean argument whether to return results by Concept or overall only
+#' @param outputFolder folder to write to. If NULL, results will not be written to file
+#' @param databaseId database identifier
+#' @param filename output file name, if NULL it will be equal to databaseId
 #'
 #' @return named list with results
 #' @export
@@ -61,7 +64,10 @@ executeChecks <- function(cdm,
                           tablePrefix = NULL,
                           earliestStartDate = "2010-01-01",
                           verbose = FALSE,
-                          byConcept = TRUE) {
+                          byConcept = TRUE,
+                          outputFolder = NULL,
+                          databaseId = CDMConnector::cdmName(cdm),
+                          filename = NULL) {
   errorMessage <- checkmate::makeAssertCollection()
   checkDbType(cdm = cdm, type = "cdm_reference", messageStore = errorMessage)
   checkmate::assertNumeric(ingredients, min.len = 1, add = errorMessage)
@@ -72,6 +78,12 @@ executeChecks <- function(cdm,
   checkmate::assertCharacter(tablePrefix, len = 1, add = errorMessage, null.ok = TRUE)
   checkmate::assertDate(as.Date(earliestStartDate), add = errorMessage, null.ok = FALSE)
   checkLogical(verbose, messageStore = errorMessage)
+  checkLogical(byConcept, messageStore = errorMessage)
+  if (!is.null(outputFolder)) {
+    checkmate::assertPathForOutput(outputFolder, overwrite = TRUE, add = errorMessage)
+  }
+  checkmate::assertCharacter(databaseId, len = 1, add = errorMessage)
+  checkmate::assertCharacter(filename, len = 1, null.ok = TRUE, add = errorMessage)
   checkmate::reportAssertions(collection = errorMessage)
 
   resultList <- vector(mode = "list", length = length(ingredients))
@@ -92,6 +104,14 @@ executeChecks <- function(cdm,
           verbose = verbose,
           byConcept = byConcept
         )
+
+        # write result
+        if (!is.null(outputFolder)) {
+          writeIngredientResultToDisk(resultList = ingredientResult,
+                                      databaseId = databaseId,
+                                      outputFolder = outputFolder,
+                                      clearDBDir = (i == 1))
+        }
       },
       error = function(e) {
         warning(e)
@@ -106,6 +126,9 @@ executeChecks <- function(cdm,
     dplyr::mutate(package_version = as.character(utils::packageVersion("DrugExposureDiagnostics")))
   resultList <- append(resultList, list("metadata" = metaData))
 
+  if (!is.null(outputFolder)) {
+    writeZipToDisk(metaData, databaseId, outputFolder, filename)
+  }
   return(resultList)
 }
 

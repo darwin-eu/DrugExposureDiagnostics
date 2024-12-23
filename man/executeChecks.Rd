@@ -14,7 +14,10 @@ executeChecks(
   tablePrefix = NULL,
   earliestStartDate = "2010-01-01",
   verbose = FALSE,
-  byConcept = TRUE
+  byConcept = TRUE,
+  outputFolder = NULL,
+  databaseId = CDMConnector::cdmName(cdm),
+  filename = NULL
 )
 }
 \arguments{
@@ -47,6 +50,12 @@ used throughout.}
 \item{verbose}{verbose, default FALSE}
 
 \item{byConcept}{boolean argument whether to return results by Concept or overall only}
+
+\item{outputFolder}{folder to write to. If NULL, results will not be written to file}
+
+\item{databaseId}{database identifier}
+
+\item{filename}{output file name, if NULL it will be equal to databaseId}
 }
 \value{
 named list with results
