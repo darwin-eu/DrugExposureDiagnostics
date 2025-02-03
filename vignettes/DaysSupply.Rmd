@@ -20,15 +20,9 @@ knitr::opts_chunk$set(
 ## Run the days supply check 
 ```{r setup}
 library(DrugExposureDiagnostics)
-library(dplyr)
-library(DT)
-
-# acetaminophen concept id is 1125315
-acetaminophen <- 1125315
 cdm <- mockDrugExposure()
-acetaminophen_checks <- executeChecks(
+result <- executeChecks(
   cdm = cdm,
-  ingredients = acetaminophen,
   checks = "daysSupply"
 )
 ```
@@ -37,7 +31,7 @@ acetaminophen_checks <- executeChecks(
 This shows the days supply of the drug records summarised on ingredient level.
 
 ```{r}
-datatable(acetaminophen_checks$drugDaysSupply,
+DT::datatable(result$drugDaysSupply,
   rownames = FALSE
 )
 ```
@@ -69,15 +63,11 @@ result_obscured | TRUE if count has been suppressed due to being below the minim
 ## Days supply by drug concept
 This shows the days supply on the drug concept level. The tables are identical to the overall just including two more columns at the beginning. \
 
-
 | Column  | Description |
 :------------- | :------------- |
 drug_concept_id  | ID of the drug concept. |
 drug  | Name of the drug concept. |
 
-```{r}
-datatable(acetaminophen_checks$drugDaysSupplyByConcept,
-  rownames = FALSE
-)
+```{r, eval=FALSE}
+DT::datatable(result$drugDaysSupplyByConcept, rownames = FALSE)
 ```
-

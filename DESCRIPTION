@@ -1,6 +1,6 @@
 Package: DrugExposureDiagnostics
 Title: Diagnostics for OMOP Common Data Model Drug Records
-Version: 1.1.0
+Version: 1.1.1
 Authors@R: c(
     person("Ger", "Inberg", email = "g.inberg@erasmusmc.nl", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8993-8748")),
@@ -38,7 +38,8 @@ Imports:
     glue (>= 1.5.0),
     DrugUtilisation (>= 0.7.0),
     omopgenerics (>= 0.2.3),
-    shiny (>= 1.6.0)
+    shiny (>= 1.6.0),
+    R6
 Suggests: 
     testthat (>= 3.0.0),
     duckdb,
@@ -66,3 +67,29 @@ URL: https://darwin-eu.github.io/DrugExposureDiagnostics/, https://github.com/da
 BugReports: https://github.com/darwin-eu/DrugExposureDiagnostics/issues
 VignetteBuilder: knitr
 Language: en-US
+Collate: 
+    'DrugExposureDiagnostics-package.R'
+    'checkDaysSupply.R'
+    'checkDrugDose.R'
+    'checkDrugExposureDuration.R'
+    'checkDrugQuantity.R'
+    'checkDrugRoutes.R'
+    'checkDrugSig.R'
+    'checkDrugSourceConcepts.R'
+    'checkDrugType.R'
+    'checkDrugsMissing.R'
+    'checkVerbatimEndDate.R'
+    'shinyModule.R'
+    'dataPlotPanel.R'
+    'executeChecks.R'
+    'getDrugRecords.R'
+    'globals.R'
+    'ingredientDescendantsInDb.R'
+    'metaDataPanel.R'
+    'mockDrugExposure.R'
+    'obscureCounts.R'
+    'runBenchmark.R'
+    'shiny.R'
+    'summariseChecks.R'
+    'utils-pipe.R'
+    'utils.R'

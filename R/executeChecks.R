@@ -46,9 +46,9 @@
 #' @examples
 #' \dontrun{
 #' db <- DBI::dbConnect(" Your database connection here ")
-#' cdm <- CDMConnector::cdm_from_con(
+#' cdm <- CDMConnector::cdmFromCon(
 #'   con = db,
-#'   cdm_schema = "cdm schema name"
+#'   cdmSchema = "cdm schema name"
 #' )
 #' result <- executeChecks(
 #'   cdm = cdm,
@@ -207,18 +207,6 @@ executeChecksSingleIngredient <- function(cdm,
     cdm[["ingredient_concepts"]] <- cdm[["ingredient_concepts"]] %>%
       dplyr::compute()
   }
-
-  if (verbose == TRUE) {
-    start <- printDurationAndMessage("Progress: getting drug strength for ingredient", start)
-  }
-
-  cdm[["ingredient_drug_strength"]] <- getDrugStrength(
-    cdm = cdm,
-    ingredient = ingredient,
-    includedConceptsTable = "ingredient_concepts",
-    tablePrefix = tablePrefix
-  ) %>%
-    dplyr::compute(name = "ingredient_drug_strength")
 
   if (verbose == TRUE) {
     start <- printDurationAndMessage("Progress: getting drug records for ingredient", start)

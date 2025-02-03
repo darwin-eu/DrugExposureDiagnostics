@@ -20,15 +20,9 @@ knitr::opts_chunk$set(
 ## Run the Sig checks 
 ```{r setup}
 library(DrugExposureDiagnostics)
-library(dplyr)
-library(DT)
-
-# acetaminophen concept id is 1125315
-acetaminophen <- 1125315
 cdm <- mockDrugExposure()
-acetaminophen_checks <- executeChecks(
+result <- executeChecks(
   cdm = cdm,
-  ingredients = acetaminophen,
   checks = "sig"
 )
 ```
@@ -37,7 +31,7 @@ acetaminophen_checks <- executeChecks(
 This shows the sig(netur) of the drug records summarised on ingredient level. The signetur of a prescription contains the information of when, how often, and how much of a drug a patient shall use. 
 
 ```{r}
-datatable(acetaminophen_checks$drugSig,
+DT::datatable(result$drugSig,
   rownames = FALSE
 )
 ```
@@ -54,15 +48,12 @@ result_obscured | TRUE if count has been suppressed due to being below the minim
 ## Sig by concept
 This shows the sig(netur) on the drug concept level. The signetur of a prescription contains the information of when, how often, and how much of a drug a patient shall use. The tables are identical to the overall just including two more columns at the beginning. \
 
-
 | Column  | Description |
 :------------- | :------------- |
 drug_concept_id  | ID of the drug concept. |
 drug  | Name of the drug concept. |
 
-```{r}
-datatable(acetaminophen_checks$drugSigByConcept,
-  rownames = FALSE
-)
+```{r, eval=FALSE}
+DT::datatable(result$drugSigByConcept, rownames = FALSE)
 ```
 

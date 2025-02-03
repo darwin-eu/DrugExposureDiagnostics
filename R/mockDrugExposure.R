@@ -471,14 +471,14 @@ mockDrugExposure <- function(drug_exposure = NULL,
     overwrite = TRUE
   )
 
-  write_schema <- "main"
-  cdm <- CDMConnector::cdm_from_con(db, cdm_schema = "main", write_schema = write_schema) %>%
-    CDMConnector::cdm_select_tbl(c(
+  cdm <- CDMConnector::cdmFromCon(db, cdmSchema = "main", writeSchema = "main") %>%
+    omopgenerics::cdmSelect(c(
       person, observation_period, concept_ancestor, concept_relationship,
       concept, drug_strength, drug_exposure, cdm_source, vocabulary
     ))
 
-  cdm$ingredient_drug_records <- dplyr::tbl(db, CDMConnector::inSchema(write_schema, "ingredient_drug_records"))
+  cdm$ingredient_drug_records <- dplyr::tbl(db, "main.ingredient_drug_records") %>%
+    omopgenerics::newCdmTable(omopgenerics::cdmSource(cdm), "ingredient_drug_records")
 
   return(cdm)
 }

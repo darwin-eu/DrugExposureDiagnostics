@@ -22,15 +22,9 @@ All possible routes can be seen in athena. https://athena.ohdsi.org/search-terms
 
 ```{r setup}
 library(DrugExposureDiagnostics)
-library(dplyr)
-library(DT)
-
-# acetaminophen concept id is 1125315
-acetaminophen <- 1125315
 cdm <- mockDrugExposure()
-acetaminophen_checks <- executeChecks(
+result <- executeChecks(
   cdm = cdm,
-  ingredients = acetaminophen,
   checks = "route"
 )
 ```
@@ -39,7 +33,7 @@ acetaminophen_checks <- executeChecks(
 This shows the routes of the drug records summarised on ingredient level.
 
 ```{r}
-datatable(acetaminophen_checks$drugRoutesOverall,
+DT::datatable(result$drugRoutesOverall,
   rownames = FALSE
 )
 ```
@@ -65,9 +59,7 @@ This shows the route of the drug records on the drug concept level. The tables a
 drug_concept_id  | ID of the drug concept. |
 drug  | Name of the drug concept. |
 
-```{r}
-datatable(acetaminophen_checks$drugRoutesByConcept,
-  rownames = FALSE
-)
+```{r, eval=FALSE}
+DT::datatable(result$drugRoutesByConcept, rownames = FALSE)
 ```
 

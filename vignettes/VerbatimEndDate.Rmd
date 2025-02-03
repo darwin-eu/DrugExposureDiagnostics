@@ -22,15 +22,9 @@ The verbatim end date is the drug exposure end date in the source data. Thus, we
 
 ```{r setup}
 library(DrugExposureDiagnostics)
-library(dplyr)
-library(DT)
-
-# acetaminophen concept id is 1125315
-acetaminophen <- 1125315
 cdm <- mockDrugExposure()
-acetaminophen_checks <- executeChecks(
+result <- executeChecks(
   cdm = cdm,
-  ingredients = acetaminophen,
   checks = "verbatimEndDate"
 )
 ```
@@ -39,7 +33,7 @@ acetaminophen_checks <- executeChecks(
 This shows the days drug verbatim end date checks summarised on ingredient level.
 
 ```{r}
-datatable(acetaminophen_checks$drugVerbatimEndDate,
+DT::datatable(result$drugVerbatimEndDate,
   rownames = FALSE
 )
 ```
@@ -68,9 +62,7 @@ This shows the days drug verbatim end date checks on drug concept level. The tab
 drug_concept_id  | ID of the drug concept. |
 drug  | Name of the drug concept. |
 
-```{r}
-datatable(acetaminophen_checks$drugVerbatimEndDateByConcept,
-  rownames = FALSE
-)
+```{r, eval=FALSE}
+DT::datatable(result$drugVerbatimEndDateByConcept, rownames = FALSE)
 ```
 

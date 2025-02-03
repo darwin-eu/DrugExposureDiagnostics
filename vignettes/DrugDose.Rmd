@@ -20,15 +20,9 @@ knitr::opts_chunk$set(
 ## Run the Drug Dose check 
 ```{r setup}
 library(DrugExposureDiagnostics)
-library(dplyr)
-library(DT)
-
-# acetaminophen concept id is 1125315
-acetaminophen <- 1125315
 cdm <- mockDrugExposure()
 acetaminophen_checks <- executeChecks(
   cdm = cdm,
-  ingredients = acetaminophen,
   checks = "dose"
 )
 ```
@@ -39,7 +33,7 @@ The output of the drug dose check is a "summarised result". More information can
 The result is a "summarised result" because we use the function `dailyDoseCoverage()` from the DrugUtilisation R Package. https://darwin-eu-dev.github.io/DrugUtilisation/reference/dailyDoseCoverage.html
 
 ```{r}
-datatable(acetaminophen_checks$drugDose,
+DT::datatable(acetaminophen_checks$drugDose,
   rownames = FALSE
 )
 ```

@@ -20,15 +20,9 @@ knitr::opts_chunk$set(
 ## Run duration check
 ```{r setup}
 library(DrugExposureDiagnostics)
-library(dplyr)
-library(DT)
-
-# acetaminophen concept id is 1125315
-acetaminophen <- 1125315
 cdm <- mockDrugExposure()
-acetaminophen_checks <- executeChecks(
+result <- executeChecks(
   cdm = cdm,
-  ingredients = acetaminophen,
   checks = "exposureDuration"
 )
 ```
@@ -37,7 +31,7 @@ acetaminophen_checks <- executeChecks(
 This shows the drug exposure duration of the drug records summarised on ingredient level. The drug exposure duration is estimated through (drug_exposure_end_date - drug_exposure_start_date + 1) for every individual drug exposure record. 
 
 ```{r}
-datatable(acetaminophen_checks$drugExposureDurationOverall,
+DT::datatable(result$drugExposureDurationOverall,
   rownames = FALSE
 )
 ```
@@ -63,19 +57,14 @@ q95_drug_exposure_days  | 95th quantile of drug exposure duration |
 maximum_drug_exposure_days  | Maximum drug exposure duration |
 result_obscured | TRUE if count has been suppressed due to being below the minimum cell count, otherwise FALSE. |
 
-
-
 ## Drug exposure duration by drug concept
 This shows the drug exposure duration on the drug concept level. The drug exposure duration is estimated through (drug_exposure_end_date - drug_exposure_start_date + 1) for every individual drug exposure record. The tables are identical to the overall just including two more columns at the beginning. \
-
 
 | Column  | Description |
 :------------- | :------------- |
 drug_concept_id  | ID of the drug concept. |
 drug  | Name of the drug concept. |
 
-```{r}
-datatable(acetaminophen_checks$drugExposureDurationByConcept,
-  rownames = FALSE
-)
+```{r, eval=FALSE}
+DT::datatable(result$drugExposureDurationByConcept, rownames = FALSE)
 ```

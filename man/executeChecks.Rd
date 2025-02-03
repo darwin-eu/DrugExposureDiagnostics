@@ -66,9 +66,9 @@ Execute given checks on Drug Exposure.
 \examples{
 \dontrun{
 db <- DBI::dbConnect(" Your database connection here ")
-cdm <- CDMConnector::cdm_from_con(
+cdm <- CDMConnector::cdmFromCon(
   con = db,
-  cdm_schema = "cdm schema name"
+  cdmSchema = "cdm schema name"
 )
 result <- executeChecks(
   cdm = cdm,

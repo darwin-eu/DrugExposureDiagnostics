@@ -17,9 +17,6 @@ knitr::opts_chunk$set(
 
 ```{r setup,message= FALSE, warning=FALSE}
 library(DrugExposureDiagnostics)
-library(CDMConnector)
-library(dplyr)
-library(DT)
 ```
 First, connect to the database. 
 Examples of how to connect your database using CDMConnector can be found here: 
@@ -130,7 +127,7 @@ Furthermore, the `conceptSummary` can be used to make decisions about further re
 The `conceptSummary` in the case of acetaminophen with  `subsetToConceptId = NULL`, the following drug concepts are part of the diagnostics investigation. 
 
 ```{r,  message=FALSE, warning=FALSE }  
-datatable(all_checks$conceptSummary,
+DT::datatable(all_checks$conceptSummary,
   rownames = FALSE
 )
 ```
