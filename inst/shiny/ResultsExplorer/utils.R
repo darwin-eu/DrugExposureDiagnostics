@@ -30,8 +30,10 @@ loadFile <- function(file, folder, overwrite, i) {
       ))
   } else if (grepl("drugDose", file)) {
     data <- data %>%
-      dplyr::mutate(result_id = i,
-                    estimate_value = as.character(estimate_value))
+      dplyr::mutate(
+        result_id = i,
+        estimate_value = as.character(estimate_value)
+      )
   } else if (grepl("drugSourceConceptsOverall", file)) {
     data <- data %>%
       dplyr::mutate(drug_source_value = as.character(.data$drug_source_value))

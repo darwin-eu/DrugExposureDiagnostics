@@ -69,8 +69,8 @@ metaDataPanel <- R6::R6Class(
           data <- getData()
           if (!is.null(data) && nrow(data) > 0) {
             shinyWidgets::downloadBttn(shiny::NS(private$.namespace, "downloadButton"),
-                                       size = "xs",
-                                       label = "Download"
+              size = "xs",
+              label = "Download"
             )
           }
         })

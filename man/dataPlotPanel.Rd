@@ -10,7 +10,7 @@
 Class to view the data and plot view of a DrugExposureDiagnostics check.
 }
 \section{Super class}{
-\code{DrugExposureDiagnostics::ShinyModule} -> \code{dataPlotPanel}
+\code{\link[DrugExposureDiagnostics:ShinyModule]{DrugExposureDiagnostics::ShinyModule}} -> \code{dataPlotPanel}
 }
 \section{Methods}{
 \subsection{Public methods}{

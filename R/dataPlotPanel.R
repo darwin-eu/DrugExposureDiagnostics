@@ -76,36 +76,36 @@ dataPlotPanel <- R6::R6Class(
 
         # update ingredients when db changes
         observeEvent(input[["dbPicker"]],
-                     {
-                       databases <- input$dbPicker
-                       if (!is.null(databases)) {
-                         ingredients <- private$getIngredients(databases)
-                         shinyWidgets::updatePickerInput(
-                           session = session,
-                           inputId = shiny::NS(private$.namespace, "ingredientPicker"),
-                           choices = ingredients,
-                           selected = ingredients
-                         )
-                       }
-                     },
-                     ignoreNULL = FALSE,
-                     ignoreInit = TRUE
+          {
+            databases <- input$dbPicker
+            if (!is.null(databases)) {
+              ingredients <- private$getIngredients(databases)
+              shinyWidgets::updatePickerInput(
+                session = session,
+                inputId = shiny::NS(private$.namespace, "ingredientPicker"),
+                choices = ingredients,
+                selected = ingredients
+              )
+            }
+          },
+          ignoreNULL = FALSE,
+          ignoreInit = TRUE
         )
         observeEvent(input[["plotDbPicker"]],
-                     {
-                       databases <- input$plotDbPicker
-                       if (!is.null(databases)) {
-                         ingredients <- private$getIngredients(databases)
-                         shinyWidgets::updatePickerInput(
-                           session = session,
-                           inputId = shiny::NS(private$.namespace, "plotIngredientPicker"),
-                           choices = ingredients,
-                           selected = ingredients
-                         )
-                       }
-                     },
-                     ignoreNULL = FALSE,
-                     ignoreInit = TRUE
+          {
+            databases <- input$plotDbPicker
+            if (!is.null(databases)) {
+              ingredients <- private$getIngredients(databases)
+              shinyWidgets::updatePickerInput(
+                session = session,
+                inputId = shiny::NS(private$.namespace, "plotIngredientPicker"),
+                choices = ingredients,
+                selected = ingredients
+              )
+            }
+          },
+          ignoreNULL = FALSE,
+          ignoreInit = TRUE
         )
 
         output$tableDescription <- renderUI({
@@ -125,7 +125,7 @@ dataPlotPanel <- R6::R6Class(
         })
 
         output$ingredientPickerUI <- renderUI({
-           shinyWidgets::pickerInput(
+          shinyWidgets::pickerInput(
             inputId = shiny::NS(private$.namespace, "ingredientPicker"),
             label = "ingredients",
             choices = private$.ingredients,
@@ -150,8 +150,8 @@ dataPlotPanel <- R6::R6Class(
           data <- getData()
           if (!is.null(data) && nrow(data) > 0) {
             shinyWidgets::downloadBttn(shiny::NS(private$.namespace, "downloadButton"),
-                                       size = "xs",
-                                       label = "Download"
+              size = "xs",
+              label = "Download"
             )
           }
         })
@@ -255,7 +255,6 @@ dataPlotPanel <- R6::R6Class(
           ggplot2::labs(x = xLabel)
       }
     },
-
     addBoxPlotTheme = function(plot, fontSize = 16) {
       plot +
         ggplot2::theme(
@@ -271,25 +270,24 @@ dataPlotPanel <- R6::R6Class(
     createBoxChart = function(data) {
       if (!is.null(data) && nrow(data) > 0) {
         private$addBoxPlotTheme(data %>%
-                                ggplot2::ggplot(ggplot2::aes(x = ingredient, ymin = y0, lower = y25, middle = y50, upper = y75, ymax = y100)) +
-                                  ggplot2::geom_boxplot(stat = "identity") +
-                                  ggplot2::facet_wrap(. ~ database_id) +
-                                  ggplot2::ggtitle(private$.description))
+          ggplot2::ggplot(ggplot2::aes(x = ingredient, ymin = y0, lower = y25, middle = y50, upper = y75, ymax = y100)) +
+          ggplot2::geom_boxplot(stat = "identity") +
+          ggplot2::facet_wrap(. ~ database_id) +
+          ggplot2::ggtitle(private$.description))
       }
     },
-
     createDoseChart = function(data, colour = "database_id", x = "group_level", facet = "strata_name") {
       result <- NULL
       if (!is.null(data) && nrow(data) > 0) {
         result <- private$addBoxPlotTheme(data %>%
-                                          dplyr::filter(estimate_name != "count_missing") %>%
-                                          dplyr::filter(estimate_name != "percentage_missing") %>%
-                                          dplyr::filter(variable_name == "daily_dose") %>%
-                                          dplyr::mutate(estimate_value = as.integer(estimate_value)) %>%
-                                          private$plotCharacteristics(
-                                            facet = facet,
-                                            colour = colour
-                                          ))
+          dplyr::filter(estimate_name != "count_missing") %>%
+          dplyr::filter(estimate_name != "percentage_missing") %>%
+          dplyr::filter(variable_name == "daily_dose") %>%
+          dplyr::mutate(estimate_value = as.integer(estimate_value)) %>%
+          private$plotCharacteristics(
+            facet = facet,
+            colour = colour
+          ))
       }
       return(result)
     },
@@ -409,33 +407,43 @@ dataPlotPanel <- R6::R6Class(
       do.call(paste, ingredients)
     },
     # Copied from CohortCharacteristics. The new version of this function doesn't work with dose data
-    plotCharacteristics = function (data, x = "variable_name", facet = NULL,
-                                    colour = NULL, colourName = NULL, .options = list()) {
+    plotCharacteristics = function(data, x = "variable_name", facet = NULL,
+                                   colour = NULL, colourName = NULL, .options = list()) {
       result <- NULL
       if (nrow(data) > 0) {
         xAxis <- x
         yAxis <- "estimate_value"
         vertical_x <- FALSE
-        nVariableNames <- length(dplyr::pull(dplyr::distinct(dplyr::select(data,
-                                                                           "variable_name"))))
+        nVariableNames <- length(dplyr::pull(dplyr::distinct(dplyr::select(
+          data,
+          "variable_name"
+        ))))
         if (nVariableNames != 1) {
-          emptyPlot("Only one variable name can be plotted at a time.",
-                    "Please filter variable_name column in results before passing to plotCharacteristics()")
+          emptyPlot(
+            "Only one variable name can be plotted at a time.",
+            "Please filter variable_name column in results before passing to plotCharacteristics()"
+          )
         }
         data <- dplyr::mutate(data, estimate_type = dplyr::if_else(.data$estimate_type ==
-                                                                     "integer", "numeric", .data$estimate_type))
-        estimateType <- dplyr::pull(dplyr::distinct(dplyr::select(data,
-                                                                  "estimate_type")))
+          "integer", "numeric", .data$estimate_type))
+        estimateType <- dplyr::pull(dplyr::distinct(dplyr::select(
+          data,
+          "estimate_type"
+        )))
         nEstimateTypes <- length(estimateType)
         if (nEstimateTypes != 1) {
-          private$emptyPlot("Only one estimate type can be plotted at a time.",
-                            "Please filter estimate_type column in results before passing to plotCharacteristics()")
+          private$emptyPlot(
+            "Only one estimate type can be plotted at a time.",
+            "Please filter estimate_type column in results before passing to plotCharacteristics()"
+          )
         }
         if (!estimateType %in% c("numeric", "percentage")) {
           private$emptyPlot(paste0(estimateType, " not currently supported by plotCharacteristics()"))
         }
-        gg <- private$plotfunction(data, xAxis, yAxis, facetVarX = NULL, facetVarY = NULL,
-                                   colorVars = colour, vertical_x, facet = facet, .options = .options)
+        gg <- private$plotfunction(data, xAxis, yAxis,
+          facetVarX = NULL, facetVarY = NULL,
+          colorVars = colour, vertical_x, facet = facet, .options = .options
+        )
         gg <- gg + ggplot2::theme_bw()
         if (estimateType == "numeric") {
           var <- unique(data$variable_name)
@@ -457,8 +465,7 @@ dataPlotPanel <- R6::R6Class(
         gg <- gg + ggplot2::theme_bw() + ggplot2::theme(legend.position = "top")
         if (!is.null(colourName)) {
           gg <- gg + ggplot2::labs(color = colourName, fill = colourName)
-        }
-        else {
+        } else {
           gg <- gg + ggplot2::labs(color = "", fill = "")
         }
         result <- gg
@@ -483,8 +490,8 @@ dataPlotPanel <- R6::R6Class(
       checkmate::assertVector(facetVarY, add = errorMessage, null.ok = TRUE)
       if (nrow(data) == 0) {
         return(ggplot2::ggplot() +
-                 ggplot2::theme_void() +
-                 ggplot2::labs(title = "Empty Data Provided", subtitle = "No data available for plotting."))
+          ggplot2::theme_void() +
+          ggplot2::labs(title = "Empty Data Provided", subtitle = "No data available for plotting."))
       }
       if (!all(c("q25", "median", "q75", "min", "max") %in% data$estimate_name)) {
         return(
@@ -496,7 +503,7 @@ dataPlotPanel <- R6::R6Class(
             )
         )
       }
-      data <- data |>
+      data <- data %>%
         dplyr::mutate(color_combined = private$construct_color_variable(data, colorVars))
       if (is.null(facetVarX)) {
         data$overall <- "overall"
@@ -506,47 +513,47 @@ dataPlotPanel <- R6::R6Class(
         data$overall <- "overall"
         facetVarY <- "overall"
       }
-      data <- data |>
+      data <- data %>%
         dplyr::mutate(
           facet_combined_x = private$construct_variable(data, facetVarX),
           facet_combined_y = private$construct_variable(data, facetVarY)
         )
       if (!is.null(facet)) {
-        data <- data |>
+        data <- data %>%
           tidyr::unite("facet_var",
-                       c(dplyr::all_of(.env$facet)),
-                       remove = FALSE, sep = "; "
+            c(dplyr::all_of(.env$facet)),
+            remove = FALSE, sep = "; "
           )
       }
       checkmate::assertTRUE(any(xAxis == "estimate_value", yAxis == "estimate_value"), add = errorMessage)
       checkmate::reportAssertions(collection = errorMessage)
 
-      df_dates <- data |> dplyr::filter(.data$estimate_type == "date")
-      df_non_dates <- data |> dplyr::filter(!(.data$estimate_type %in% c("date", "logical")))
+      df_dates <- data %>% dplyr::filter(.data$estimate_type == "date")
+      df_non_dates <- data %>% dplyr::filter(!(.data$estimate_type %in% c("date", "logical")))
 
       # Start constructing the plot
       if (nrow(df_non_dates) > 0) {
-        df_non_dates <- df_non_dates |>
-          dplyr::filter(.data$estimate_name %in% c("q25", "median", "q75", "min", "max")) |>
+        df_non_dates <- df_non_dates %>%
+          dplyr::filter(.data$estimate_name %in% c("q25", "median", "q75", "min", "max")) %>%
           dplyr::mutate(
             estimate_value = as.numeric(.data$estimate_value),
             estimate_type = "numeric"
           )
-        non_numeric_cols <- df_non_dates |>
+        non_numeric_cols <- df_non_dates %>%
           dplyr::select(-c(
             "estimate_value", "estimate_name",
             if ("facet_combined_x" %in% names(df_non_dates)) "facet_combined_x" else NULL,
             if ("facet_combined_y" %in% names(df_non_dates)) "facet_combined_y" else NULL,
             if ("color_combined" %in% names(df_non_dates)) "color_combined" else NULL
-          )) |>
-          dplyr::summarise(dplyr::across(dplyr::everything(), ~ dplyr::n_distinct(.) > 1)) |>
-          dplyr::select(dplyr::where(~.)) |>
+          )) %>%
+          dplyr::summarise(dplyr::across(dplyr::everything(), ~ dplyr::n_distinct(.) > 1)) %>%
+          dplyr::select(dplyr::where(~.)) %>%
           names()
 
-        df_non_dates_wide <- df_non_dates |>
+        df_non_dates_wide <- df_non_dates %>%
           tidyr::pivot_wider(
             id_cols = dplyr::all_of(colnames(
-              df_non_dates |>
+              df_non_dates %>%
                 dplyr::select(-c("estimate_name", "estimate_value"))
             )),
             names_from = "estimate_name",
@@ -555,32 +562,32 @@ dataPlotPanel <- R6::R6Class(
 
 
         if (length(non_numeric_cols) > 0) {
-          df_non_dates_wide$group_identifier <- interaction(df_non_dates_wide |>
-                                                              dplyr::select(dplyr::all_of(non_numeric_cols)))
+          df_non_dates_wide$group_identifier <- interaction(df_non_dates_wide %>%
+            dplyr::select(dplyr::all_of(non_numeric_cols)))
         } else {
           df_non_dates_wide$group_identifier <- "overall"
         }
       }
 
       if (nrow(df_dates) > 0) {
-        df_dates <- df_dates |>
-          dplyr::filter(.data$estimate_name %in% c("q25", "median", "q75", "min", "max")) |>
+        df_dates <- df_dates %>%
+          dplyr::filter(.data$estimate_name %in% c("q25", "median", "q75", "min", "max")) %>%
           dplyr::mutate(estimate_value = as.Date(.data$estimate_value))
 
-        df_dates_wide <- df_dates |>
+        df_dates_wide <- df_dates %>%
           tidyr::pivot_wider(
-            id_cols = dplyr::all_of(colnames(df_dates |>
-                                               dplyr::select(-c(
-                                                 "estimate_name",
-                                                 "estimate_value"
-                                               )))),
+            id_cols = dplyr::all_of(colnames(df_dates %>%
+              dplyr::select(-c(
+                "estimate_name",
+                "estimate_value"
+              )))),
             names_from = "estimate_name", values_from = "estimate_value"
           )
         if (length(non_numeric_cols) > 0) {
-          df_dates_wide$group_identifier <- interaction(df_dates_wide |>
-                                                          dplyr::select(
-                                                            dplyr::all_of(non_numeric_cols)
-                                                          ))
+          df_dates_wide$group_identifier <- interaction(df_dates_wide %>%
+            dplyr::select(
+              dplyr::all_of(non_numeric_cols)
+            ))
         } else {
           df_dates_wide$group_identifier <- "overall"
         }
@@ -589,7 +596,7 @@ dataPlotPanel <- R6::R6Class(
       # Check if the dataframe has rows to plot
       if (nrow(df_non_dates) > 0) {
         xcol <- ifelse(xAxis == "estimate_value", yAxis, xAxis)
-        p_non_dates <- df_non_dates_wide |> ggplot2::ggplot(
+        p_non_dates <- df_non_dates_wide %>% ggplot2::ggplot(
           ggplot2::aes(x = .data[[xcol]])
         )
 
@@ -626,7 +633,7 @@ dataPlotPanel <- R6::R6Class(
       if (nrow(df_dates) > 0) {
         xcol <- ifelse(xAxis == "estimate_value", yAxis, xAxis)
 
-        p_dates <- df_dates_wide |> ggplot2::ggplot(
+        p_dates <- df_dates_wide %>% ggplot2::ggplot(
           ggplot2::aes(x = .data[[xcol]])
         ) +
           ggplot2::labs(
@@ -669,65 +676,65 @@ dataPlotPanel <- R6::R6Class(
 
       if (suppressWarnings(!is.null(data$facet_combined_x) || !is.null(data$facet_combined_y))) {
         if (!is.null(p_dates)) {
-            facet_x_exists <- "facet_combined_x" %in% names(df_dates)
-            facet_y_exists <- "facet_combined_y" %in% names(df_dates)
+          facet_x_exists <- "facet_combined_x" %in% names(df_dates)
+          facet_y_exists <- "facet_combined_y" %in% names(df_dates)
 
-            # Construct the faceting formula based on the existence of the variables
-            facet_formula <- paste0(
-              ifelse(facet_y_exists, "facet_combined_y", "."),
-              " ~ ",
-              ifelse(facet_x_exists, "facet_combined_x", ".")
+          # Construct the faceting formula based on the existence of the variables
+          facet_formula <- paste0(
+            ifelse(facet_y_exists, "facet_combined_y", "."),
+            " ~ ",
+            ifelse(facet_x_exists, "facet_combined_x", ".")
+          )
+
+          p_dates <- p_dates +
+            ggplot2::facet_grid(rows = facet_formula, scales = "free")
+          if (vertical_x) {
+            p_dates <- p_dates + ggplot2::theme(axis.text.x = ggplot2::element_text(
+              angle = 90,
+              hjust = 1,
+              vjust = 0.5
+            ))
+          }
+        }
+        if (!is.null(p_non_dates)) {
+          facet_x_exists <- "facet_combined_x" %in% names(df_non_dates)
+          facet_y_exists <- "facet_combined_y" %in% names(df_non_dates)
+
+          # Construct the faceting formula based on the existence of the variables
+          facet_formula <- paste0(
+            ifelse(facet_y_exists, "facet_combined_y", "."),
+            " ~ ",
+            ifelse(facet_x_exists, "facet_combined_x", ".")
+          )
+
+          p_non_dates <- p_non_dates +
+            ggplot2::facet_grid(rows = facet_formula, scales = "free")
+          if (vertical_x) {
+            p_non_dates <- p_non_dates + ggplot2::theme(
+              axis.text.x =
+                ggplot2::element_text(
+                  angle = 90,
+                  hjust = 1,
+                  vjust = 0.5
+                )
             )
-
-            p_dates <- p_dates +
-              ggplot2::facet_grid(rows = facet_formula, scales = "free")
-            if (vertical_x) {
-              p_dates <- p_dates + ggplot2::theme(axis.text.x = ggplot2::element_text(
-                angle = 90,
-                hjust = 1,
-                vjust = 0.5
-              ))
-            }
           }
-          if (!is.null(p_non_dates)) {
-            facet_x_exists <- "facet_combined_x" %in% names(df_non_dates)
-            facet_y_exists <- "facet_combined_y" %in% names(df_non_dates)
+        }
 
-            # Construct the faceting formula based on the existence of the variables
-            facet_formula <- paste0(
-              ifelse(facet_y_exists, "facet_combined_y", "."),
-              " ~ ",
-              ifelse(facet_x_exists, "facet_combined_x", ".")
+        p <- if (!is.null(p_dates) && !is.null(p_non_dates)) {
+          ggpubr::ggarrange(p_dates, p_non_dates, nrow = 2)
+        } else if (!is.null(p_dates)) {
+          p_dates
+        } else if (!is.null(p_non_dates)) {
+          p_non_dates
+        } else {
+          ggplot2::ggplot() +
+            ggplot2::theme_void() +
+            ggplot2::labs(
+              title = "No Data Provided",
+              subtitle = "Boxplot needs to have min max q25 q75 in estimate_name"
             )
-
-            p_non_dates <- p_non_dates +
-              ggplot2::facet_grid(rows = facet_formula, scales = "free")
-            if (vertical_x) {
-              p_non_dates <- p_non_dates + ggplot2::theme(
-                axis.text.x =
-                  ggplot2::element_text(
-                    angle = 90,
-                    hjust = 1,
-                    vjust = 0.5
-                  )
-              )
-            }
-          }
-
-          p <- if (!is.null(p_dates) && !is.null(p_non_dates)) {
-            ggpubr::ggarrange(p_dates, p_non_dates, nrow = 2)
-          } else if (!is.null(p_dates)) {
-            p_dates
-          } else if (!is.null(p_non_dates)) {
-            p_non_dates
-          } else {
-            ggplot2::ggplot() +
-              ggplot2::theme_void() +
-              ggplot2::labs(
-                title = "No Data Provided",
-                subtitle = "Boxplot needs to have min max q25 q75 in estimate_name"
-              )
-          }
+        }
       } else {
         if (!is.null(p_dates) || !is.null(p_non_dates)) {
           if (!is.null(p_dates) && is.null(p_non_dates)) {
@@ -781,8 +788,8 @@ dataPlotPanel <- R6::R6Class(
         }
         p <- p +
           ggplot2::facet_wrap(ggplot2::vars(.data$facet_var),
-                              ncol = facetNcols,
-                              scales = facetScales
+            ncol = facetNcols,
+            scales = facetScales
           )
       }
       return(p)
@@ -796,7 +803,7 @@ dataPlotPanel <- R6::R6Class(
         valid_vars <- facet_vars[unique_val_vars]
 
         if (length(valid_vars) > 1) {
-          return(as.factor(interaction(data |> dplyr::select(dplyr::all_of(valid_vars)), sep = ".")))
+          return(as.factor(interaction(data %>% dplyr::select(dplyr::all_of(valid_vars)), sep = ".")))
         } else if (length(valid_vars) == 1) {
           return(as.factor(data[[valid_vars]]))
         }
@@ -870,9 +877,9 @@ dataPlotPanel <- R6::R6Class(
     #' @return (`tabItem`)
     uiBody = function() {
       filterRow <- shiny::fluidRow(
-        shiny::column(width = 3, shiny::uiOutput(shiny::NS(private$.namespace,"dbPickerUI"))),
-        shiny::column(width = 3, shiny::uiOutput(shiny::NS(private$.namespace,"ingredientPickerUI"))),
-        shiny::column(width = 3, shiny::uiOutput(shiny::NS(private$.namespace,"columnPickerUI")))
+        shiny::column(width = 3, shiny::uiOutput(shiny::NS(private$.namespace, "dbPickerUI"))),
+        shiny::column(width = 3, shiny::uiOutput(shiny::NS(private$.namespace, "ingredientPickerUI"))),
+        shiny::column(width = 3, shiny::uiOutput(shiny::NS(private$.namespace, "columnPickerUI")))
       )
 
       topNCol <- shiny::tagList()

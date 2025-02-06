@@ -10,7 +10,7 @@
 Class to view the metadata of a DrugExposureDiagnostics execution.
 }
 \section{Super class}{
-\code{DrugExposureDiagnostics::ShinyModule} -> \code{metaDataPanel}
+\code{\link[DrugExposureDiagnostics:ShinyModule]{DrugExposureDiagnostics::ShinyModule}} -> \code{metaDataPanel}
 }
 \section{Methods}{
 \subsection{Public methods}{

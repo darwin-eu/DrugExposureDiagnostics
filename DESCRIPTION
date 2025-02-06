@@ -90,6 +90,7 @@ Collate:
     'obscureCounts.R'
     'runBenchmark.R'
     'shiny.R'
+    'shinyApp.R'
     'summariseChecks.R'
     'utils-pipe.R'
     'utils.R'

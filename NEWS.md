@@ -1,5 +1,10 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 1.1.1
+* Update shiny app: fix NA in boxplots and add dropdown drugs-missing
+* CDMConnector v2 changes
+* Add shiny modules
+
 # DrugExposureDiagnostics 1.1.0
 * Add params to executeChecks so it will write results to disk, no need to separately call writeResultToDisk
 

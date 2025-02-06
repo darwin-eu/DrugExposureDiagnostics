@@ -107,7 +107,7 @@ if (exists("drugverbatimenddate")) {
 }
 
 drugDailyDose <- data.frame()
-if (exists("drugdose")) {
+if (exists("drugdose") && nrow(ingredientConcepts) > 0) {
   drugDailyDose <- formatResult(drugdose) %>%
     dplyr::filter(!is.na(strata_level)) %>%
     dplyr::mutate(result_id = as.integer(result_id))

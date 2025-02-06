@@ -30,48 +30,77 @@
 #' @export
 dataPlotPanelViewer <- function(id, title, byConcept = TRUE, plotPercentage = FALSE) {
   ns <- shiny::NS(id)
-  filterRow <- fluidRow(
-    column(width = 3, uiOutput(ns("dbPickerUI"))),
-    column(width = 3, uiOutput(ns("ingredientPickerUI"))),
-    column(width = 3, uiOutput(ns("columnPickerUI")))
-  )
 
-  topNCol <- tagList()
-  if (!id %in% ggplotModules) {
-    topNCol <- column(width = 3, numericInput(ns("top_n"), label = "Top n:", 20, min = 1, max = 100))
-  }
-
-  plotFilterRow <- fluidRow(
-    column(width = 3, uiOutput(ns("plotDbPickerUI"))),
-    column(width = 3, uiOutput(ns("plotIngredientPickerUI"))),
-    topNCol
-  )
-
-  if (plotPercentage) {
-    plotFilterRow <- fluidRow(
-      column(width = 3, uiOutput(ns("plotDbPickerUI"))),
-      column(width = 3, uiOutput(ns("plotIngredientPickerUI"))),
-      topNCol,
-      column(width = 3, tags$br(), tags$br(), checkboxInput(ns("perc"), label = "Percentage", value = TRUE))
-    )
-  }
-
+  # filter row for data tab
+  dbPickerColumn <- column(width = 3, uiOutput(ns("dbPickerUI")))
+  ingredientColumn <- column(width = 3, uiOutput(ns("ingredientPickerUI")))
   if (byConcept) {
-    filterRow <- fluidRow(
-      column(width = 3, uiOutput(ns("dbPickerUI"))),
-      column(width = 3, uiOutput(ns("ingredientPickerUI"))),
-      column(width = 3, uiOutput(ns("columnPickerUI"))),
-      column(
-        width = 3,
-        tags$br(), tags$br(),
-        prettyCheckbox(
-          inputId = ns("byConcept"),
-          label = "By concept",
-          value = FALSE
-        )
+    byConceptColumn <- column(
+      width = 2,
+      tags$br(), tags$br(),
+      prettyCheckbox(
+        inputId = ns("byConcept"),
+        label = "By concept",
+        value = FALSE
       )
     )
+    if (id == "drugVariablesMissing") {
+      filterRow <- fluidRow(
+        dbPickerColumn,
+        ingredientColumn,
+        column(width = 2, uiOutput(ns("columnPickerUI"))),
+        column(width = 2, uiOutput(ns("variablesPickerUI"))),
+        byConceptColumn
+      )
+    } else {
+      filterRow <- fluidRow(
+        dbPickerColumn,
+        ingredientColumn,
+        column(width = 3, uiOutput(ns("columnPickerUI"))),
+        byConceptColumn
+      )
+    }
+  } else {
+    filterRow <- fluidRow(
+      dbPickerColumn,
+      ingredientColumn,
+      column(width = 3, uiOutput(ns("columnPickerUI")))
+    )
   }
+
+  # filter row for plot tab
+  plotDbPickerColumn <- column(width = 3, uiOutput(ns("plotDbPickerUI")))
+  plotIngredientColumn <- column(width = 3, uiOutput(ns("plotIngredientPickerUI")))
+  topNCol <- tagList()
+  if (!id %in% ggplotModules) {
+    topNCol <- column(width = 2, numericInput(ns("top_n"), label = "Top n:", 20, min = 1, max = 100))
+  }
+  if (plotPercentage) {
+    plotPercentageColumn <- column(width = 2, tags$br(), tags$br(), checkboxInput(ns("perc"), label = "Percentage", value = TRUE))
+    if (id == "drugVariablesMissing") {
+      plotFilterRow <- fluidRow(
+        plotDbPickerColumn,
+        plotIngredientColumn,
+        column(width = 2, uiOutput(ns("plotVariablesPickerUI"))),
+        topNCol,
+        plotPercentageColumn
+      )
+    } else {
+      plotFilterRow <- fluidRow(
+        plotDbPickerColumn,
+        plotIngredientColumn,
+        topNCol,
+        plotPercentageColumn
+      )
+    }
+  } else {
+    plotFilterRow <- fluidRow(
+      plotDbPickerColumn,
+      plotIngredientColumn,
+      topNCol
+    )
+  }
+
   tabPanel(
     title,
     tabsetPanel(
@@ -111,10 +140,10 @@ dataPlotPanelViewer <- function(id, title, byConcept = TRUE, plotPercentage = FA
 dataPlotPanelServer <- function(id, data, dataByConcept, downloadFilename, description, commonInputs, selectedColumns = NULL) {
   ns <- shiny::NS(id)
 
-  createBarChart <- function(data, x = "count", y = "variable", fill = "ingredient", xLabel = "count") {
+  createBarChart <- function(data, xLabel = "count") {
     if (!is.null(data) && nrow(data) > 0) {
       data %>%
-        ggplot(aes_string(x = x, y = y, fill = fill)) +
+        ggplot(aes(x = count, y = variable, fill = ingredient, text = paste0(variable, ": ", count))) +
         geom_bar(stat = "identity", position = position_dodge()) +
         theme(
           axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
@@ -170,6 +199,7 @@ dataPlotPanelServer <- function(id, data, dataByConcept, downloadFilename, descr
     if (!is.null(topN)) {
       result <- data %>%
         group_by(database_id, ingredient_id) %>%
+        mutate(count = replace(count, is.na(count), 0)) %>%
         slice_max(order_by = count, n = topN, with_ties = TRUE) %>%
         dplyr::ungroup() %>%
         dplyr::mutate(variable = factor(variable, levels = unique(variable[order(count, decreasing = F)])))
@@ -187,11 +217,11 @@ dataPlotPanelServer <- function(id, data, dataByConcept, downloadFilename, descr
       } else if (id == "drugDaysSupply") {
         data %>%
           dplyr::rename(
-            y0 = minimum_drug_exposure_days_supply,
+            y0 = q05_drug_exposure_days_supply,
             y25 = q25_drug_exposure_days_supply,
             y50 = median_drug_exposure_days_supply,
             y75 = q75_drug_exposure_days_supply,
-            y100 = maximum_drug_exposure_days_supply
+            y100 = q95_drug_exposure_days_supply
           ) %>%
           createBoxChart()
       } else if (id == "drugRoutes") {
@@ -242,21 +272,21 @@ dataPlotPanelServer <- function(id, data, dataByConcept, downloadFilename, descr
       } else if (id == "drugExposureDuration") {
         data %>%
           dplyr::rename(
-            y0 = minimum_drug_exposure_days,
+            y0 = q05_drug_exposure_days,
             y25 = q25_drug_exposure_days,
             y50 = median_drug_exposure_days,
             y75 = q75_drug_exposure_days,
-            y100 = maximum_drug_exposure_days
+            y100 = q95_drug_exposure_days
           ) %>%
           createBoxChart()
       } else if (id == "drugQuantity") {
         data %>%
           dplyr::rename(
-            y0 = minimum_drug_exposure_quantity,
+            y0 = q05_drug_exposure_quantity,
             y25 = q25_drug_exposure_quantity,
             y50 = median_drug_exposure_quantity,
             y75 = q75_drug_exposure_quantity,
-            y100 = maximum_drug_exposure_quantity
+            y100 = q95_drug_exposure_quantity
           ) %>%
           createBoxChart()
       }
@@ -302,6 +332,16 @@ dataPlotPanelServer <- function(id, data, dataByConcept, downloadFilename, descr
               filter(database_id %in% databases) %>%
               filter(ingredient_id %in% sub(" .*", "", ingredients))
           }
+        })
+
+        getTabData <- reactive({
+          data <- getData()
+          if (!is.null(data) && id == "drugVariablesMissing") {
+            variables <- input$variablesPicker
+            data <- data %>%
+              dplyr::filter(variable %in% variables)
+          }
+          return(data)
         })
 
         observeEvent(input[["ingredientPicker"]],
@@ -423,8 +463,23 @@ dataPlotPanelServer <- function(id, data, dataByConcept, downloadFilename, descr
           )
         })
 
+        output$variablesPickerUI <- renderUI({
+          if (id == "drugVariablesMissing") {
+            data <- getData()
+            choices <- unique(data$variable)
+            pickerInput(
+              inputId = ns("variablesPicker"),
+              label = "Variables",
+              choices = choices,
+              options = list(`actions-box` = TRUE),
+              multiple = T,
+              selected = choices
+            )
+          }
+        })
+
         output$downloadButtonUI <- renderUI({
-          data <- getData()
+          data <- getTabData()
           if (!is.null(data) && nrow(data) > 0) {
             downloadBttn(ns("downloadButton"),
               size = "xs",
@@ -434,9 +489,9 @@ dataPlotPanelServer <- function(id, data, dataByConcept, downloadFilename, descr
         })
 
         output$mainTable <- DT::renderDataTable({
-          validate(need(ncol(getData()) > 1, "No input data"))
+          validate(need(ncol(getTabData()) > 1, "No input data"))
 
-          DT::datatable(getData(), rownames = FALSE)
+          DT::datatable(getTabData(), rownames = FALSE)
         })
 
         output$downloadButton <- downloadHandler(
@@ -444,7 +499,7 @@ dataPlotPanelServer <- function(id, data, dataByConcept, downloadFilename, descr
             downloadFilename
           },
           content = function(file) {
-            write.csv(getData(), file, row.names = FALSE)
+            write.csv(getTabData(), file, row.names = FALSE)
           }
         )
 
@@ -473,7 +528,20 @@ dataPlotPanelServer <- function(id, data, dataByConcept, downloadFilename, descr
             selected = ingredients
           )
         })
-
+        output$plotVariablesPickerUI <- renderUI({
+          if (id == "drugVariablesMissing") {
+            data <- getPlotData()
+            choices <- unique(data$variable)
+            pickerInput(
+              inputId = ns("plotVariablesPicker"),
+              label = "Variables",
+              choices = choices,
+              options = list(`actions-box` = TRUE),
+              multiple = T,
+              selected = choices
+            )
+          }
+        })
 
         getPlotData <- reactive({
           result <- NULL
@@ -488,18 +556,32 @@ dataPlotPanelServer <- function(id, data, dataByConcept, downloadFilename, descr
           result
         })
 
+        getPlotTabData <- reactive({
+          data <- getPlotData()
+          if (!is.null(data) && id == "drugVariablesMissing") {
+            variables <- input$plotVariablesPicker
+            data <- data %>%
+              dplyr::filter(variable %in% variables)
+          }
+          return(data)
+        })
+
         output$plotUI <- renderUI({
           result <- NULL
           # Boxplots and ggplotly do not work together, so we output ggplot for these
           if (id %in% ggplotModules) {
             result <- plotOutput(ns("plot"), height = "700px")
             output$plot <- renderPlot({
-              createChart(getPlotData(), input$top_n)
+              createChart(getPlotTabData(), input$top_n)
             })
           } else {
             result <- plotlyOutput(ns("plot"), height = "700px")
             output$plot <- renderPlotly({
-              createChart(getPlotData(), input$top_n, input$perc)
+              plotData <- getPlotTabData()
+              if (!is.null(plotData) && nrow(plotData) > 0) {
+                plot <- createChart(plotData, input$top_n, input$perc)
+                ggplotly(plot, tooltip = c("text"))
+              }
             })
           }
           result

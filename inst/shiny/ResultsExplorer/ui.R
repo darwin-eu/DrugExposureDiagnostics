@@ -1,11 +1,11 @@
 # User interface definition
 
-allTabsList <- list(
-  dataPlotPanelViewer("ingredientConcepts", "Ingredient concepts", byConcept = FALSE),
-  widths = c(2, 10)
-)
+allTabsList <- list(widths = c(2, 10))
 
 # add tabs depending on if the data is available
+if (nrow(ingredientConcepts) > 0) {
+  allTabsList[[length(allTabsList) + 1]] <- dataPlotPanelViewer("ingredientConcepts", "Ingredient concepts", byConcept = FALSE)
+}
 if (nrow(drugRoutes) > 0) {
   allTabsList[[length(allTabsList) + 1]] <- dataPlotPanelViewer("drugRoutes", "Drug routes")
 }
