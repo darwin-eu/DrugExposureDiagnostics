@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">DrugExposureDiagnostics</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,18 +63,14 @@
 
 
 
-<link href="DrugSourceConcepts_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
-<script src="DrugSourceConcepts_files/htmlwidgets-1.6.4/htmlwidgets.js"></script><link href="DrugSourceConcepts_files/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
-<script src="DrugSourceConcepts_files/datatables-binding-0.33/datatables.js"></script><link href="DrugSourceConcepts_files/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
-<link href="DrugSourceConcepts_files/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
-<script src="DrugSourceConcepts_files/dt-core-1.13.6/js/jquery.dataTables.min.js"></script><link href="DrugSourceConcepts_files/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
-<script src="DrugSourceConcepts_files/crosstalk-1.2.1/js/crosstalk.min.js"></script><div class="row">
+
+<div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Drug Source Concepts</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/darwin-eu/DrugExposureDiagnostics/blob/v1.1.0/vignettes/DrugSourceConcepts.Rmd" class="external-link"><code>vignettes/DrugSourceConcepts.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/darwin-eu/DrugExposureDiagnostics/blob/main/vignettes/DrugSourceConcepts.Rmd" class="external-link"><code>vignettes/DrugSourceConcepts.Rmd</code></a></small>
       <div class="d-none name"><code>DrugSourceConcepts.Rmd</code></div>
     </div>
 
@@ -85,17 +81,9 @@
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://darwin-eu.github.io/DrugExposureDiagnostics/">DrugExposureDiagnostics</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
-<span><span class="co">#&gt;   object 'type_sum.accel' not found</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rstudio/DT" class="external-link">DT</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># acetaminophen concept id is 1125315</span></span>
-<span><span class="va">acetaminophen</span> <span class="op">&lt;-</span> <span class="fl">1125315</span></span>
 <span><span class="va">cdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mockDrugExposure.html">mockDrugExposure</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">acetaminophen_checks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/executeChecks.html">executeChecks</a></span><span class="op">(</span></span>
+<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/executeChecks.html">executeChecks</a></span><span class="op">(</span></span>
 <span>  cdm <span class="op">=</span> <span class="va">cdm</span>,</span>
-<span>  ingredients <span class="op">=</span> <span class="va">acetaminophen</span>,</span>
 <span>  checks <span class="op">=</span> <span class="st">"sourceConcept"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -106,11 +94,8 @@
 This check only exists “byConcept” to depict the required detail. Do not
 get confused by the name of the object being “Overall”.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/DT/man/datatable.html" class="external-link">datatable</a></span><span class="op">(</span><span class="va">acetaminophen_checks</span><span class="op">$</span><span class="va">drugSourceConceptsOverall</span>,</span>
-<span>  rownames <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<div class="datatables html-widget html-fill-item" id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"filter":"none","vertical":false,"data":[[1125315,1125315,1125315,1125315,1125315,1125315,1125315,1125315,1125315,1125315,1125315,1125315,1125315,1125315,1125315,1125315,1125315,1125315,1125315],["acetaminophen","acetaminophen","acetaminophen","acetaminophen","acetaminophen","acetaminophen","acetaminophen","acetaminophen","acetaminophen","acetaminophen","acetaminophen","acetaminophen","acetaminophen","acetaminophen","acetaminophen","acetaminophen","acetaminophen","acetaminophen","acetaminophen"],[19133768,19133768,40229134,1127433,40229134,1127433,1127078,40162522,40231925,40162522,40162522,40162522,40229134,1127433,1127078,1127078,1127433,19133768,19133768],["acetaminophen 160 MG Oral Tablet","acetaminophen 160 MG Oral Tablet","acetaminophen 21.7 MG/ML / Dextromethorphan","acetaminophen 325 MG / Oxycodone Hydrochloride","acetaminophen 21.7 MG/ML / Dextromethorphan","acetaminophen 325 MG / Oxycodone Hydrochloride","acetaminophen 750 MG / Hydrocodone Bitartrate","acetaminophen 325 MG Oral Tablet","acetaminophen 325 MG / Hydrocodone Bitartrate","acetaminophen 325 MG Oral Tablet","acetaminophen 325 MG Oral Tablet","acetaminophen 325 MG Oral Tablet","acetaminophen 21.7 MG/ML / Dextromethorphan","acetaminophen 325 MG / Oxycodone Hydrochloride","acetaminophen 750 MG / Hydrocodone Bitartrate","acetaminophen 750 MG / Hydrocodone Bitartrate","acetaminophen 325 MG / Oxycodone Hydrochloride","acetaminophen 160 MG Oral Tablet","acetaminophen 160 MG Oral Tablet"],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,1127078,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,"acetaminophen 750 MG / Hydrocodone Bitartrate",null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,"282464",null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,5,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,10000,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,5,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,0.1136363636363636,null,null,null,null],[true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>ingredient_concept_id<\/th>\n      <th>ingredient<\/th>\n      <th>drug_concept_id<\/th>\n      <th>drug<\/th>\n      <th>drug_source_concept_id<\/th>\n      <th>drug_source<\/th>\n      <th>drug_source_value<\/th>\n      <th>n_records<\/th>\n      <th>n_sample<\/th>\n      <th>n_person<\/th>\n      <th>proportion_records<\/th>\n      <th>result_obscured<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[0,2,4,7,8,9,10]},{"name":"ingredient_concept_id","targets":0},{"name":"ingredient","targets":1},{"name":"drug_concept_id","targets":2},{"name":"drug","targets":3},{"name":"drug_source_concept_id","targets":4},{"name":"drug_source","targets":5},{"name":"drug_source_value","targets":6},{"name":"n_records","targets":7},{"name":"n_sample","targets":8},{"name":"n_person","targets":9},{"name":"proportion_records","targets":10},{"name":"result_obscured","targets":11}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><table class="table">
+<code class="sourceCode R"><span><span class="fu">DT</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/DT/man/datatable.html" class="external-link">datatable</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="va">drugSourceConceptsOverall</span>, rownames <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
 <colgroup>
 <col width="50%">
 <col width="50%">
