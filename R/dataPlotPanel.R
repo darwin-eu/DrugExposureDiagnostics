@@ -323,10 +323,12 @@ dataPlotPanel <- R6::R6Class(
         } else if (private$.id == "drugRoutes") {
           data %>%
             dplyr::rename(variable = route_type, count = n_records) %>%
+            private$filterTopN(topN) %>%
             private$createBarChart()
         } else if (private$.id == "drugTypes") {
           data %>%
             dplyr::rename(variable = drug_type, count = n_records) %>%
+            private$filterTopN(topN) %>%
             private$createBarChart()
         } else if (private$.id == "drugSourceConcepts") {
           data %>%
