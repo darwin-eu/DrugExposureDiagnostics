@@ -338,6 +338,7 @@ dataPlotPanel <- R6::R6Class(
         } else if (private$.id == "drugSig") {
           data %>%
             dplyr::rename(variable = sig, count = n_records) %>%
+            dplyr::mutate(variable = if_else(is.na(variable), "NA", variable)) %>%
             private$filterTopN(topN) %>%
             private$createBarChart()
         } else if (private$.id == "drugVariablesMissing") {
