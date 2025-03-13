@@ -33,6 +33,7 @@
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/dataPlotPanel.html</loc></url>
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/executeChecks.html</loc></url>
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/executeChecksSingleIngredient.html</loc></url>
+<url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/getAllCheckOptions.html</loc></url>
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/getDrugMissings.html</loc></url>
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/getDrugRecords.html</loc></url>
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/getDrugRoutes.html</loc></url>
@@ -50,6 +51,7 @@
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/summariseChecks.html</loc></url>
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/summariseDrugExposureDuration.html</loc></url>
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/summariseQuantity.html</loc></url>
+<url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/validateChecks.html</loc></url>
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/viewResults.html</loc></url>
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/writeFile.html</loc></url>
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/writeIngredientResultToDisk.html</loc></url>
