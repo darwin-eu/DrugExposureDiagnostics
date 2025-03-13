@@ -233,8 +233,8 @@ dataPlotPanel <- R6::R6Class(
           dplyr::mutate_at(dplyr::vars(starts_with("proportion_")), ~ 100 * .) %>%
           dplyr::rename_with(~ gsub("proportion_", "perc_", .x)) %>%
           dplyr::mutate_at(
-            dplyr::vars(which(sapply(., is.numeric) & !names(.) %in% c("ingredient_id", "drug_concept_id", "n"))),
-            ~ signif(., 4)
+            dplyr::vars(which(sapply(., is.numeric) & !names(.) %in% c(names(.)[grepl("id$", names(.))], "n"))),
+            ~ floor(.) + signif(. %% 1, 4)
           )
       }
       return(data)
@@ -852,6 +852,7 @@ dataPlotPanel <- R6::R6Class(
     #'
     #' @returns `self`
     initialize = function(data, dataByConcept = NULL, id, title, description, plotPercentage, byConcept, downloadFilename, selectedColumns = colnames(data)) {
+      rlang::check_installed("shiny (>= 1.6.0)")
       super$initialize()
       private$.data <- private$formatData(data)
       private$.dataByConcept <- private$formatData(dataByConcept)

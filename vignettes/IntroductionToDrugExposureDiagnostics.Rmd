@@ -78,6 +78,7 @@ all_checks <- executeChecks(cdm,
   earliestStartDate = "2010-01-01",
   verbose = FALSE,
   byConcept = TRUE,
+  exposureTypeId = NULL,
   outputFolder = "output_folder",
   filename = "your_database"
 )
@@ -95,6 +96,7 @@ The `tablePrefix` is an optional value for database tables that will be created 
 `earliestStartDate` is the earliest data from which drug records will be included.
 `verbose` is a parameter that enables the printing of messages to the console.
 `byConcept` is a boolean that determines if only overall results should be returned or also by drug concept.
+`exposureTypeId` id of the drug exposure type to be filtered on (e.g. only prescribed). By default (NULL) all record types will be taken into account.
 `outputFolder` is the folder to write to. If NULL, results will not be written to disk, but just saved in memory.
 `databaseId` is the database identifier. This is an optional parameter used to create the name of a temporary directory to store results.
 `fileName` is the output file name. If NULL, it will be set to the databaseId. \

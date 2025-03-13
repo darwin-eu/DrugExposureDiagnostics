@@ -124,6 +124,29 @@ checkIngredientInTable <- function(cdm, conceptId, tableName, messageStore) {
   }
 }
 
+#' Get all options that can be passed to the "checks" parameter
+getAllCheckOptions <- function() {
+  return(c("missing", "exposureDuration", "type", "route", "sourceConcept",
+           "daysSupply", "verbatimEndDate", "dose", "sig", "quantity",
+           "diagnosticsSummary"))
+}
+
+#' Validate the "checks" parameter
+#'
+#' @param checks the checks that have been passed to executeChecks
+#' @param messageStore checkmate collection
+#'
+validateChecks <- function(checks, messageStore) {
+  checkmate::assertVector(checks, add = messageStore, null.ok = TRUE)
+  if (length(checks) > 0) {
+    # check values are allowed
+    allChecks <- getAllCheckOptions()
+    if (!identical(setdiff(checks, allChecks), character(0))) {
+      messageStore$push(glue::glue("Invalid option(s) given as a check. Valid options are: {paste(allChecks, collapse = ', ')}"))
+    }
+  }
+}
+
 #' Compute the difference in days between 2 variables in a database table.
 #'
 #' @param cdm CDMConnector reference object

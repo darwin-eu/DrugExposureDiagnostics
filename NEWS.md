@@ -1,5 +1,12 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 1.1.2
+* Add option to run for an exposure type
+* Fix rounding issue drug_type_concept_id
+* Add error if wrong check is passed
+* Fix earliestStartDate NULL behaviour
+* Move shiny to suggests
+
 # DrugExposureDiagnostics 1.1.1
 * Update shiny app: fix NA in boxplots and add dropdown drugs-missing
 * CDMConnector v2 changes

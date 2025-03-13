@@ -7,6 +7,7 @@ executeChecksMock <- function(cdm,
                               tablePrefix = NULL,
                               earliestStartDate = "2010-01-01",
                               verbose = FALSE,
+                              exposureTypeId = NULL,
                               minCellCount = 5,
                               outputFolder = NULL,
                               databaseId = CDMConnector::cdmName(cdm)) {
@@ -18,6 +19,7 @@ executeChecksMock <- function(cdm,
                 tablePrefix = tablePrefix,
                 earliestStartDate = earliestStartDate,
                 verbose = verbose,
+                exposureTypeId = exposureTypeId,
                 minCellCount = minCellCount,
                 outputFolder = outputFolder,
                 databaseId = databaseId)
@@ -65,7 +67,8 @@ test_that("execute all checks, given ingredient", {
       "missing", "exposureDuration", "type", "route",
       "sourceConcept", "daysSupply", "verbatimEndDate",
       "dose", "sig", "quantity", "diagnosticsSummary"
-    )
+    ),
+    earliestStartDate = NULL
   )
   # checks
   expect_equal(length(result), 21)
@@ -92,12 +95,46 @@ test_that("execute some checks, given ingredient", {
   DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
 })
 
-test_that("execute all checks: expected errors", {
+test_that("execute checks for given exposureTypeId", {
+  cdm <- mockDrugExposure(drug_exposure_size = 100)
+
+  # all exposures
+  result <- executeChecksMock(
+    cdm = cdm,
+    checks = c()
+  )
+  expect_equal(length(result), 2)
+  allConcepts <- result$conceptSummary
+  expect_equal(nrow(allConcepts), 6)
+
+  resultPrescriptions <- executeChecksMock(
+    cdm = cdm,
+    checks = c(),
+    exposureTypeId = 32839
+  )
+  expect_equal(length(resultPrescriptions), 2)
+  prescriptionConcepts <- resultPrescriptions$conceptSummary
+  expect_equal(nrow(prescriptionConcepts), 6)
+
+  # checks
+  expect_true(sum(allConcepts$n_records) > sum(prescriptionConcepts$n_records, na.rm = T))
+  expect_true(sum(allConcepts$n_patients) > sum(prescriptionConcepts$n_patients, na.rm = T))
+
+  DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
+})
+
+test_that("execute checks: expected errors", {
   cdm <- mockDrugExposure()
 
-  expect_error(executeChecksMock(cdm = "a", 1125315))
-  expect_error(executeChecksMock(cdm, "a"))
-  expect_error(executeChecksMock(cdm, 33)) # not an ingredient
+  expect_error(executeChecksMock(cdm = "a", ingredients = 1125315))
+  expect_error(executeChecksMock(cdm = cdm, ingredients = "a"))
+  expect_error(executeChecksMock(cdm, ingredients = 33)) # not an ingredient
+
+  # invalid checks
+  expect_error(executeChecksMock(cdm = cdm, checks = "not valid"))
+  expect_error(executeChecksMock(cdm = cdm, checks = NA))
+  expect_error(executeChecksMock(cdm = cdm, checks = -1))
+  expect_error(executeChecksMock(cdm = cdm, checks = c("missing", "exposureDuration", "quantity", "not valid")))
 
   DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
 })

@@ -74,8 +74,8 @@ formatResult <- function(result) {
       dplyr::mutate_at(vars(starts_with("proportion_")), ~ 100 * .) %>%
       dplyr::rename_with(~ gsub("proportion_", "perc_", .x)) %>%
       dplyr::mutate_at(
-        vars(which(sapply(., is.numeric) & !names(.) %in% c("ingredient_id", "drug_concept_id", "n"))),
-        ~ signif(., 4)
+        vars(which(sapply(., is.numeric) & !names(.) %in% c(names(.)[grepl("id$", names(.))], "n"))),
+        ~ floor(.) + signif(. %% 1, 4)
       )
   }
   return(result)

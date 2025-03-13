@@ -9,6 +9,7 @@ getDrugRecords(
   ingredient,
   includedConceptsTable,
   drugRecordsTable = "drug_exposure",
+  exposureTypeId = NULL,
   tablePrefix = NULL,
   verbose = FALSE
 )
@@ -21,6 +22,9 @@ getDrugRecords(
 \item{includedConceptsTable}{includedConceptsTable}
 
 \item{drugRecordsTable}{drugRecordsTable, default "drug_exposure"}
+
+\item{exposureTypeId}{id of the drug exposure type to be filtered on (e.g. only prescribed).
+By default all record types will be taken into account.}
 
 \item{tablePrefix}{The stem for the permanent tables that will
 be created when running the diagnostics. Permanent tables will be created using

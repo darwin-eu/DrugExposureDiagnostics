@@ -20,6 +20,8 @@
 #' @param ingredient Concept ID for ingredient of interest
 #' @param includedConceptsTable includedConceptsTable
 #' @param drugRecordsTable drugRecordsTable, default "drug_exposure"
+#' @param exposureTypeId id of the drug exposure type to be filtered on (e.g. only prescribed).
+#' By default all record types will be taken into account.
 #' @param tablePrefix The stem for the permanent tables that will
 #' be created when running the diagnostics. Permanent tables will be created using
 #' this prefix, and any existing tables that start with this will be at risk of
@@ -32,6 +34,7 @@ getDrugRecords <- function(cdm,
                            ingredient,
                            includedConceptsTable,
                            drugRecordsTable = "drug_exposure",
+                           exposureTypeId = NULL,
                            tablePrefix = NULL,
                            verbose = FALSE) {
   errorMessage <- checkmate::makeAssertCollection()
@@ -48,6 +51,13 @@ getDrugRecords <- function(cdm,
   checkLogical(verbose, messageStore = errorMessage)
   checkmate::reportAssertions(collection = errorMessage)
 
+  # filter on exposure type
+  if (!is.null(exposureTypeId)) {
+    cdm[[drugRecordsTable]] <- cdm[[drugRecordsTable]] %>%
+      dplyr::filter(.data$drug_type_concept_id == .env$exposureTypeId)
+  }
+
+  # join with concepts table
   records <- cdm[[drugRecordsTable]] %>%
     dplyr::inner_join(
       cdm[[includedConceptsTable]] %>%

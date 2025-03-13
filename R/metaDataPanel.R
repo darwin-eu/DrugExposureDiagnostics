@@ -106,6 +106,7 @@ metaDataPanel <- R6::R6Class(
     #'
     #' @returns `self`
     initialize = function(data, id, title, description, downloadFilename) {
+      rlang::check_installed("shiny (>= 1.6.0)")
       super$initialize()
       private$.data <- data
       private$.id <- id

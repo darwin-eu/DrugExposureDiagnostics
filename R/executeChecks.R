@@ -36,6 +36,8 @@
 #' @param earliestStartDate the earliest date from which a record can be included
 #' @param verbose verbose, default FALSE
 #' @param byConcept boolean argument whether to return results by Concept or overall only
+#' @param exposureTypeId id of the drug exposure type to be filtered on (e.g. only prescribed).
+#' By default all record types will be taken into account.
 #' @param outputFolder folder to write to. If NULL, results will not be written to file
 #' @param databaseId database identifier
 #' @param filename output file name, if NULL it will be equal to databaseId
@@ -65,6 +67,7 @@ executeChecks <- function(cdm,
                           earliestStartDate = "2010-01-01",
                           verbose = FALSE,
                           byConcept = TRUE,
+                          exposureTypeId = NULL,
                           outputFolder = NULL,
                           databaseId = CDMConnector::cdmName(cdm),
                           filename = NULL) {
@@ -72,6 +75,7 @@ executeChecks <- function(cdm,
   checkDbType(cdm = cdm, type = "cdm_reference", messageStore = errorMessage)
   checkmate::assertNumeric(ingredients, min.len = 1, add = errorMessage)
   checkmate::assertNumeric(subsetToConceptId, add = errorMessage, null.ok = TRUE)
+  validateChecks(checks, messageStore = errorMessage)
   checkmate::assertTRUE(is.numeric(minCellCount), add = errorMessage)
   checkmate::assertNumeric(sample, len = 1, add = errorMessage, null.ok = TRUE)
   checkSampleMinCellCount(sample, minCellCount, messageStore = errorMessage)
@@ -102,7 +106,8 @@ executeChecks <- function(cdm,
           tablePrefix = tablePrefix,
           earliestStartDate = earliestStartDate,
           verbose = verbose,
-          byConcept = byConcept
+          byConcept = byConcept,
+          exposureTypeId = exposureTypeId
         )
 
         # write result
@@ -152,6 +157,8 @@ executeChecks <- function(cdm,
 #' @param earliestStartDate the earliest date from which a record can be included
 #' @param verbose verbose, default FALSE
 #' @param byConcept boolean argument whether to return results by Concept or overall only
+#' @param exposureTypeId id of the drug exposure type to be filtered on (e.g. only prescribed).
+#' By default all record types will be taken into account.
 #'
 #' @return named list with results
 executeChecksSingleIngredient <- function(cdm,
@@ -163,7 +170,8 @@ executeChecksSingleIngredient <- function(cdm,
                                           tablePrefix = NULL,
                                           earliestStartDate = "2010-01-01",
                                           verbose = FALSE,
-                                          byConcept = FALSE) {
+                                          byConcept = FALSE,
+                                          exposureTypeId = NULL) {
   errorMessage <- checkmate::makeAssertCollection()
   checkDbType(cdm = cdm, type = "cdm_reference", messageStore = errorMessage)
   checkIsIngredient(cdm = cdm, conceptId = ingredient, messageStore = errorMessage)
@@ -215,6 +223,7 @@ executeChecksSingleIngredient <- function(cdm,
     cdm = cdm,
     ingredient = ingredient,
     includedConceptsTable = "ingredient_concepts",
+    exposureTypeId = exposureTypeId,
     tablePrefix = tablePrefix
   ) %>%
     dplyr::compute(name = "ingredient_drug_records")
@@ -247,14 +256,20 @@ executeChecksSingleIngredient <- function(cdm,
     if (verbose == TRUE) {
       start <- printDurationAndMessage("Progress: sampling drug records", start)
     }
-    if (dplyr::pull(dplyr::tally(dplyr::filter(cdm[["ingredient_drug_records"]], .data$drug_exposure_start_date > .env$earliestStartDate)), .data$n) < sampleSize) {
-      message("population after earliestStartDate smaller than sample, sampling ignored")
-      cdm[["ingredient_drug_records"]] <- cdm[["ingredient_drug_records"]] %>%
-        dplyr::filter(.data$drug_exposure_start_date > .env$earliestStartDate) %>%
-        dplyr::compute()
+    if (!is.null(earliestStartDate)) {
+      if (dplyr::pull(dplyr::tally(dplyr::filter(cdm[["ingredient_drug_records"]], .data$drug_exposure_start_date > .env$earliestStartDate)), .data$n) < sampleSize) {
+        message("population after earliestStartDate smaller than sample, sampling ignored")
+        cdm[["ingredient_drug_records"]] <- cdm[["ingredient_drug_records"]] %>%
+          dplyr::filter(.data$drug_exposure_start_date > .env$earliestStartDate) %>%
+          dplyr::compute()
+      } else {
+        cdm[["ingredient_drug_records"]] <- cdm[["ingredient_drug_records"]] %>%
+          dplyr::filter(.data$drug_exposure_start_date > .env$earliestStartDate) %>%
+          dplyr::slice_sample(n = sampleSize) %>%
+          dplyr::compute()
+      }
     } else {
       cdm[["ingredient_drug_records"]] <- cdm[["ingredient_drug_records"]] %>%
-        dplyr::filter(.data$drug_exposure_start_date > .env$earliestStartDate) %>%
         dplyr::slice_sample(n = sampleSize) %>%
         dplyr::compute()
     }

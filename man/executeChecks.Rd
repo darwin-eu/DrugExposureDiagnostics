@@ -15,6 +15,7 @@ executeChecks(
   earliestStartDate = "2010-01-01",
   verbose = FALSE,
   byConcept = TRUE,
+  exposureTypeId = NULL,
   outputFolder = NULL,
   databaseId = CDMConnector::cdmName(cdm),
   filename = NULL
@@ -50,6 +51,9 @@ used throughout.}
 \item{verbose}{verbose, default FALSE}
 
 \item{byConcept}{boolean argument whether to return results by Concept or overall only}
+
+\item{exposureTypeId}{id of the drug exposure type to be filtered on (e.g. only prescribed).
+By default all record types will be taken into account.}
 
 \item{outputFolder}{folder to write to. If NULL, results will not be written to file}
 

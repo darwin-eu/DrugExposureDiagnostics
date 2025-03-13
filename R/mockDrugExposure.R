@@ -239,7 +239,7 @@ mockDrugExposure <- function(drug_exposure = NULL,
       ))
     # define other columns in the dataset
     verbatim_end_date <- drug_exposure_end_date
-    drug_type_concept_id <- as.integer(c(rep(38000177, drug_exposure_size)))
+    drug_type_concept_id <- as.integer(sample(c(38000177, 32839), drug_exposure_size, replace = TRUE))
     stop_reason <- as.character(c(rep(NA, drug_exposure_size)))
     refills <- as.integer(c(rep(0, drug_exposure_size)))
     quantity <- as.numeric(sample(1:10, drug_exposure_size, replace = TRUE))
