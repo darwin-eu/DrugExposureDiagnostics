@@ -24,7 +24,7 @@
 #' @param checks the checks to be executed, by default the missing values, the
 #' exposure duration and the quantity. Possible options are "missing",
 #' "exposureDuration", "type", "route", "sourceConcept", "daysSupply",
-#' "verbatimEndDate", "dose", "sig", "quantity" and "diagnosticsSummary"
+#' "verbatimEndDate", "dose", "sig", "quantity", "daysBetween" and "diagnosticsSummary"
 #' @param minCellCount minimum number of events to report- results
 #' lower than this will be obscured. If 0 all results will be reported.
 #' @param sample the number of samples, default 10.000
@@ -414,6 +414,18 @@ executeChecksSingleIngredient <- function(cdm,
     }
   }
 
+  drugTimeBetween <- drugTimeBetweenByConcept <- NULL
+  if ("daysBetween" %in% checks) {
+    if (verbose == TRUE) {
+      start <- printDurationAndMessage("Progress: check time between drug records", start)
+    }
+
+    drugTimeBetween <- summariseTimeBetween(cdm, "ingredient_drug_records", byConcept = FALSE, sampleSize = sampleSize) %>% dplyr::collect()
+    if (isTRUE(byConcept)) {
+      drugTimeBetweenByConcept <- summariseTimeBetween(cdm, "ingredient_drug_records", byConcept = byConcept, sampleSize = sampleSize) %>% dplyr::collect()
+    }
+  }
+
   if (!is.null(tablePrefix)) {
     if (verbose == TRUE) {
       start <- printDurationAndMessage("Cleaning up tables", start)
@@ -448,7 +460,9 @@ executeChecksSingleIngredient <- function(cdm,
     "drugSig" = drugSig,
     "drugSigByConcept" = drugSigByConcept,
     "drugQuantity" = drugQuantity,
-    "drugQuantityByConcept" = drugQuantityByConcept
+    "drugQuantityByConcept" = drugQuantityByConcept,
+    "drugTimeBetween" = drugTimeBetween,
+    "drugTimeBetweenByConcept" = drugTimeBetweenByConcept
   )
 
   # add summary table

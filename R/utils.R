@@ -127,7 +127,7 @@ checkIngredientInTable <- function(cdm, conceptId, tableName, messageStore) {
 #' Get all options that can be passed to the "checks" parameter
 getAllCheckOptions <- function() {
   return(c("missing", "exposureDuration", "type", "route", "sourceConcept",
-           "daysSupply", "verbatimEndDate", "dose", "sig", "quantity",
+           "daysSupply", "verbatimEndDate", "dose", "sig", "quantity", "daysBetween",
            "diagnosticsSummary"))
 }
 

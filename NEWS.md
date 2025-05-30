@@ -1,5 +1,9 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 1.1.3
+* Add time in between check
+* Integration with Darwin shiny modules
+
 # DrugExposureDiagnostics 1.1.2
 * Add option to run for an exposure type
 * Fix rounding issue drug_type_concept_id

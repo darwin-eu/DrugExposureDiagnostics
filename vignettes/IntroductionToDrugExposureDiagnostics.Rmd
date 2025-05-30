@@ -70,7 +70,7 @@ all_checks <- executeChecks(cdm,
   subsetToConceptId = NULL,
   checks = c(
     "missing", "exposureDuration", "type", "route", "sourceConcept", "daysSupply",
-    "verbatimEndDate", "dose", "sig", "quantity", "diagnosticsSummary"
+    "verbatimEndDate", "dose", "sig", "quantity", "daysBetween", "diagnosticsSummary"
   ),
   minCellCount = 5,
   sample = 10000,
