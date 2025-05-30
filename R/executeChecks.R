@@ -124,6 +124,14 @@ executeChecks <- function(cdm,
     )
     resultList[[i]] <- ingredientResult
   }
+  # print resultList structure
+  for (i in seq(length(resultList))) {
+    tmpResultList <- resultList[[i]]
+    for (name in names(tmpResultList)) {
+      message(paste("Resultlist:",i, ":", name))
+      message(paste(colnames(tmpResultList[[name]]), collapse = ","))
+    }
+  }
   resultList <- do.call(Map, c(f = rbind, Filter(Negate(is.null), resultList)))
 
   # add metadata
