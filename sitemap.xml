@@ -18,6 +18,7 @@
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/index.html</loc></url>
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/news/index.html</loc></url>
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/DrugExposureDiagnostics-package.html</loc></url>
+<url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyApp.html</loc></url>
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.html</loc></url>
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/checkDaysSupply.html</loc></url>
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/checkDbType.html</loc></url>
@@ -51,6 +52,7 @@
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/summariseChecks.html</loc></url>
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/summariseDrugExposureDuration.html</loc></url>
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/summariseQuantity.html</loc></url>
+<url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/summariseTimeBetween.html</loc></url>
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/validateChecks.html</loc></url>
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/viewResults.html</loc></url>
 <url><loc>https://darwin-eu.github.io/DrugExposureDiagnostics/reference/writeFile.html</loc></url>
