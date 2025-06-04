@@ -474,7 +474,7 @@ executeChecksSingleIngredient <- function(cdm,
   )
 
   # add summary table
-  if ("diagnosticsSummaryTest" %in% checks) {
+  if ("diagnosticsSummary" %in% checks) {
     if (verbose == TRUE) {
       start <- printDurationAndMessage("Progress: create diagnosticsSummary", start)
     }

@@ -81,6 +81,11 @@ summariseChecks <- function(resultList) {
           dplyr::select("missing_quantity_exp_start_end_days_supply", "ingredient_concept_id"),
         by = "ingredient_concept_id"
       )
+  } else {
+    diagnosticsSummary <- diagnosticsSummary %>%
+      dplyr::mutate(
+        missing_quantity_exp_start_end_days_supply =
+          glue::glue("0 (0%), 0 (0%), 0 (0%), 0 (0%)"))
   }
 
   # drug type
