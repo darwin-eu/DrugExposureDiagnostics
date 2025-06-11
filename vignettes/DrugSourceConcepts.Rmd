@@ -20,15 +20,9 @@ knitr::opts_chunk$set(
 ## Run checks 
 ```{r setup}
 library(DrugExposureDiagnostics)
-library(dplyr)
-library(DT)
-
-# acetaminophen concept id is 1125315
-acetaminophen <- 1125315
 cdm <- mockDrugExposure()
-acetaminophen_checks <- executeChecks(
+result <- executeChecks(
   cdm = cdm,
-  ingredients = acetaminophen,
   checks = "sourceConcept"
 )
 ```
@@ -36,10 +30,8 @@ acetaminophen_checks <- executeChecks(
 ## Drug Source by Concept
 This shows the drug source concepts next to the mapped drug concepts. This check only exists "byConcept" to depict the required detail. Do not get confused by the name of the object being "Overall". 
 
-```{r}
-datatable(acetaminophen_checks$drugSourceConceptsOverall,
-  rownames = FALSE
-)
+```{r, eval=FALSE}
+DT::datatable(result$drugSourceConceptsOverall, rownames = FALSE)
 ```
 
 | Column  | Description |

@@ -14,7 +14,11 @@ executeChecks(
   tablePrefix = NULL,
   earliestStartDate = "2010-01-01",
   verbose = FALSE,
-  byConcept = TRUE
+  byConcept = TRUE,
+  exposureTypeId = NULL,
+  outputFolder = NULL,
+  databaseId = CDMConnector::cdmName(cdm),
+  filename = NULL
 )
 }
 \arguments{
@@ -29,7 +33,7 @@ If NULL, all concept IDs for an ingredient will be considered.}
 \item{checks}{the checks to be executed, by default the missing values, the
 exposure duration and the quantity. Possible options are "missing",
 "exposureDuration", "type", "route", "sourceConcept", "daysSupply",
-"verbatimEndDate", "dose", "sig", "quantity" and "diagnosticsSummary"}
+"verbatimEndDate", "dose", "sig", "quantity", "daysBetween" and "diagnosticsSummary"}
 
 \item{minCellCount}{minimum number of events to report- results
 lower than this will be obscured. If 0 all results will be reported.}
@@ -47,6 +51,15 @@ used throughout.}
 \item{verbose}{verbose, default FALSE}
 
 \item{byConcept}{boolean argument whether to return results by Concept or overall only}
+
+\item{exposureTypeId}{id of the drug exposure type to be filtered on (e.g. only prescribed).
+By default all record types will be taken into account.}
+
+\item{outputFolder}{folder to write to. If NULL, results will not be written to file}
+
+\item{databaseId}{database identifier}
+
+\item{filename}{output file name, if NULL it will be equal to databaseId}
 }
 \value{
 named list with results
@@ -57,9 +70,9 @@ Execute given checks on Drug Exposure.
 \examples{
 \dontrun{
 db <- DBI::dbConnect(" Your database connection here ")
-cdm <- CDMConnector::cdm_from_con(
+cdm <- CDMConnector::cdmFromCon(
   con = db,
-  cdm_schema = "cdm schema name"
+  cdmSchema = "cdm schema name"
 )
 result <- executeChecks(
   cdm = cdm,

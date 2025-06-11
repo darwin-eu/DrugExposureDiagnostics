@@ -25,22 +25,16 @@ They make up the individual components of the diagnostic Summary.
 If fewer checks are run, the diagnostics Summary will contain fewer components.
 ```{r setup}
 library(DrugExposureDiagnostics)
-library(DT)
-library(dplyr)
-
-# acetaminophen concept id is 1125315
-acetaminophen <- 1125315
 cdm <- mockDrugExposure()
 acetaminophen_checks <- executeChecks(
   cdm = cdm,
-  ingredients = acetaminophen,
   checks = c("missing", "exposureDuration", "type", "route", "dose", "quantity", "diagnosticsSummary")
 )
 ```
 
 Let's have a look at the diagnostics summary
 ```{r}
-datatable(acetaminophen_checks$diagnosticsSummary,
+DT::datatable(acetaminophen_checks$diagnosticsSummary,
   rownames = FALSE
 )
 ```

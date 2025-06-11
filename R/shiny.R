@@ -19,6 +19,8 @@ viewResults <- function(dataFolder,
                         publishDir = file.path(getwd(), "ResultsExplorer"),
                         overwritePublishDir = FALSE,
                         launch.browser = FALSE) {
+  rlang::check_installed("shiny (>= 1.6.0)")
+
   appDir <- system.file("shiny", "ResultsExplorer", package = "DrugExposureDiagnostics")
   shinySettings <- list(dataFolder = dataFolder)
   .GlobalEnv$shinySettings <- shinySettings

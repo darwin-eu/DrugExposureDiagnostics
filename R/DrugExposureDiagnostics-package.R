@@ -2,6 +2,7 @@
 "_PACKAGE"
 
 ## usethis namespace: start
+#' @import R6
 #' @importFrom graphics hist
 #' @importFrom rlang :=
 #' @importFrom rlang .data

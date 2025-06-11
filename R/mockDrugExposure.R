@@ -239,7 +239,7 @@ mockDrugExposure <- function(drug_exposure = NULL,
       ))
     # define other columns in the dataset
     verbatim_end_date <- drug_exposure_end_date
-    drug_type_concept_id <- as.integer(c(rep(38000177, drug_exposure_size)))
+    drug_type_concept_id <- as.integer(sample(c(38000177, 32839), drug_exposure_size, replace = TRUE))
     stop_reason <- as.character(c(rep(NA, drug_exposure_size)))
     refills <- as.integer(c(rep(0, drug_exposure_size)))
     quantity <- as.numeric(sample(1:10, drug_exposure_size, replace = TRUE))
@@ -471,14 +471,14 @@ mockDrugExposure <- function(drug_exposure = NULL,
     overwrite = TRUE
   )
 
-  write_schema <- "main"
-  cdm <- CDMConnector::cdm_from_con(db, cdm_schema = "main", write_schema = write_schema) %>%
-    CDMConnector::cdm_select_tbl(c(
+  cdm <- CDMConnector::cdmFromCon(db, cdmSchema = "main", writeSchema = "main") %>%
+    omopgenerics::cdmSelect(c(
       person, observation_period, concept_ancestor, concept_relationship,
       concept, drug_strength, drug_exposure, cdm_source, vocabulary
     ))
 
-  cdm$ingredient_drug_records <- dplyr::tbl(db, CDMConnector::inSchema(write_schema, "ingredient_drug_records"))
+  cdm$ingredient_drug_records <- dplyr::tbl(db, "main.ingredient_drug_records") %>%
+    omopgenerics::newCdmTable(omopgenerics::cdmSource(cdm), "ingredient_drug_records")
 
   return(cdm)
 }

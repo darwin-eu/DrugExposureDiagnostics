@@ -14,7 +14,8 @@ executeChecksSingleIngredient(
   tablePrefix = NULL,
   earliestStartDate = "2010-01-01",
   verbose = FALSE,
-  byConcept = FALSE
+  byConcept = FALSE,
+  exposureTypeId = NULL
 )
 }
 \arguments{
@@ -45,6 +46,9 @@ used throughout.}
 \item{verbose}{verbose, default FALSE}
 
 \item{byConcept}{boolean argument whether to return results by Concept or overall only}
+
+\item{exposureTypeId}{id of the drug exposure type to be filtered on (e.g. only prescribed).
+By default all record types will be taken into account.}
 }
 \value{
 named list with results

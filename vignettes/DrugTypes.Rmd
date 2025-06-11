@@ -22,15 +22,9 @@ The name drug type may be misleading. It refers to whether the drugs records are
 
 ```{r setup}
 library(DrugExposureDiagnostics)
-library(dplyr)
-library(DT)
-
-# acetaminophen concept id is 1125315
-acetaminophen <- 1125315
 cdm <- mockDrugExposure()
-acetaminophen_checks <- executeChecks(
+result <- executeChecks(
   cdm = cdm,
-  ingredients = acetaminophen,
   checks = "type"
 )
 ```
@@ -39,7 +33,7 @@ acetaminophen_checks <- executeChecks(
 This shows the drug type of the drug records summarised on ingredient level.
 
 ```{r}
-datatable(acetaminophen_checks$drugTypesOverall,
+DT::datatable(result$drugTypesOverall,
   rownames = FALSE
 )
 ```
@@ -65,8 +59,6 @@ This shows the drug type of the drug records on the drug concept level. The tabl
 drug_concept_id  | ID of the drug concept. |
 drug  | Name of the drug concept. |
 
-```{r}
-datatable(acetaminophen_checks$drugTypesByConcept,
-  rownames = FALSE
-)
+```{r, eval=FALSE}
+DT::datatable(result$drugTypesByConcept, rownames = FALSE)
 ```

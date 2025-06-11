@@ -20,15 +20,9 @@ knitr::opts_chunk$set(
 ## Run the quantity check 
 ```{r setup}
 library(DrugExposureDiagnostics)
-library(dplyr)
-library(DT)
-
-# acetaminophen concept id is 1125315
-acetaminophen <- 1125315
 cdm <- mockDrugExposure()
-acetaminophen_checks <- executeChecks(
+result <- executeChecks(
   cdm = cdm,
-  ingredients = acetaminophen,
   checks = "quantity"
 )
 ```
@@ -39,7 +33,7 @@ How the quantity is filled depends on the drug strength pattern. For quantified 
 However, in case of non-quantified drugs (where the denominator_value is missing), the quantity identifies the volume / total number of actuations or others dispensed / prescribed. 
 
 ```{r}
-datatable(acetaminophen_checks$drugQuantity,
+DT::datatable(result$drugQuantity,
   rownames = FALSE
 )
 ```
@@ -67,15 +61,11 @@ This shows the quantity of the drug records on the drug concept level. The quant
 How the quantity is filled depends on the drug strength pattern. For quantified drugs (where the denominator_value is not missing), the quantity identifies the number of packages / items (in case of multiple dose packages). 
 However, in case of non-quantified drugs (where the denominator_value is missing), the quantity identifies the volume / total number of actuations or others dispensed / prescribed. The tables are identical to the overall just including two more columns at the beginning. \
 
-
 | Column  | Description |
 :------------- | :------------- |
 drug_concept_id  | ID of the drug concept. |
 drug  | Name of the drug concept. |
 
-```{r}
-datatable(acetaminophen_checks$drugQuantityByConcept,
-  rownames = FALSE
-)
+```{r, eval=FALSE}
+DT::datatable(result$drugQuantityByConcept, rownames = FALSE)
 ```
-

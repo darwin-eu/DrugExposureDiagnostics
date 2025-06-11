@@ -20,15 +20,9 @@ knitr::opts_chunk$set(
 ## Run missingness check
 ```{r setup}
 library(DrugExposureDiagnostics)
-library(dplyr)
-library(DT)
-
-# acetaminophen concept id is 1125315
-acetaminophen <- 1125315
 cdm <- mockDrugExposure()
-acetaminophen_checks <- executeChecks(
+result <- executeChecks(
   cdm = cdm,
-  ingredients = acetaminophen,
   checks = "missing"
 )
 ```
@@ -37,7 +31,7 @@ acetaminophen_checks <- executeChecks(
 This shows the missingness of the drug records summarised on ingredient level.
 
 ```{r}
-datatable(acetaminophen_checks$missingValuesOverall,
+DT::datatable(result$missingValuesOverall,
   rownames = FALSE
 )
 ```
@@ -57,10 +51,8 @@ result_obscured | TRUE if count has been suppressed due to being below the minim
 ## Missingness by drug concept
 This shows the missingness on drug concept level.
 
-```{r}
-datatable(acetaminophen_checks$missingValuesByConcept,
-  rownames = FALSE
-)
+```{r, eval=FALSE}
+DT::datatable(result$missingValuesByConcept, rownames = FALSE)
 ```
 
 | Column  | Description |
