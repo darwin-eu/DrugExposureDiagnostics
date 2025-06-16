@@ -81,6 +81,10 @@ summariseChecks <- function(resultList) {
           dplyr::select("missing_quantity_exp_start_end_days_supply", "ingredient_concept_id"),
         by = "ingredient_concept_id"
       )
+  } else {
+    diagnosticsSummary <- diagnosticsSummary %>%
+      dplyr::mutate(
+        missing_quantity_exp_start_end_days_supply = NA)
   }
 
   # drug type
@@ -211,6 +215,11 @@ summariseChecks <- function(resultList) {
         dplyr::select("ingredient_concept_id", "median_daily_dose_q05_q95"),
       by = "ingredient_concept_id"
     )
+  } else {
+    diagnosticsSummary <- diagnosticsSummary %>%
+      dplyr::mutate(
+        n_dose_and_missingness = NA,
+        median_daily_dose_q05_q95 = NA)
   }
 
   diagnosticsSummary <- diagnosticsSummary %>%

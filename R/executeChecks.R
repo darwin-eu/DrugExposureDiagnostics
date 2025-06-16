@@ -274,9 +274,11 @@ executeChecksSingleIngredient <- function(cdm,
         dplyr::compute()
     }
   } else {
-    cdm[["ingredient_drug_records"]] <- cdm[["ingredient_drug_records"]] %>%
-      dplyr::filter(.data$drug_exposure_start_date > .env$earliestStartDate) %>%
-      dplyr::compute()
+    if (!is.null(earliestStartDate)) {
+      cdm[["ingredient_drug_records"]] <- cdm[["ingredient_drug_records"]] %>%
+        dplyr::filter(.data$drug_exposure_start_date > .env$earliestStartDate) %>%
+        dplyr::compute()
+    }
 
     sampleSize <- cdm$ingredient_drug_records %>%
       dplyr::tally() %>%

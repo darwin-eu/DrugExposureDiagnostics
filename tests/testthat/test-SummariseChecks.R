@@ -143,6 +143,7 @@ test_that("summariseChecks partial inputs: summary, quantity and dose", {
     c(
       "ingredient", "ingredient_concept_id", "n_records", "n_patients",
       "proportion_of_records_with_dose_form",
+      "missing_quantity_exp_start_end_days_supply",
       "n_dose_and_missingness",
       "median_daily_dose_q05_q95",
       "median_quantity_q05_q95"
@@ -184,7 +185,9 @@ test_that("summariseChecks partial inputs: summary and quantity", {
     names(result),
     c(
       "ingredient", "ingredient_concept_id", "n_records", "n_patients",
-      "proportion_of_records_with_dose_form", "median_quantity_q05_q95"
+      "proportion_of_records_with_dose_form", "missing_quantity_exp_start_end_days_supply",
+      "n_dose_and_missingness", "median_daily_dose_q05_q95",
+      "median_quantity_q05_q95"
     )
   )
 

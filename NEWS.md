@@ -1,5 +1,10 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 1.1.4
+* Fix error in executeChecks (#312)
+* Fix running daysBetween check on certain db (#313)
+* Fix loading results in shiny app (#316)
+
 # DrugExposureDiagnostics 1.1.3
 * Add time in between check
 * Integration with Darwin shiny modules
