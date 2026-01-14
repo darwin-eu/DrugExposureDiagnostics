@@ -1,0 +1,36 @@
+# Drug Source Concepts
+
+## Run checks
+
+``` r
+library(DrugExposureDiagnostics)
+cdm <- mockDrugExposure()
+result <- executeChecks(
+  cdm = cdm,
+  checks = "sourceConcept"
+)
+```
+
+## Drug Source by Concept
+
+This shows the drug source concepts next to the mapped drug concepts.
+This check only exists “byConcept” to depict the required detail. Do not
+get confused by the name of the object being “Overall”.
+
+``` r
+DT::datatable(result$drugSourceConceptsOverall, rownames = FALSE)
+```
+
+| Column                 | Description                                                                                                                                                                                       |
+|:-----------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ingredient_concept_id  | Concept ID of ingredient.                                                                                                                                                                         |
+| ingredient             | Name of drug ingredient.                                                                                                                                                                          |
+| drug_concept_id        | ID of the drug concept.                                                                                                                                                                           |
+| drug                   | Name of the drug concept.                                                                                                                                                                         |
+| drug_source_concept_id | Concept ID of source concept                                                                                                                                                                      |
+| drug_source_type       | Concept name for source concept                                                                                                                                                                   |
+| drug_source_value      | Concept code of source concept in the original vocabulary                                                                                                                                         |
+| n_records              | Number of records for drug concept. If n_records is the same as n_sample this means that there are more records but the number was cut at the pre-specified sample number for efficiency reasons. |
+| n_sample               | The pre-specified maximum sample. If n_records is smaller than the sample it means that sampling was ignored because the total number of records was already too small.                           |
+| n_person               | Number of individuals.                                                                                                                                                                            |
+| result_obscured        | TRUE if count has been suppressed due to being below the minimum cell count, otherwise FALSE.                                                                                                     |

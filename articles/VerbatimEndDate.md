@@ -1,0 +1,57 @@
+# Verbatim End Date
+
+## Run the Verbatim End Date check
+
+The verbatim end date is the drug exposure end date in the source data.
+Thus, we check whether the verbatim end date equals the
+drug_exposure_end_date in OMOP (which is a required field).
+
+``` r
+library(DrugExposureDiagnostics)
+cdm <- mockDrugExposure()
+result <- executeChecks(
+  cdm = cdm,
+  checks = "verbatimEndDate"
+)
+```
+
+## Drug verbatim end date Overall
+
+This shows the days drug verbatim end date checks summarised on
+ingredient level.
+
+``` r
+DT::datatable(result$drugVerbatimEndDate,
+  rownames = FALSE
+)
+```
+
+| Column                                                | Description                                                                                                                                                                                             |
+|:------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ingredient_concept_id                                 | Concept ID of ingredient.                                                                                                                                                                               |
+| ingredient                                            | Name of drug ingredient.                                                                                                                                                                                |
+| minimum_verbatim_end_date                             | Minimum verbatim end date.                                                                                                                                                                              |
+| maximum_verbatim_end_date                             | Maximum verbatim end date.                                                                                                                                                                              |
+| n_records                                             | Number of records for ingredient concept. If n_records is the same as n_sample this means that there are more records but the number was cut at the pre-specified sample number for efficiency reasons. |
+| n_sample                                              | The pre-specified maximum sample. If n_records is smaller than the sample it means that sampling was ignored because the total number of records was already too small.                                 |
+| n_person                                              | Number of individuals.                                                                                                                                                                                  |
+| n_missing_verbatim_end_date                           | Number of records missing verbatim end date.                                                                                                                                                            |
+| n_not_missing_verbatim_end_date                       | Number of records not missing verbatim end date.                                                                                                                                                        |
+| n_verbatim_end_date_equal_to_drug_exposure_end_date   | Number of records where verbatim end date is the same as drug exposure end date.                                                                                                                        |
+| n_verbatim_end_date_and_drug_exposure_end_date_differ | Number of records where verbatim end date and drug exposure end date differ.                                                                                                                            |
+| result_obscured                                       | TRUE if count has been suppressed due to being below the minimum cell count, otherwise FALSE.                                                                                                           |
+
+## Drug verbatim end date by concept
+
+This shows the days drug verbatim end date checks on drug concept level.
+The tables are identical to the overall just including two more columns
+at the beginning.  
+
+| Column          | Description               |
+|:----------------|:--------------------------|
+| drug_concept_id | ID of the drug concept.   |
+| drug            | Name of the drug concept. |
+
+``` r
+DT::datatable(result$drugVerbatimEndDateByConcept, rownames = FALSE)
+```

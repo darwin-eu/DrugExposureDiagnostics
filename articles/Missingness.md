@@ -1,0 +1,57 @@
+# Missingness
+
+## Run missingness check
+
+``` r
+library(DrugExposureDiagnostics)
+cdm <- mockDrugExposure()
+result <- executeChecks(
+  cdm = cdm,
+  checks = "missing"
+)
+```
+
+## Overall missingness
+
+This shows the missingness of the drug records summarised on ingredient
+level.
+
+``` r
+DT::datatable(result$missingValuesOverall,
+  rownames = FALSE
+)
+```
+
+| Column                           | Description                                                                                                                                                                                             |
+|:---------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ingredient_concept_id            | Concept ID of ingredient.                                                                                                                                                                               |
+| ingredient                       | Name of drug ingredient.                                                                                                                                                                                |
+| variable                         | the variable for which missingness was assessed.                                                                                                                                                        |
+| n_records                        | Number of records for ingredient concept. If n_records is the same as n_sample this means that there are more records but the number was cut at the pre-specified sample number for efficiency reasons. |
+| n_sample                         | The pre-specified maximum sample. If n_records is smaller than the sample it means that sampling was ignored because the total number of records was already too small.                                 |
+| n_records_not_missing_value      | The number of records for which there is no missingness in the variable of interest.                                                                                                                    |
+| n_records_missing_value          | The number of records with missing values for the variable of interest.                                                                                                                                 |
+| proportion_records_missing_value | The proportion of records with missing values for the variable of interest.                                                                                                                             |
+| result_obscured                  | TRUE if count has been suppressed due to being below the minimum cell count, otherwise FALSE.                                                                                                           |
+
+## Missingness by drug concept
+
+This shows the missingness on drug concept level.
+
+``` r
+DT::datatable(result$missingValuesByConcept, rownames = FALSE)
+```
+
+| Column                           | Description                                                                                                                                                                                       |
+|:---------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| drug_concept_id                  | ID of the drug concept.                                                                                                                                                                           |
+| drug                             | Name of the drug concept.                                                                                                                                                                         |
+| ingredient_concept_id            | Concept ID of ingredient.                                                                                                                                                                         |
+| ingredient                       | Name of drug ingredient.                                                                                                                                                                          |
+| variable                         | the variable for which missingness was assessed.                                                                                                                                                  |
+| n_records                        | Number of records for drug concept. If n_records is the same as n_sample this means that there are more records but the number was cut at the pre-specified sample number for efficiency reasons. |
+| n_sample                         | The pre-specified maximum sample. If n_records is smaller than the sample it means that sampling was ignored because the total number of records was already too small.                           |
+| n_records_not_missing_value      | The number of records for which there is no missingness in the variable of interest.                                                                                                              |
+| n_records_missing_value          | The number of records with missing values for the variable of interest.                                                                                                                           |
+| proportion_records_missing_value | The proportion of records with missing values for the variable of interest.                                                                                                                       |
+| result_obscured                  | TRUE if count has been suppressed due to being below the minimum cell count, otherwise FALSE.                                                                                                     |

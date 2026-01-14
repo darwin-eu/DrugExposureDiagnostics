@@ -1,0 +1,236 @@
+# Introduction To DrugExposureDiagnostics
+
+``` r
+library(DrugExposureDiagnostics)
+```
+
+First, connect to the database. Examples of how to connect your database
+using CDMConnector can be found here:
+<https://darwin-eu.github.io/CDMConnector/articles/a04_DBI_connection_examples.html>  
+Here we use the internal mock database.
+
+``` r
+cdm <- mockDrugExposure()
+```
+
+### Drug(s) of interest
+
+In the DrugExposureDiagnostics package, all the diagnostics are
+conducted on ingredient level, and if requested, additionally on drug
+level. We will use the ingredient “acetaminophen” as an example.  
+Here is a brief look at this ingredient.
+
+|                  |               |
+|------------------|---------------|
+| Property         | Value         |
+| Concept Name     | acetaminophen |
+| Domain ID        | Drug          |
+| Concept Class ID | Ingredient    |
+| Vocabulary ID    | RxNorm        |
+| Concept ID       | 1125315       |
+| Concept code     | 161           |
+| Validity         | Valid         |
+| Concept          | Standard      |
+| Valid start      | 01-Jan-1970   |
+| Valid end        | 31-Dec-2099   |
+
+### Running the diagnostics
+
+We can run all available checks at the same time using the
+´executeChecks()´ function. This will return a list which contains the
+results of each check.  
+Multiple ingredients can be added in the vector of ´ingredients´.  
+If the parameter ´outputFolder´ is specified, the results will be saved
+to disk. The created outputs (CSV files) will be zipped and saved to a
+file ´filename´.zip This zip file serves as the input for the
+corresponding Shiny Application. If the parameter ´outputFolder´ is not
+specified and you want to save results to disk, it is needed to call
+´writeResultToDisk´ (see below). If ´outputFolder´ is not specified,
+results are only stored in memory.
+
+``` r
+all_checks <- executeChecks(cdm,
+  ingredients = c(1125315),
+  subsetToConceptId = NULL,
+  checks = c(
+    "missing", "exposureDuration", "type", "route", "sourceConcept", "daysSupply",
+    "verbatimEndDate", "dose", "sig", "quantity", "daysBetween", "diagnosticsSummary"
+  ),
+  minCellCount = 5,
+  sample = 10000,
+  tablePrefix = NULL,
+  earliestStartDate = "2010-01-01",
+  verbose = FALSE,
+  byConcept = TRUE,
+  exposureTypeId = NULL,
+  outputFolder = "output_folder",
+  filename = "your_database"
+)
+#> population after earliestStartDate smaller than sample, sampling ignored
+#> ℹ The following estimates will be computed:
+#> • daily_dose: count_missing, percentage_missing, mean, sd, q05, q25, median,
+#>   q75, q95, min, max
+#> ! Table is collected to memory as not all requested estimates are supported on
+#>   the database side
+#> → Start summary of data, at 2026-01-14 08:42:23.740889
+#> 
+#> ✔ Summary finished, at 2026-01-14 08:42:24.226677
+```
+
+The `cdm` is the database reference of the OMOP CDM using the
+`CDMConnector` package.  
+The `ingredients` is a list of ingredients of interests, by default it
+is 1125315 for acetaminophen. The `subsetToConceptId` vector of concept
+IDs of the ingredients to filter. If a concept ID is positive it will be
+included, a negative one will be excluded. If NULL, all concept IDs for
+an ingredient will be considered. `checks` allows to select the checks
+to be executed, by default the missing values, the exposure duration and
+the quantity checks will be run. The `minCellCount` is minimum number of
+events to report, numbers lower than this will be obscured. `sample` is
+the number of samples, by default, 10.000 drug record samples will be
+used.  
+The `tablePrefix` is an optional value for database tables that will be
+created during executeChecks. `earliestStartDate` is the earliest data
+from which drug records will be included. `verbose` is a parameter that
+enables the printing of messages to the console. `byConcept` is a
+boolean that determines if only overall results should be returned or
+also by drug concept. `exposureTypeId` id of the drug exposure type to
+be filtered on (e.g. only prescribed). By default (NULL) all record
+types will be taken into account. `outputFolder` is the folder to write
+to. If NULL, results will not be written to disk, but just saved in
+memory. `databaseId` is the database identifier. This is an optional
+parameter used to create the name of a temporary directory to store
+results. `fileName` is the output file name. If NULL, it will be set to
+the databaseId.  
+
+The check “missing” outputs the `missingValuesOverall` if
+`byConcept = FALSE` and additionally `missingValuesbyConcept` if
+`byConcept = TRUE`  
+The check “exposureDuration” outputs the `drugExposureDurationOverall`
+if `byConcept = FALSE` and additionally `drugExposureDurationbyConcept`
+if `byConcept = TRUE`  
+The check “type” outputs the `drugTypesOverall` if `byConcept = FALSE`
+and additionally `drugTypesbyConcept` if `byConcept = TRUE`  
+The check “route” outputs the `drugRoutesOverall` if `byConcept = FALSE`
+and additionally `drugRoutesbyConcept` if `byConcept = TRUE`  
+The check “sourceConcept” outputs the `sourceConceptsOverall` (which is
+actually the drug concept level. It disregards the `byConcept` argument
+because only the drug concept level makes sense here)  
+The check “daysSupply” outputs the `drugDaysSupplyOverall` if
+`byConcept = FALSE` and additionally `drugDaysSupplybyConcept` if
+`byConcept = TRUE`  
+The check “verbatimEndDate” outputs the `drugVerbatimEndDate` if
+`byConcept = FALSE` and additionally `drugVerbatimEndDatebyConcept` if
+`byConcept = TRUE`  
+The check “dose” outputs the `drugDoseOverall` (output only on
+ingredient level. It disregards the `byConcept` argument because only
+the drug concept level makes sense here)  
+The check “sig” outputs the `drugSig` if `byConcept = FALSE` and
+additionally `drugSigbyConcept` if `byConcept = TRUE`  
+The check “quantity” outputs the `drugQuantity` if `byConcept = FALSE`
+and additionally `drugQuantitybyConcept` if `byConcept = TRUE`  
+The check “diagnosticsSummary” outputs a summary called
+`diagnosticsSummary`  
+
+Here, we see the files created:
+
+``` r
+names(all_checks)
+#>  [1] "conceptSummary"                "missingValuesOverall"         
+#>  [3] "missingValuesByConcept"        "drugExposureDurationOverall"  
+#>  [5] "drugExposureDurationByConcept" "drugTypesOverall"             
+#>  [7] "drugTypesByConcept"            "drugRoutesOverall"            
+#>  [9] "drugRoutesByConcept"           "drugSourceConceptsOverall"    
+#> [11] "drugDaysSupply"                "drugDaysSupplyByConcept"      
+#> [13] "drugVerbatimEndDate"           "drugVerbatimEndDateByConcept" 
+#> [15] "drugDose"                      "drugSig"                      
+#> [17] "drugSigByConcept"              "drugQuantity"                 
+#> [19] "drugQuantityByConcept"         "drugTimeBetween"              
+#> [21] "drugTimeBetweenByConcept"      "diagnosticsSummary"           
+#> [23] "metadata"
+```
+
+### Assessing the drug concepts (of interest)
+
+The first item shown, the `conceptSummary` is not the output from a
+check but always output. This table is used within the function as an
+input for all the requested checks.  
+It contains information from the CONCEPT table and DRUG_STRENGTH
+table.  
+The `conceptSummary` has several use:  
+It can be quickly seen whether a certain drug is mapped on ingredient
+level. Thereby, the drug_concept_id and ingredient_concept_id are
+identical.  
+Furthermore, the `conceptSummary` can be used to make decisions about
+further refine the concept list. For example, though the argument
+`subsetToConceptId` in the
+[`executeChecks()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/executeChecks.md)
+function, the selected concepts can be requested or eliminated.  
+The `conceptSummary` in the case of acetaminophen with
+`subsetToConceptId = NULL`, the following drug concepts are part of the
+diagnostics investigation.
+
+``` r
+DT::datatable(all_checks$conceptSummary,
+  rownames = FALSE
+)
+```
+
+| Column                      | Description                                                                                                                                                                 |
+|:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| drug_concept_id             | ID of the drug concept.                                                                                                                                                     |
+| drug                        | Name of the drug concept.                                                                                                                                                   |
+| ingredient_concept_id       | Concept ID of ingredient.                                                                                                                                                   |
+| ingredient                  | Name of drug ingredient for which the checks have been performed.                                                                                                           |
+| n_records                   | Number of records for drug concept.                                                                                                                                         |
+| domain_id                   | From the CONCEPT table. A foreign key to the domain table the drug concept belongs to.                                                                                      |
+| vocabulary_id               | From the CONCEPT table. A foreign key to the vocabulary table indicating from which source the drug concept has been adapted.                                               |
+| concept_class_id            | From the CONCEPT table. The concept class of the drug concept (e.g.‘Ingredient’ or ‘Clinical Drug’).                                                                        |
+| standard_concept            | From the CONCEPT table. A flag indicating whether the drug concept is standard (‘S’), a classification (‘C’), or a non-standard Source (NULL).                              |
+| concept_code                | From the CONCEPT table. The concept code represents the identifier of the Concept in the source vocabulary.                                                                 |
+| valid_start_date            | From the CONCEPT table. The date when the drug concept was first recorded                                                                                                   |
+| valid_end_date              | From the CONCEPT table. The date when the drug concept became invalid because it was deleted or superseded (updated) by a new concept.                                      |
+| invalid_reason              | From the CONCEPT table. Reason the Concept was invalidated. Possible values are D (deleted), U (replaced with an update) or NULL when valid_end_date has the default value. |
+| amount_value                | From DRUG_STRENGTH table. The numeric value or the amount of active ingredient contained within the drug product.                                                           |
+| amount_unit_concept_id      | From DRUG_STRENGTH table. The Concept representing the Unit of measure for the amount of active ingredient contained within the drug product.                               |
+| numerator_value             | From DRUG_STRENGTH table. The concentration of the active ingredient contained within the drug product.                                                                     |
+| numerator_unit_concept_id   | From DRUG_STRENGTH table. The Concept representing the Unit of measure for the concentration of active ingredient.                                                          |
+| numerator_unit              | From the CONCEPT table. The concept name associated with the numerator_unit_concept_id.                                                                                     |
+| denominator_value           | From DRUG_STRENGTH table. The amount of total liquid (or other divisible product, such as ointment, gel, spray, etc.).                                                      |
+| denominator_unit_concept_id | From DRUG_STRENGTH table. The Concept representing the denominator unit for the concentration of active ingredient.                                                         |
+| denominator_unit            | From the CONCEPT table. The concept name associated with the denominator_unit_concept_id                                                                                    |
+| box_size                    | The number of units of Clinical Branded Drug or Quantified Clinical or Branded Drug contained in a box as dispensed to the patient.                                         |
+| amount_unit                 | From DRUG_STRENGTH table.                                                                                                                                                   |
+| dose_form                   | From CONCEPT_RELATIONSHIP table. The RxNorm dose form associated with the drug concept.                                                                                     |
+| result_obscured             | TRUE if count has been suppressed due to being below the minimum cell count, otherwise FALSE.                                                                               |
+
+### Saving the diagnostic output
+
+After running the checks, we can write the created outputs (CSV files)
+into a zip file to disk using the
+[`writeResultToDisk()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/writeResultToDisk.md)
+function. Note: this is only needed if the `outputFolder` argument is
+not added to `executeChecks`! The zip created from using the
+[`writeResultToDisk()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/writeResultToDisk.md)
+function serves as the input for the corresponding Shiny Application.  
+Please replace the “your_database” with the name of your database.
+Create your designated “output_folder” at your desired location and put
+the path if not the working directory.
+
+``` r
+writeResultToDisk(all_checks,
+  databaseId = "your_database",
+  outputFolder = "output_folder"
+)
+```
+
+### View results in the Shiny app & make it available for publishing
+
+``` r
+viewResults(
+  dataFolder = file.path(getwd(), "output_folder"),
+  makePublishable = TRUE,
+  publishDir = file.path(getwd(), "MyStudyResultsExplorer"),
+  overwritePublishDir = TRUE
+)
+```

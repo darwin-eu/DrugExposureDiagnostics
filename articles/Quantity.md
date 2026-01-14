@@ -1,0 +1,69 @@
+# Quantity
+
+## Run the quantity check
+
+``` r
+library(DrugExposureDiagnostics)
+cdm <- mockDrugExposure()
+result <- executeChecks(
+  cdm = cdm,
+  checks = "quantity"
+)
+```
+
+## Quantity Overall
+
+This shows the quantity of the drug records summarised on ingredient
+level. The quantity is not a required field, but it is a most useful
+field. How the quantity is filled depends on the drug strength pattern.
+For quantified drugs (where the denominator_value is not missing), the
+quantity identifies the number of packages / items (in case of multiple
+dose packages). However, in case of non-quantified drugs (where the
+denominator_value is missing), the quantity identifies the volume /
+total number of actuations or others dispensed / prescribed.
+
+``` r
+DT::datatable(result$drugQuantity,
+  rownames = FALSE
+)
+```
+
+| Column                         | Description                                                                                                                                                                                             |
+|:-------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ingredient_concept_id          | Concept ID of ingredient.                                                                                                                                                                               |
+| ingredient                     | Name of drug ingredient.                                                                                                                                                                                |
+| n_records                      | Number of records for ingredient concept. If n_records is the same as n_sample this means that there are more records but the number was cut at the pre-specified sample number for efficiency reasons. |
+| n_sample                       | The pre-specified maximum sample. If n_records is smaller than the sample it means that sampling was ignored because the total number of records was already too small.                                 |
+| n_person                       | Number of individuals.                                                                                                                                                                                  |
+| minimum_drug_exposure_quantity | Minimum drug exposure quantity.                                                                                                                                                                         |
+| q05_drug_exposure_quantity     | 5th quantile for drug exposure quantity.                                                                                                                                                                |
+| q10_drug_exposure_quantity     | 10th quantile for drug exposure quantity.                                                                                                                                                               |
+| q25_drug_exposure_quantity     | 25th quantile for drug exposure quantity.                                                                                                                                                               |
+| median_drug_exposure_quantity  | Median drug exposure quantity.                                                                                                                                                                          |
+| q75_drug_exposure_quantity     | 75th quantile for drug exposure quantity.                                                                                                                                                               |
+| q90_drug_exposure_quantity     | 90th quantile for drug exposure quantity.                                                                                                                                                               |
+| q95_drug_exposure_quantity     | 95th quantile for drug exposure quantity.                                                                                                                                                               |
+| maximum_drug_exposure_quantity | Maximum drug exposure quantity.                                                                                                                                                                         |
+| result_obscured                | TRUE if count has been suppressed due to being below the minimum cell count, otherwise FALSE.                                                                                                           |
+
+## Quantity by concept
+
+This shows the quantity of the drug records on the drug concept level.
+The quantity is not a required field, but it is a most useful field. How
+the quantity is filled depends on the drug strength pattern. For
+quantified drugs (where the denominator_value is not missing), the
+quantity identifies the number of packages / items (in case of multiple
+dose packages). However, in case of non-quantified drugs (where the
+denominator_value is missing), the quantity identifies the volume /
+total number of actuations or others dispensed / prescribed. The tables
+are identical to the overall just including two more columns at the
+beginning.  
+
+| Column          | Description               |
+|:----------------|:--------------------------|
+| drug_concept_id | ID of the drug concept.   |
+| drug            | Name of the drug concept. |
+
+``` r
+DT::datatable(result$drugQuantityByConcept, rownames = FALSE)
+```

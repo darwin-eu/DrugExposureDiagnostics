@@ -1,0 +1,52 @@
+# Routes
+
+## Run the route check
+
+All possible routes can be seen in athena.
+<https://athena.ohdsi.org/search-terms/terms?vocabulary=SNOMED&invalidReason=Valid&domain=Route&page=1&pageSize=15&query=>
+
+``` r
+library(DrugExposureDiagnostics)
+cdm <- mockDrugExposure()
+result <- executeChecks(
+  cdm = cdm,
+  checks = "route"
+)
+```
+
+## Route Overall
+
+This shows the routes of the drug records summarised on ingredient
+level.
+
+``` r
+DT::datatable(result$drugRoutesOverall,
+  rownames = FALSE
+)
+```
+
+| Column                | Description                                                                                                                                                                                             |
+|:----------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ingredient_concept_id | Concept ID of ingredient.                                                                                                                                                                               |
+| ingredient            | Name of drug ingredient.                                                                                                                                                                                |
+| route_concept_id      | Concept ID of route                                                                                                                                                                                     |
+| route_type            | Concept name for route                                                                                                                                                                                  |
+| n_records             | Number of records for ingredient concept. If n_records is the same as n_sample this means that there are more records but the number was cut at the pre-specified sample number for efficiency reasons. |
+| n_sample              | The pre-specified maximum sample. If n_records is smaller than the sample it means that sampling was ignored because the total number of records was already too small.                                 |
+| n_person              | Number of individuals.                                                                                                                                                                                  |
+| result_obscured       | TRUE if count has been suppressed due to being below the minimum cell count, otherwise FALSE.                                                                                                           |
+
+## Route by drug concept
+
+This shows the route of the drug records on the drug concept level. The
+tables are identical to the overall just including two more columns at
+the beginning.  
+
+| Column          | Description               |
+|:----------------|:--------------------------|
+| drug_concept_id | ID of the drug concept.   |
+| drug            | Name of the drug concept. |
+
+``` r
+DT::datatable(result$drugRoutesByConcept, rownames = FALSE)
+```
