@@ -1,6 +1,6 @@
 Package: DrugExposureDiagnostics
 Title: Diagnostics for OMOP Common Data Model Drug Records
-Version: 1.1.4
+Version: 1.1.5
 Authors@R: c(
     person("Ger", "Inberg", email = "g.inberg@erasmusmc.nl", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8993-8748")),
@@ -38,8 +38,7 @@ Imports:
     glue (>= 1.5.0),
     DrugUtilisation (>= 0.7.0),
     omopgenerics (>= 0.2.3),
-    R6,
-    clock
+    R6
 Suggests: 
     testthat (>= 3.0.0),
     duckdb,

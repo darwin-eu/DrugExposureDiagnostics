@@ -26,8 +26,8 @@ test_that("check summary calculation overall", {
 
   result <- summariseTimeBetween(testData, "ingredient_drug_records", byConcept = FALSE, sampleSize = 100)
 
-  expect_identical(result$minimum_time_between_days, 59)
-  expect_identical(result$maximum_time_between_days, 671)
+  expect_identical(as.double(result$minimum_time_between_days), 59)
+  expect_identical(as.double(result$maximum_time_between_days), 671)
   expect_identical(round(as.numeric(result$q05_time_between_days), 1), 74.5)
 
   DBI::dbDisconnect(attr(testData, "dbcon"), shutdown = TRUE)
@@ -39,8 +39,8 @@ test_that("check summary calculation by concept", {
   result <- summariseTimeBetween(testData, "ingredient_drug_records", byConcept = TRUE, sampleSize = 100) %>%
     dplyr::arrange(drug_concept_id)
 
-  expect_identical(result$minimum_time_between_days, c(59, 214))
-  expect_identical(result$maximum_time_between_days, c(671, 214))
+  expect_identical(as.double(result$minimum_time_between_days), c(59, 214))
+  expect_identical(as.double(result$maximum_time_between_days), c(671, 214))
   expect_identical(round(as.numeric(result$q05_time_between_days), 1), c(89.6, 214))
 
   DBI::dbDisconnect(attr(testData, "dbcon"), shutdown = TRUE)

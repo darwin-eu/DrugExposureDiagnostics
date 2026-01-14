@@ -301,7 +301,7 @@ mockDrugExposure <- function(drug_exposure = NULL,
       source_release_date = as.Date("2022-08-12"),
       cdm_release_date = as.Date("2022-08-12"),
       cdm_version = "5.4",
-      cdm_version_concept_id = "756265",
+      cdm_version_concept_id = 756265,
       vocabulary_version = "v5.0 22-JUN-22"
     )
 

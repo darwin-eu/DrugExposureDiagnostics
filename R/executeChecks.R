@@ -128,6 +128,7 @@ executeChecks <- function(cdm,
 
   # add metadata
   metaData <- CDMConnector::snapshot(cdm) %>%
+    dplyr::select(-dplyr::one_of("cdm_data_hash")) %>%
     dplyr::mutate(package_version = as.character(utils::packageVersion("DrugExposureDiagnostics")))
   resultList <- append(resultList, list("metadata" = metaData))
 

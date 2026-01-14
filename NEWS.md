@@ -1,5 +1,9 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 1.1.5
+* Make compatible with newest CDMConnector (#327)
+* Remove additional performance columns when merging results in shiny app (#325)
+
 # DrugExposureDiagnostics 1.1.4
 * Fix error in executeChecks (#312)
 * Fix running daysBetween check on certain db (#313)
