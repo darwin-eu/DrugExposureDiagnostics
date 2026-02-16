@@ -52,7 +52,7 @@ obscureCounts <- function(table,
     }
 
     # if any count col is less than minCellCount and larger than zero, replace colNames with substitute
-    if (!is.null(checkColNames)) {
+    if (!is.null(checkColNames) && nrow(table) > 0) {
       table <- table %>%
         dplyr::rowwise() %>%
         dplyr::mutate(result_obscured = any(dplyr::across(dplyr::all_of(checkColNames), ~ (. < minCellCount & . > 0)))) %>%

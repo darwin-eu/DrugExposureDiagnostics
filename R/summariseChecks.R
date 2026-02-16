@@ -75,16 +75,16 @@ summariseChecks <- function(resultList) {
           tidyr::pivot_wider(names_from = .data$variable, values_from = .data$missing) %>%
           dplyr::mutate(
             missing_quantity_exp_start_end_days_supply =
-              glue::glue("
+              as.character(glue::glue("
         {.data$n_missing_quantity}, {.data$n_missing_drug_exposure_start_date}, {.data$n_missing_drug_exposure_end_date}, {.data$n_missing_days_supply}")
-          ) %>%
+          )) %>%
           dplyr::select("missing_quantity_exp_start_end_days_supply", "ingredient_concept_id"),
         by = "ingredient_concept_id"
       )
   } else {
     diagnosticsSummary <- diagnosticsSummary %>%
       dplyr::mutate(
-        missing_quantity_exp_start_end_days_supply = NA)
+        missing_quantity_exp_start_end_days_supply = NA_character_)
   }
 
   # drug type
@@ -160,8 +160,8 @@ summariseChecks <- function(resultList) {
         ) %>% tidyr::pivot_wider(names_from = .data$estimate_name, values_from = .data$estimate_value) %>%
         dplyr::mutate(
           n_dose_and_missingness =
-            glue::glue(paste("{.data$count} ({.data$count_missing}, {.data$percentage_missing}%)"))
-        ) %>%
+            as.character(glue::glue(paste("{.data$count} ({.data$count_missing}, {.data$percentage_missing}%)"))
+        )) %>%
         dplyr::select("ingredient_concept_id", "n_dose_and_missingness"),
       by = "ingredient_concept_id"
     )
@@ -210,16 +210,16 @@ summariseChecks <- function(resultList) {
         ) %>%
         dplyr::mutate(
           median_daily_dose_q05_q95 =
-            glue::glue(paste("{.data$median} ({.data$q05}-{.data$q95}) [{.data$unit}]"))
-        ) %>%
+            as.character(glue::glue(paste("{.data$median} ({.data$q05}-{.data$q95}) [{.data$unit}]"))
+        )) %>%
         dplyr::select("ingredient_concept_id", "median_daily_dose_q05_q95"),
       by = "ingredient_concept_id"
     )
   } else {
     diagnosticsSummary <- diagnosticsSummary %>%
       dplyr::mutate(
-        n_dose_and_missingness = NA,
-        median_daily_dose_q05_q95 = NA)
+        n_dose_and_missingness = NA_character_,
+        median_daily_dose_q05_q95 = NA_character_)
   }
 
   diagnosticsSummary <- diagnosticsSummary %>%

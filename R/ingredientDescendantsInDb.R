@@ -207,7 +207,7 @@ ingredientDescendantsInDb <- function(cdm,
       )
   } else {
     dbConceptsTable <- dbConceptsTable %>%
-      dplyr::mutate(dose_form = NA)
+      dplyr::mutate(dose_form = as.character(NA))
   }
   # store result
   dbConceptsTable <- computeDBQuery(

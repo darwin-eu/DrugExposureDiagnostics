@@ -14,11 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-measureMemoryUsage <- function(func, ...) {
-  memUsed <- as.numeric(pryr::mem_change(func(...)))
-  return(memUsed)
-}
-
 #' Run benchmark for ExecuteSingleIngredient
 #'
 #' @param cdm CDMConnector reference object
@@ -114,6 +109,51 @@ runBenchmarkExecuteSingleIngredient <- function(cdm,
     dplyr::select(-ingredient) %>%
     omopgenerics::newSummarisedResult()
 
-
   return(result)
+}
+
+measureMemoryUsage <- function(func, ...) {
+  memUsed <- as.numeric(mem_change(func(...)))
+  return(memUsed)
+}
+
+#' How much memory is currently used by R?
+#'
+#' R breaks down memory usage into Vcells (memory used by vectors) and
+#' Ncells (memory used by everything else). However, neither this distinction
+#' nor the "gc trigger" and "max used" columns are typically important. What
+#' we're usually most interested in is the the first column: the total memory
+#' used. This function wraps around \code{gc()} to return the total amount of
+#' memory (in megabytes) currently used by R.
+#'
+#' @return Megabytes of ram used by R objects.
+mem_used <- function() {
+  show_bytes(sum(gc()[, 1] * c(node_size(), 8)))
+}
+
+node_size <- function() {
+  bit <- 8L * .Machine$sizeof.pointer
+  if (!(bit == 32L || bit == 64L)) {
+    stop("Unknown architecture", call. = FALSE)
+  }
+
+  if (bit == 32L) 28L else 56L
+}
+
+#' Determine change in memory from running code
+#'
+#' @param code Code to evaluate.
+#' @return Change in memory (in megabytes) before and after running code.
+mem_change <- function(code) {
+  start <- mem_used()
+
+  expr <- substitute(code)
+  eval(expr, parent.frame())
+  rm(code, expr)
+
+  show_bytes(mem_used() - start)
+}
+
+show_bytes <- function(x) {
+  structure(x, class = "pryr_bytes")
 }
