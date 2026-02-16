@@ -55,6 +55,10 @@
   table.
 - [`ingredientDescendantsInDb()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ingredientDescendantsInDb.md)
   : Get the descendants for the given ingredients
+- [`mem_change()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/mem_change.md)
+  : Determine change in memory from running code
+- [`mem_used()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/mem_used.md)
+  : How much memory is currently used by R?
 - [`metaDataPanel`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/metaDataPanel.md)
   : metaDataPanel
 - [`mockDrugExposure()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/mockDrugExposure.md)

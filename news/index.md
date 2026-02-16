@@ -2,6 +2,13 @@
 
 ## DrugExposureDiagnostics (development version)
 
+## DrugExposureDiagnostics 1.1.6
+
+CRAN release: 2026-02-16
+
+- Make compatible with newest dplyr
+- Remove pryr dependency
+
 ## DrugExposureDiagnostics 1.1.5
 
 CRAN release: 2025-09-16

@@ -26,16 +26,16 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/darwin-eu/DrugExposureDiagnostics/blob/v1.1.5/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/darwin-eu/DrugExposureDiagnostics/blob/main/DESCRIPTION)
 
 Inberg G, Burn E, Burkard T (2026). *DrugExposureDiagnostics:
 Diagnostics for OMOP Common Data Model Drug Records*. R package version
-1.1.5, <https://darwin-eu.github.io/DrugExposureDiagnostics/>.
+1.1.6, <https://darwin-eu.github.io/DrugExposureDiagnostics/>.
 
     @Manual{,
       title = {DrugExposureDiagnostics: Diagnostics for OMOP Common Data Model Drug Records},
       author = {Ger Inberg and Edward Burn and Theresa Burkard},
       year = {2026},
-      note = {R package version 1.1.5},
+      note = {R package version 1.1.6},
       url = {https://darwin-eu.github.io/DrugExposureDiagnostics/},
     }

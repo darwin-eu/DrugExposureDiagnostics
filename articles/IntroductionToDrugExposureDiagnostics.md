@@ -67,14 +67,14 @@ all_checks <- executeChecks(cdm,
   filename = "your_database"
 )
 #> population after earliestStartDate smaller than sample, sampling ignored
-#> ℹ The following estimates will be computed:
+#> ℹ The following estimates will be calculated:
 #> • daily_dose: count_missing, percentage_missing, mean, sd, q05, q25, median,
 #>   q75, q95, min, max
 #> ! Table is collected to memory as not all requested estimates are supported on
 #>   the database side
-#> → Start summary of data, at 2026-01-14 08:57:49.533801
+#> → Start summary of data, at 2026-02-16 11:06:44.18327
 #> 
-#> ✔ Summary finished, at 2026-01-14 08:57:50.005062
+#> ✔ Summary finished, at 2026-02-16 11:06:44.599338
 ```
 
 The `cdm` is the database reference of the OMOP CDM using the
