@@ -26,7 +26,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/darwin-eu/DrugExposureDiagnostics/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/darwin-eu/DrugExposureDiagnostics/blob/v1.1.7/DESCRIPTION)
 
 Inberg G, Burn E, Burkard T (2026). *DrugExposureDiagnostics:
 Diagnostics for OMOP Common Data Model Drug Records*. R package version
