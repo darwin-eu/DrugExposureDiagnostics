@@ -17,9 +17,11 @@
 #' Create a summary about the diagnostics results
 #'
 #' @param resultList a list with the diagnostics results
+#' @param minCellCount minimum number of events to report, results
+#' lower than this will be obscured. If 0 all results will be reported.
 #'
 #' @return a table containing the diagnostics summary
-summariseChecks <- function(resultList) {
+summariseChecks <- function(resultList, minCellCount = 5) {
   # total by ingredient
   dose_form_table <- resultList$conceptSummary %>%
     dplyr::group_by(.data$ingredient, .data$ingredient_concept_id) %>%
@@ -45,9 +47,13 @@ summariseChecks <- function(resultList) {
   # proportion with rxnorm dose form per ingredient
   diagnosticsSummary <- diagnosticsSummary %>%
     dplyr::mutate(n_dose_form = ifelse(is.na(.data$n_dose_form), 0, .data$n_dose_form)) %>%
+    dplyr::mutate(n_dose_form = ifelse(.data$n_dose_form > 0 & .data$n_dose_form < minCellCount, NA, .data$n_dose_form)) %>%
     dplyr::mutate(
       proportion_of_records_with_dose_form =
-        glue::glue("{.data$n_dose_form} ({round(100 * .data$n_dose_form / .data$n_records, 1)}%)")
+        dplyr::if_else(is.na(.data$n_dose_form),
+                       "NA (NA%)",
+                       glue::glue("{.data$n_dose_form} ({round(100 * .data$n_dose_form / .data$n_records, 1)}%)")
+        )
     ) %>%
     dplyr::select(-.data$n_dose_form)
 
@@ -66,6 +72,8 @@ summariseChecks <- function(resultList) {
           )) %>%
           dplyr::mutate(n_records_missing_value = dplyr::if_else(is.na(.data$n_records_missing_value), 0, .data$n_records_missing_value)) %>%
           dplyr::mutate(proportion_records_missing_value = dplyr::if_else(is.na(.data$proportion_records_missing_value), 0, .data$proportion_records_missing_value)) %>%
+          dplyr::mutate(n_records_missing_value = ifelse(.data$n_records_missing_value > 0 & .data$n_records_missing_value < minCellCount, NA, .data$n_records_missing_value)) %>%
+          dplyr::mutate(proportion_records_missing_value = ifelse(.data$n_records_missing_value > 0 & .data$n_records_missing_value < minCellCount, NA, .data$proportion_records_missing_value)) %>%
           dplyr::mutate(
             missing =
               glue::glue("
@@ -91,8 +99,9 @@ summariseChecks <- function(resultList) {
   if (!is.null(resultList$drugTypesOverall)) {
     totN <- as.numeric(sum(resultList$drugTypesOverall$n_records))
     drugTypes <- resultList$drugTypesOverall %>%
-      dplyr::mutate(drug_type_n = glue::glue("
-        {.data$drug_type} ({n_records}, {round(100 * .data$n_records / .env$totN, 1)}%)"))
+      dplyr::mutate(drug_type_n = dplyr::if_else(.data$n_records > 0 & .data$n_records < minCellCount,
+                                                 glue::glue("{.data$drug_type} (NA, NA%)"),
+                                                 glue::glue("{.data$drug_type} ({n_records}, {round(100 * .data$n_records / .env$totN, 1)}%)")))
     diagnosticsSummary$proportion_of_records_by_drug_type <- paste(drugTypes$drug_type_n, collapse = ";")
   }
 
@@ -100,8 +109,9 @@ summariseChecks <- function(resultList) {
   if (!is.null(resultList$drugRoutesOverall)) {
     totN <- as.numeric(sum(resultList$drugRoutesOverall$n_records))
     routes <- resultList$drugRoutesOverall %>%
-      dplyr::mutate(route_type_n = glue::glue("
-        {.data$route_type} ({n_records}, {round(100 * .data$n_records / .env$totN, 1)}%)"))
+      dplyr::mutate(route_type_n = dplyr::if_else(.data$n_records > 0 & .data$n_records < minCellCount,
+                                                  glue::glue("{.data$route_type} (NA, NA%)"),
+                                                  glue::glue("{.data$route_type} ({n_records}, {round(100 * .data$n_records / .env$totN, 1)}%)")))
     diagnosticsSummary$proportion_of_records_by_route_type <- paste(routes$route_type_n, collapse = ";")
   }
 

@@ -473,7 +473,7 @@ executeChecksSingleIngredient <- function(cdm,
     if (verbose == TRUE) {
       start <- printDurationAndMessage("Progress: create diagnosticsSummary", start)
     }
-    result[["diagnosticsSummary"]] <- summariseChecks(resultList = result)
+    result[["diagnosticsSummary"]] <- summariseChecks(resultList = result, minCellCount = minCellCount)
   }
 
   result <- Filter(Negate(is.null), sapply(names(result),

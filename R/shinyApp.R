@@ -110,7 +110,7 @@ ShinyApp <- R6::R6Class(
           id = "ingredientConcepts",
           title = "Ingredient concepts",
           description = "Ingredient concepts",
-          plotPercentage = FALSE,
+          plotPercentage = TRUE,
           byConcept = FALSE,
           downloadFilename = "IngredientConcepts.csv",
           selectedColumns = ingredientConceptColumnsSelected

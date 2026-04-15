@@ -65,7 +65,7 @@ test_that("summariseChecks works", {
     proportion_records_missing_value = c(4, 0, 0, 1, 0, 0, 0, 0)
   )
 
-  result <- DrugExposureDiagnostics:::summariseChecks(resultList)
+  result <- DrugExposureDiagnostics:::summariseChecks(resultList, minCellCount = 0)
 
   expect_equal(
     names(result),
@@ -90,6 +90,21 @@ test_that("summariseChecks works", {
   expect_equal(unique(result$proportion_of_records_by_route_type), c("Route1 (1, 12.5%);Route2 (2, 25%);Route3 (5, 62.5%)"))
   expect_equal(result$proportion_of_records_with_dose_form, c("123 (100%)", "0 (0%)"))
   expect_equal(result$missing_quantity_exp_start_end_days_supply, c("10 (4%), 0 (0%), 0 (0%), 2 (1%)", "0 (0%), 0 (0%), 0 (0%), 0 (0%)"))
+  expect_equal(result$median_daily_dose_q05_q95, c("6 (2-10) [milligram]", "4 (2-8) [milligram]"))
+  expect_equal(result$median_quantity_q05_q95, c("10 (1-15)", "12 (2-19)"))
+  expect_equal(result$median_drug_exposure_days_q05_q95, c("5 (1-15)", "6 (2-19)"))
+  expect_equal(result$proportion_of_records_with_negative_drug_exposure_days, c("10 (10%)", "20 (20%)"))
+
+  # suppress results
+  result <- DrugExposureDiagnostics:::summariseChecks(resultList, minCellCount = 5)
+
+  expect_equal(result$ingredient, ingredients)
+  expect_equal(result$ingredient_concept_id, ingredientConceptIds)
+  expect_equal(result$n_records, c(123, 299))
+  expect_equal(unique(result$proportion_of_records_by_drug_type), c("Type1 (NA, NA%);Type2 (NA, NA%);Type3 (0, 0%)"))
+  expect_equal(unique(result$proportion_of_records_by_route_type), c("Route1 (NA, NA%);Route2 (NA, NA%);Route3 (5, 62.5%)"))
+  expect_equal(result$proportion_of_records_with_dose_form, c("123 (100%)", "0 (0%)"))
+  expect_equal(result$missing_quantity_exp_start_end_days_supply, c("10 (4%), 0 (0%), 0 (0%), NA (NA%)", "0 (0%), 0 (0%), 0 (0%), 0 (0%)"))
   expect_equal(result$median_daily_dose_q05_q95, c("6 (2-10) [milligram]", "4 (2-8) [milligram]"))
   expect_equal(result$median_quantity_q05_q95, c("10 (1-15)", "12 (2-19)"))
   expect_equal(result$median_drug_exposure_days_q05_q95, c("5 (1-15)", "6 (2-19)"))
@@ -136,7 +151,7 @@ test_that("summariseChecks partial inputs: summary, quantity and dose", {
     q95_drug_exposure_quantity = c(15, 19)
   )
 
-  result <- DrugExposureDiagnostics:::summariseChecks(resultList)
+  result <- DrugExposureDiagnostics:::summariseChecks(resultList, minCellCount = 0)
 
   expect_equal(
     names(result),
@@ -179,7 +194,7 @@ test_that("summariseChecks partial inputs: summary and quantity", {
     q95_drug_exposure_quantity = c(15, 19)
   )
 
-  result <- DrugExposureDiagnostics:::summariseChecks(resultList)
+  result <- DrugExposureDiagnostics:::summariseChecks(resultList, minCellCount = 0)
 
   expect_equal(
     names(result),
