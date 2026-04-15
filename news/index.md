@@ -2,6 +2,13 @@
 
 ## DrugExposureDiagnostics (development version)
 
+## DrugExposureDiagnostics 1.1.7
+
+- Suppress results diagnostics summary
+  ([\#332](https://github.com/darwin-eu/DrugExposureDiagnostics/issues/332))
+- Update ingredient concept plot section
+  ([\#338](https://github.com/darwin-eu/DrugExposureDiagnostics/issues/338))
+
 ## DrugExposureDiagnostics 1.1.6
 
 CRAN release: 2026-02-16
