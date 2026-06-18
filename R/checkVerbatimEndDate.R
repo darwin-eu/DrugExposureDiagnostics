@@ -80,6 +80,8 @@ checkVerbatimEndDate <- function(cdm,
 
   records <- records %>%
     dplyr::mutate(
+      minimum_verbatim_end_date = as.Date(.data$minimum_verbatim_end_date),
+      maximum_verbatim_end_date = as.Date(.data$maximum_verbatim_end_date),
       proportion_missing_verbatim_end_date = .data$n_missing_verbatim_end_date / .env$total,
       proportion_not_missing_verbatim_end_date = .data$n_not_missing_verbatim_end_date / .env$total,
       proportion_verbatim_end_date_equal_to_drug_exposure_end_date = .data$n_verbatim_end_date_equal_to_drug_exposure_end_date / .env$total,
