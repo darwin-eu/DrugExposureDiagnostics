@@ -4,10 +4,13 @@
 \alias{summariseChecks}
 \title{Create a summary about the diagnostics results}
 \usage{
-summariseChecks(resultList)
+summariseChecks(resultList, minCellCount = 5)
 }
 \arguments{
 \item{resultList}{a list with the diagnostics results}
+
+\item{minCellCount}{minimum number of events to report, results
+lower than this will be obscured. If 0 all results will be reported.}
 }
 \value{
 a table containing the diagnostics summary

@@ -47,7 +47,15 @@
 #'
 #' @examples
 #' \dontrun{
-#' db <- DBI::dbConnect(" Your database connection here ")
+#' db <- DBI::dbConnect(
+#'  RPostgres::Postgres(),
+#'  dbname = dbname,
+#'  port = port,
+#'  host = host,
+#'  user = user,
+#'  password = password,
+#'  bigint = c("numeric")
+#' )
 #' cdm <- CDMConnector::cdmFromCon(
 #'   con = db,
 #'   cdmSchema = "cdm schema name"
@@ -136,6 +144,7 @@ executeChecks <- function(cdm,
 
   # add metadata
   metaData <- CDMConnector::snapshot(cdm) %>%
+    dplyr::select(-dplyr::one_of("cdm_data_hash")) %>%
     dplyr::mutate(package_version = as.character(utils::packageVersion("DrugExposureDiagnostics")))
   resultList <- append(resultList, list("metadata" = metaData))
 
@@ -282,9 +291,11 @@ executeChecksSingleIngredient <- function(cdm,
         dplyr::compute()
     }
   } else {
-    cdm[["ingredient_drug_records"]] <- cdm[["ingredient_drug_records"]] %>%
-      dplyr::filter(.data$drug_exposure_start_date > .env$earliestStartDate) %>%
-      dplyr::compute()
+    if (!is.null(earliestStartDate)) {
+      cdm[["ingredient_drug_records"]] <- cdm[["ingredient_drug_records"]] %>%
+        dplyr::filter(.data$drug_exposure_start_date > .env$earliestStartDate) %>%
+        dplyr::compute()
+    }
 
     sampleSize <- cdm$ingredient_drug_records %>%
       dplyr::tally() %>%
@@ -478,7 +489,7 @@ executeChecksSingleIngredient <- function(cdm,
     if (verbose == TRUE) {
       start <- printDurationAndMessage("Progress: create diagnosticsSummary", start)
     }
-    result[["diagnosticsSummary"]] <- summariseChecks(resultList = result)
+    result[["diagnosticsSummary"]] <- summariseChecks(resultList = result, minCellCount = minCellCount)
   }
 
   result <- Filter(Negate(is.null), sapply(names(result),

@@ -61,9 +61,11 @@ summariseTimeBetween <- function(cdm,
   summ <- recordDays %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(c(grouping, "person_id")))) %>%
     dplyr::arrange(.data$person_id, .data$drug_exposure_start_date) %>%
-    dplyr::mutate(time_between_days = clock::date_count_between(dplyr::lag(.data$drug_exposure_start_date),
-                                                                .data$drug_exposure_start_date,
-                                                                "day")) %>%
+    dplyr::mutate(prev_drug_exposure_start_date = dplyr::lag(.data$drug_exposure_start_date)) %>%
+    dplyr::mutate(time_between_days = !!CDMConnector::datediff(start = "prev_drug_exposure_start_date",
+                                                               end = "drug_exposure_start_date",
+                                                               interval = "day")) %>%
+    dplyr::select(-.data$prev_drug_exposure_start_date) %>%
     dplyr::filter(!is.na(.data$time_between_days)) %>%
     dplyr::ungroup() %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%

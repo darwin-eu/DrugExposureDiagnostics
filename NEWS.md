@@ -1,5 +1,26 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 1.1.8
+* Fix error verbatim_end_date (#345)
+* Update documentation on connection setup 
+
+# DrugExposureDiagnostics 1.1.7
+* Suppress results diagnostics summary (#332)
+* Update ingredient concept plot section (#338)
+
+# DrugExposureDiagnostics 1.1.6
+* Make compatible with newest dplyr
+* Remove pryr dependency
+
+# DrugExposureDiagnostics 1.1.5
+* Make compatible with newest CDMConnector (#327)
+* Remove additional performance columns when merging results in shiny app (#325)
+
+# DrugExposureDiagnostics 1.1.4
+* Fix error in executeChecks (#312)
+* Fix running daysBetween check on certain db (#313)
+* Fix loading results in shiny app (#316)
+
 # DrugExposureDiagnostics 1.1.3
 * Add time in between check
 * Integration with Darwin shiny modules

@@ -159,7 +159,7 @@ dataPlotPanel <- R6::R6Class(
         output$variablesPickerUI <- renderUI({
           if (private$.id == "drugVariablesMissing") {
             data <- getData()
-            choices <- unique(data$variable)
+            choices <- na.exclude(unique(data$variable))
             pickerInput(
               inputId = shiny::NS(private$.namespace, "variablesPicker"),
               label = "Variables",
@@ -215,23 +215,28 @@ dataPlotPanel <- R6::R6Class(
             choices = private$.ingredients,
             options = list(`actions-box` = TRUE),
             multiple = F,
-            selected = private$.ingredients
+            selected = private$.ingredients[1]
           )
         })
 
         output$plotVariablesPickerUI <- renderUI({
-          if (private$.id == "drugVariablesMissing") {
-            data <- getPlotData()
-            choices <- unique(data$variable)
-            pickerInput(
-              inputId = shiny::NS(private$.namespace, "plotVariablesPicker"),
-              label = "Variables",
-              choices = choices,
-              options = list(`actions-box` = TRUE),
-              multiple = T,
-              selected = choices
-            )
+          data <- getPlotData()
+          choices <- na.exclude(unique(data$variable))
+          selChoices <- choices
+          multiple <- TRUE
+          if (private$.id == "ingredientConcepts") {
+            choices <- c("drug", "concept_class_id", "dose_form")
+            selChoices <- choices[1]
+            multiple <- FALSE
           }
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(private$.namespace, "plotVariablePicker"),
+            label = "Variable",
+            choices = choices,
+            options = list(`actions-box` = TRUE),
+            multiple = multiple,
+            selected = selChoices
+          )
         })
 
         getPlotData <- reactive({
@@ -243,15 +248,22 @@ dataPlotPanel <- R6::R6Class(
               dplyr::filter(database_id %in% databases) %>%
               dplyr::filter(ingredient_id == !!private$getIngredientId(ingredient))
           }
-          result
+          return(result)
         })
 
         getPlotTabData <- reactive({
           data <- getPlotData()
+          variables <- input$plotVariablePicker
           if (!is.null(data) && private$.id == "drugVariablesMissing") {
-            variables <- input$plotVariablesPicker
             data <- data %>%
               dplyr::filter(variable %in% variables)
+          }
+          if (!is.null(variables) && !is.null(data) && private$.id == "ingredientConcepts") {
+            data <- data %>%
+              dplyr::group_by(database_id, ingredient_id, ingredient, !!rlang::sym(variables)) %>%
+              dplyr::summarise(n_records = sum(n_records, na.rm = T)) %>%
+              dplyr::mutate(perc_records = round(100 * n_records / sum(n_records), 2)) %>%
+              dplyr::ungroup()
           }
           return(data)
         })
@@ -269,7 +281,7 @@ dataPlotPanel <- R6::R6Class(
             output$plot <- plotly::renderPlotly({
               plotData <- getPlotTabData()
               if (!is.null(plotData) && nrow(plotData) > 0) {
-                plot <- private$createChart(plotData, input$top_n, input$perc)
+                plot <- private$createChart(plotData, input$plotVariablePicker, input$top_n, input$perc)
                 plotly::ggplotly(plot, tooltip = c("text"))
               }
             })
@@ -294,9 +306,8 @@ dataPlotPanel <- R6::R6Class(
     },
 
     ## Functions
-    createBarChart = function(data, asPercentage = FALSE) {
+    createBarChart = function(data, xLabel = "count", yLabel = "variable") {
       if (!is.null(data) && nrow(data) > 0) {
-        xLabel <- ifelse(asPercentage, "Percentage", "Count")
         data %>%
           ggplot2::ggplot(ggplot2::aes(x = count, y = variable, fill = ingredient, text = paste0(variable, ": ", count))) +
           ggplot2::geom_bar(stat = "identity", position = ggplot2::position_dodge()) +
@@ -306,7 +317,7 @@ dataPlotPanel <- R6::R6Class(
           ) +
           ggplot2::facet_wrap(. ~ database_id) +
           ggplot2::ggtitle(private$.description) +
-          ggplot2::labs(x = xLabel)
+          ggplot2::labs(x = xLabel, y = yLabel)
       }
     },
     addBoxPlotTheme = function(plot, fontSize = 16) {
@@ -357,13 +368,15 @@ dataPlotPanel <- R6::R6Class(
       }
       return(result)
     },
-    createChart = function(data, topN = NULL, asPercentage = FALSE) {
+    createChart = function(data, variable = NULL, topN = NULL, asPercentage = FALSE) {
       if (!is.null(data) && nrow(data) > 0) {
         if (private$.id == "ingredientConcepts") {
+          columnToUse <- ifelse(asPercentage, "perc_records", "n_records")
+          xLabel <- ifelse(asPercentage, "Percentage", "Count")
           data %>%
-            dplyr::rename(variable = drug, count = n_records) %>%
+            dplyr::rename(count = columnToUse, variable = variable) %>%
             private$filterTopN(topN) %>%
-            private$createBarChart()
+            private$createBarChart(xLabel = xLabel, yLabel = variable)
         } else if (private$.id == "drugDaysSupply") {
           data %>%
             dplyr::rename(
@@ -399,10 +412,11 @@ dataPlotPanel <- R6::R6Class(
             private$createBarChart()
         } else if (private$.id == "drugVariablesMissing") {
           columnToUse <- ifelse(asPercentage, "perc_records_missing_value", "n_records_missing_value")
+          xLabel <- ifelse(asPercentage, "Percentage", "Count")
           data %>%
             dplyr::rename(count = columnToUse) %>%
             private$filterTopN(topN) %>%
-            private$createBarChart(asPercentage = asPercentage)
+            private$createBarChart(xLabel = xLabel, yLabel = "variables missing")
         } else if (private$.id == "drugVerbatimEndDate") {
           cols <- colnames(data)[!colnames(data) %in% c(
             "database_id", "ingredient_concept_id", "ingredient_id", "result_obscured",
@@ -961,7 +975,7 @@ dataPlotPanel <- R6::R6Class(
       )
 
       if (private$.plotPercentage) {
-        if (private$.id == "drugVariablesMissing") {
+        if (private$.id == "drugVariablesMissing" || private$.id == "ingredientConcepts") {
           plotFilterRow <- shiny::fluidRow(
             shiny::column(width = 3, shiny::uiOutput(shiny::NS(private$.namespace, "plotDbPickerUI"))),
             shiny::column(width = 3, shiny::uiOutput(shiny::NS(private$.namespace, "plotIngredientPickerUI"))),
