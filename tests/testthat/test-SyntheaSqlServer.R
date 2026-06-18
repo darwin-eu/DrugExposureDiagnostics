@@ -10,7 +10,8 @@ test_that("test methods against test server", {
     Database = Sys.getenv("TESTDB_NAME"),
     UID      = Sys.getenv("TESTDB_USER"),
     PWD      = Sys.getenv("TESTDB_PWD"),
-    Port     = Sys.getenv("TESTDB_PORT")
+    Port     = Sys.getenv("TESTDB_PORT"),
+    bigint = c("numeric")
   )
   cdm <- CDMConnector::cdmFromCon(con,
                                   cdmSchema = Sys.getenv("TESTDB_CDM_SCHEMA"),

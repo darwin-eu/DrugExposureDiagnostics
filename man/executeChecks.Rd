@@ -69,7 +69,15 @@ Execute given checks on Drug Exposure.
 }
 \examples{
 \dontrun{
-db <- DBI::dbConnect(" Your database connection here ")
+db <- DBI::dbConnect(
+ RPostgres::Postgres(),
+ dbname = dbname,
+ port = port,
+ host = host,
+ user = user,
+ password = password,
+ bigint = c("numeric")
+)
 cdm <- CDMConnector::cdmFromCon(
   con = db,
   cdmSchema = "cdm schema name"
