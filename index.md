@@ -8,12 +8,14 @@ drug exposure data in the OMOP CDM.
 You can install the DrugExposureDiagnostics from CRAN like this:
 
 ``` r
+
 install.packages("DrugExposureDiagnostics")
 ```
 
 or install the development version:
 
 ``` r
+
 install.packages("remotes")
 remotes::install_github("darwin-eu/DrugExposureDiagnostics")
 ```
@@ -21,39 +23,61 @@ remotes::install_github("darwin-eu/DrugExposureDiagnostics")
 ## Citation
 
 ``` r
+
 citation("DrugExposureDiagnostics")
-#> Warning in citation("DrugExposureDiagnostics"): could not determine year for
-#> 'DrugExposureDiagnostics' from package DESCRIPTION file
 #> To cite package 'DrugExposureDiagnostics' in publications use:
 #> 
-#>   Inberg G, Burn E, Burkard T (????). _DrugExposureDiagnostics:
+#>   Inberg G, Burn E, Burkard T (2026). _DrugExposureDiagnostics:
 #>   Diagnostics for OMOP Common Data Model Drug Records_. R package
-#>   version 1.1.0, https://github.com/darwin-eu/DrugExposureDiagnostics,
-#>   <https://darwin-eu.github.io/DrugExposureDiagnostics/>.
+#>   version 1.1.7, commit a2252b98a38603ab7c8342d3a91bd25a13ecf65b,
+#>   <https://github.com/darwin-eu/DrugExposureDiagnostics>.
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
 #>   @Manual{,
 #>     title = {DrugExposureDiagnostics: Diagnostics for OMOP Common Data Model Drug Records},
 #>     author = {Ger Inberg and Edward Burn and Theresa Burkard},
-#>     note = {R package version 1.1.0, https://github.com/darwin-eu/DrugExposureDiagnostics},
-#>     url = {https://darwin-eu.github.io/DrugExposureDiagnostics/},
+#>     year = {2026},
+#>     note = {R package version 1.1.7, commit a2252b98a38603ab7c8342d3a91bd25a13ecf65b},
+#>     url = {https://github.com/darwin-eu/DrugExposureDiagnostics},
 #>   }
 ```
 
 ## Example use
 
 ``` r
+
 library(DrugExposureDiagnostics)
 library(CDMConnector)
 library(dplyr)
 ```
 
+First, connect to the database. The package is using the CDMConnector
+object. You can create this object by passing a DBI connection and
+schema names. When creating a DBIConnection using dbConnect, please
+don’t forget to specify the bigint parameter (see below). If this is not
+set, you could get a merge error when running DrugExposureDiagnostics.
+More examples of how to connect your database using CDMConnector can be
+found here:
+<https://darwin-eu.github.io/CDMConnector/articles/a04_DBI_connection_examples.html>  
+Here we use the internal mock database.
+
 ``` r
+
+# conn <- DBI::dbConnect(
+#  RPostgres::Postgres(),
+#  dbname = dbname,
+#  port = port,
+#  host = host,
+#  user = user,
+#  password = password,
+#  bigint = c("numeric")
+# )
+# cdm <- CDMConnector::cdmFromCon(
+#   con = conn,
+#   cdmSchema = "cdm schema name"
+# )
 cdm <- mockDrugExposure()
-#> Note: method with signature 'DBIConnection#Id' chosen for function 'dbExistsTable',
-#>  target signature 'duckdb_connection#Id'.
-#>  "duckdb_connection#ANY" would also be valid
 ```
 
 Let´s look at the ingredient acetaminophen
@@ -63,6 +87,7 @@ We can run all the checks available in ´DrugExposureDiagnostics´ using
 the ´executeChecks´ function.
 
 ``` r
+
 all_checks <- executeChecks(
   cdm = cdm,
   ingredients = 1125315,
@@ -72,25 +97,20 @@ all_checks <- executeChecks(
   )
 )
 #> population after earliestStartDate smaller than sample, sampling ignored
-#> ℹ The following estimates will be computed:
+#> ℹ The following estimates will be calculated:
 #> • daily_dose: count_missing, percentage_missing, mean, sd, q05, q25, median,
 #>   q75, q95, min, max
 #> ! Table is collected to memory as not all requested estimates are supported on
 #>   the database side
-#> → Start summary of data, at 2024-12-19 18:52:57.147139
+#> → Start summary of data, at 2026-06-18 09:51:45.790348
 #> 
-#> Registered S3 method overwritten by 'visOmopResults':
-#>   method                 from        
-#>   tidy.summarised_result omopgenerics
-#> 
-#> ✔ Summary finished, at 2024-12-19 18:52:57.302844
-#> `sample_size` casted to character.
-#> `sample_size` eliminated from settings as all elements are NA.
+#> ✔ Summary finished, at 2026-06-18 09:51:45.995946
 ```
 
 The output is a list which contains the following set of tibbles:
 
 ``` r
+
 names(all_checks)
 #>  [1] "conceptSummary"                "missingValuesOverall"         
 #>  [3] "missingValuesByConcept"        "drugExposureDurationOverall"  
@@ -109,31 +129,32 @@ The first item contains information on the concept ids that are used in
 the database for a given ingredient.
 
 ``` r
+
 glimpse(all_checks$conceptSummary)
 #> Rows: 6
 #> Columns: 26
 #> Rowwise: 
-#> $ drug_concept_id             <int> 1127078, 40162522, 40229134, 40231925, 191…
-#> $ drug                        <chr> "acetaminophen 750 MG / Hydrocodone Bitart…
+#> $ drug_concept_id             <int> 40162522, 1127078, 40229134, 1127433, 4023…
+#> $ drug                        <chr> "acetaminophen 325 MG Oral Tablet", "aceta…
 #> $ ingredient_concept_id       <int> 1125315, 1125315, 1125315, 1125315, 112531…
 #> $ ingredient                  <chr> "acetaminophen", "acetaminophen", "acetami…
-#> $ n_records                   <int> 19, 18, 12, 10, 14, 13
-#> $ n_patients                  <int> 13, 15, 11, 9, 13, 11
+#> $ n_records                   <int> 18, 19, 12, 13, 10, 14
+#> $ n_patients                  <int> 15, 13, 11, 11, 9, 13
 #> $ domain_id                   <chr> "Drug", "Drug", "Drug", "Drug", "Drug", "D…
 #> $ vocabulary_id               <chr> "RxNorm", "RxNorm", "RxNorm", "RxNorm", "R…
 #> $ concept_class_id            <chr> "Clinical Drug", "Clinical Drug", "Clinica…
 #> $ standard_concept            <chr> "S", "S", "S", "S", "S", "S"
-#> $ concept_code                <chr> "833036", "313782", "1043400", "857005", "…
+#> $ concept_code                <chr> "313782", "833036", "1043400", "1049221", …
 #> $ valid_start_date            <date> 1970-01-01, 1970-01-01, 1970-01-01, 1970-0…
 #> $ valid_end_date              <date> 2099-12-31, 2099-12-31, 2099-12-31, 2099-1…
 #> $ invalid_reason              <chr> NA, NA, NA, NA, NA, NA
-#> $ amount_value                <dbl> 200, NA, NA, 300, 200, 200
-#> $ amount_unit_concept_id      <int> 9655, NA, NA, 9655, 9655, 9655
-#> $ numerator_value             <dbl> NA, 1, 1, NA, NA, NA
-#> $ numerator_unit_concept_id   <int> NA, 8576, 8576, NA, NA, NA
+#> $ amount_value                <dbl> 300, NA, 300, 100, 200, 100
+#> $ amount_unit_concept_id      <int> 8576, NA, 8576, 8576, 8576, 8576
+#> $ numerator_value             <dbl> NA, 3, NA, NA, NA, NA
+#> $ numerator_unit_concept_id   <int> NA, 8576, NA, NA, NA, NA
 #> $ numerator_unit              <chr> NA, NA, NA, NA, NA, NA
-#> $ denominator_value           <dbl> NA, 10, 10, NA, NA, NA
-#> $ denominator_unit_concept_id <int> NA, 8576, 8576, NA, NA, NA
+#> $ denominator_value           <dbl> NA, 1, NA, NA, NA, NA
+#> $ denominator_unit_concept_id <int> NA, 8576, NA, NA, NA, NA
 #> $ denominator_unit            <chr> NA, NA, NA, NA, NA, NA
 #> $ box_size                    <dbl> 0, 0, 0, 0, 0, 0
 #> $ amount_unit                 <chr> NA, NA, NA, NA, NA, NA
@@ -145,12 +166,12 @@ all_checks$conceptSummary %>%
 #> # Rowwise: 
 #>   drug_concept_id drug                                          
 #>             <int> <chr>                                         
-#> 1         1127078 acetaminophen 750 MG / Hydrocodone Bitartrate 
-#> 2        40162522 acetaminophen 325 MG Oral Tablet              
+#> 1        40162522 acetaminophen 325 MG Oral Tablet              
+#> 2         1127078 acetaminophen 750 MG / Hydrocodone Bitartrate 
 #> 3        40229134 acetaminophen 21.7 MG/ML / Dextromethorphan   
-#> 4        40231925 acetaminophen 325 MG / Hydrocodone Bitartrate 
-#> 5        19133768 acetaminophen 160 MG Oral Tablet              
-#> 6         1127433 acetaminophen 325 MG / Oxycodone Hydrochloride
+#> 4         1127433 acetaminophen 325 MG / Oxycodone Hydrochloride
+#> 5        40231925 acetaminophen 325 MG / Hydrocodone Bitartrate 
+#> 6        19133768 acetaminophen 160 MG Oral Tablet
 ```
 
 Other tibbles then contain information from the various checks
@@ -161,6 +182,7 @@ ingredient-related records in the drug exposure table, both overall and
 by concept.
 
 ``` r
+
 all_checks$missingValuesOverall
 #> # A tibble: 15 × 10
 #> # Rowwise:  ingredient_concept_id, ingredient
@@ -189,16 +211,16 @@ all_checks$missingValuesByConcept
 #> # Rowwise:  drug_concept_id, drug, ingredient_concept_id, ingredient
 #>    drug_concept_id drug      ingredient_concept_id ingredient variable n_records
 #>              <int> <chr>                     <int> <chr>      <chr>        <int>
-#>  1        40229134 acetamin…               1125315 acetamino… n_missi…         6
-#>  2        40229134 acetamin…               1125315 acetamino… n_missi…         6
-#>  3        40229134 acetamin…               1125315 acetamino… n_missi…         6
-#>  4        40229134 acetamin…               1125315 acetamino… n_missi…         6
-#>  5        40229134 acetamin…               1125315 acetamino… n_missi…         6
-#>  6        40229134 acetamin…               1125315 acetamino… n_missi…         6
-#>  7        40229134 acetamin…               1125315 acetamino… n_missi…         6
-#>  8        40229134 acetamin…               1125315 acetamino… n_missi…         6
-#>  9        40229134 acetamin…               1125315 acetamino… n_missi…         6
-#> 10        40229134 acetamin…               1125315 acetamino… n_missi…         6
+#>  1        19133768 acetamin…               1125315 acetamino… n_missi…         8
+#>  2        19133768 acetamin…               1125315 acetamino… n_missi…         8
+#>  3        19133768 acetamin…               1125315 acetamino… n_missi…         8
+#>  4        19133768 acetamin…               1125315 acetamino… n_missi…         8
+#>  5        19133768 acetamin…               1125315 acetamino… n_missi…         8
+#>  6        19133768 acetamin…               1125315 acetamino… n_missi…         8
+#>  7        19133768 acetamin…               1125315 acetamino… n_missi…         8
+#>  8        19133768 acetamin…               1125315 acetamino… n_missi…         8
+#>  9        19133768 acetamin…               1125315 acetamino… n_missi…         8
+#> 10        19133768 acetamin…               1125315 acetamino… n_missi…         8
 #> # ℹ 80 more rows
 #> # ℹ 6 more variables: n_sample <dbl>, n_person <dbl>,
 #> #   n_records_not_missing_value <dbl>, n_records_missing_value <dbl>,
@@ -210,6 +232,7 @@ Or we can also see a summary of drug exposure duration
 by concept.
 
 ``` r
+
 all_checks$drugExposureDurationOverall
 #> # A tibble: 1 × 18
 #> # Rowwise:  ingredient_concept_id
@@ -250,6 +273,7 @@ After running the checks we can write the CSVs to disk using the
 `writeResultToDisk` function.
 
 ``` r
+
 writeResultToDisk(all_checks,
   databaseId = "Synthea",
   outputFolder = tempdir()

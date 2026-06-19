@@ -3,6 +3,7 @@
 ## Run the Sig checks
 
 ``` r
+
 library(DrugExposureDiagnostics)
 cdm <- mockDrugExposure()
 result <- executeChecks(
@@ -18,20 +19,21 @@ level. The signetur of a prescription contains the information of when,
 how often, and how much of a drug a patient shall use.
 
 ``` r
+
 DT::datatable(result$drugSig,
   rownames = FALSE
 )
 ```
 
-| Column                | Description                                                                                                                                                                                             |
-|:----------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ingredient_concept_id | Concept ID of ingredient.                                                                                                                                                                               |
-| ingredient            | Name of drug ingredient.                                                                                                                                                                                |
-| sig                   | The signetur of a prescription. The sig is usually only available for prescription and often contains free text or only semi-standardised information.                                                  |
-| n_records             | Number of records for ingredient concept. If n_records is the same as n_sample this means that there are more records but the number was cut at the pre-specified sample number for efficiency reasons. |
-| n_sample              | The pre-specified maximum sample. If n_records is smaller than the sample it means that sampling was ignored because the total number of records was already too small.                                 |
-| n_person              | Number of individuals.                                                                                                                                                                                  |
-| result_obscured       | TRUE if count has been suppressed due to being below the minimum cell count, otherwise FALSE.                                                                                                           |
+| Column | Description |
+|:---|:---|
+| ingredient_concept_id | Concept ID of ingredient. |
+| ingredient | Name of drug ingredient. |
+| sig | The signetur of a prescription. The sig is usually only available for prescription and often contains free text or only semi-standardised information. |
+| n_records | Number of records for ingredient concept. If n_records is the same as n_sample this means that there are more records but the number was cut at the pre-specified sample number for efficiency reasons. |
+| n_sample | The pre-specified maximum sample. If n_records is smaller than the sample it means that sampling was ignored because the total number of records was already too small. |
+| n_person | Number of individuals. |
+| result_obscured | TRUE if count has been suppressed due to being below the minimum cell count, otherwise FALSE. |
 
 ## Sig by concept
 
@@ -46,5 +48,6 @@ just including two more columns at the beginning.
 | drug            | Name of the drug concept. |
 
 ``` r
+
 DT::datatable(result$drugSigByConcept, rownames = FALSE)
 ```

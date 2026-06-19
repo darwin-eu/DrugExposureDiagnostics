@@ -1,15 +1,35 @@
 # Introduction To DrugExposureDiagnostics
 
 ``` r
+
 library(DrugExposureDiagnostics)
 ```
 
-First, connect to the database. Examples of how to connect your database
-using CDMConnector can be found here:
+First, connect to the database. The package is using the CDMConnector
+object. You can create this object by passing a DBI connection and
+schema names. When creating a DBIConnection using dbConnect, please
+don’t forget to specify the bigint parameter (see below). If this is not
+set, you could get a merge error when running DrugExposureDiagnostics.
+More examples of how to connect your database using CDMConnector can be
+found here:
 <https://darwin-eu.github.io/CDMConnector/articles/a04_DBI_connection_examples.html>  
 Here we use the internal mock database.
 
 ``` r
+
+# conn <- DBI::dbConnect(
+#  RPostgres::Postgres(),
+#  dbname = dbname,
+#  port = port,
+#  host = host,
+#  user = user,
+#  password = password,
+#  bigint = c("numeric")
+# )
+# cdm <- CDMConnector::cdmFromCon(
+#   con = conn,
+#   cdmSchema = "cdm schema name"
+# )
 cdm <- mockDrugExposure()
 ```
 
@@ -49,6 +69,7 @@ specified and you want to save results to disk, it is needed to call
 results are only stored in memory.
 
 ``` r
+
 all_checks <- executeChecks(cdm,
   ingredients = c(1125315),
   subsetToConceptId = NULL,
@@ -72,9 +93,9 @@ all_checks <- executeChecks(cdm,
 #>   q75, q95, min, max
 #> ! Table is collected to memory as not all requested estimates are supported on
 #>   the database side
-#> → Start summary of data, at 2026-04-15 08:36:17.416816
+#> → Start summary of data, at 2026-06-19 09:58:11.50847
 #> 
-#> ✔ Summary finished, at 2026-04-15 08:36:17.827359
+#> ✔ Summary finished, at 2026-06-19 09:58:11.956493
 ```
 
 The `cdm` is the database reference of the OMOP CDM using the
@@ -135,6 +156,7 @@ The check “diagnosticsSummary” outputs a summary called
 Here, we see the files created:
 
 ``` r
+
 names(all_checks)
 #>  [1] "conceptSummary"                "missingValuesOverall"         
 #>  [3] "missingValuesByConcept"        "drugExposureDurationOverall"  
@@ -171,38 +193,39 @@ The `conceptSummary` in the case of acetaminophen with
 diagnostics investigation.
 
 ``` r
+
 DT::datatable(all_checks$conceptSummary,
   rownames = FALSE
 )
 ```
 
-| Column                      | Description                                                                                                                                                                 |
-|:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| drug_concept_id             | ID of the drug concept.                                                                                                                                                     |
-| drug                        | Name of the drug concept.                                                                                                                                                   |
-| ingredient_concept_id       | Concept ID of ingredient.                                                                                                                                                   |
-| ingredient                  | Name of drug ingredient for which the checks have been performed.                                                                                                           |
-| n_records                   | Number of records for drug concept.                                                                                                                                         |
-| domain_id                   | From the CONCEPT table. A foreign key to the domain table the drug concept belongs to.                                                                                      |
-| vocabulary_id               | From the CONCEPT table. A foreign key to the vocabulary table indicating from which source the drug concept has been adapted.                                               |
-| concept_class_id            | From the CONCEPT table. The concept class of the drug concept (e.g.‘Ingredient’ or ‘Clinical Drug’).                                                                        |
-| standard_concept            | From the CONCEPT table. A flag indicating whether the drug concept is standard (‘S’), a classification (‘C’), or a non-standard Source (NULL).                              |
-| concept_code                | From the CONCEPT table. The concept code represents the identifier of the Concept in the source vocabulary.                                                                 |
-| valid_start_date            | From the CONCEPT table. The date when the drug concept was first recorded                                                                                                   |
-| valid_end_date              | From the CONCEPT table. The date when the drug concept became invalid because it was deleted or superseded (updated) by a new concept.                                      |
-| invalid_reason              | From the CONCEPT table. Reason the Concept was invalidated. Possible values are D (deleted), U (replaced with an update) or NULL when valid_end_date has the default value. |
-| amount_value                | From DRUG_STRENGTH table. The numeric value or the amount of active ingredient contained within the drug product.                                                           |
-| amount_unit_concept_id      | From DRUG_STRENGTH table. The Concept representing the Unit of measure for the amount of active ingredient contained within the drug product.                               |
-| numerator_value             | From DRUG_STRENGTH table. The concentration of the active ingredient contained within the drug product.                                                                     |
-| numerator_unit_concept_id   | From DRUG_STRENGTH table. The Concept representing the Unit of measure for the concentration of active ingredient.                                                          |
-| numerator_unit              | From the CONCEPT table. The concept name associated with the numerator_unit_concept_id.                                                                                     |
-| denominator_value           | From DRUG_STRENGTH table. The amount of total liquid (or other divisible product, such as ointment, gel, spray, etc.).                                                      |
-| denominator_unit_concept_id | From DRUG_STRENGTH table. The Concept representing the denominator unit for the concentration of active ingredient.                                                         |
-| denominator_unit            | From the CONCEPT table. The concept name associated with the denominator_unit_concept_id                                                                                    |
-| box_size                    | The number of units of Clinical Branded Drug or Quantified Clinical or Branded Drug contained in a box as dispensed to the patient.                                         |
-| amount_unit                 | From DRUG_STRENGTH table.                                                                                                                                                   |
-| dose_form                   | From CONCEPT_RELATIONSHIP table. The RxNorm dose form associated with the drug concept.                                                                                     |
-| result_obscured             | TRUE if count has been suppressed due to being below the minimum cell count, otherwise FALSE.                                                                               |
+| Column | Description |
+|:---|:---|
+| drug_concept_id | ID of the drug concept. |
+| drug | Name of the drug concept. |
+| ingredient_concept_id | Concept ID of ingredient. |
+| ingredient | Name of drug ingredient for which the checks have been performed. |
+| n_records | Number of records for drug concept. |
+| domain_id | From the CONCEPT table. A foreign key to the domain table the drug concept belongs to. |
+| vocabulary_id | From the CONCEPT table. A foreign key to the vocabulary table indicating from which source the drug concept has been adapted. |
+| concept_class_id | From the CONCEPT table. The concept class of the drug concept (e.g.‘Ingredient’ or ‘Clinical Drug’). |
+| standard_concept | From the CONCEPT table. A flag indicating whether the drug concept is standard (‘S’), a classification (‘C’), or a non-standard Source (NULL). |
+| concept_code | From the CONCEPT table. The concept code represents the identifier of the Concept in the source vocabulary. |
+| valid_start_date | From the CONCEPT table. The date when the drug concept was first recorded |
+| valid_end_date | From the CONCEPT table. The date when the drug concept became invalid because it was deleted or superseded (updated) by a new concept. |
+| invalid_reason | From the CONCEPT table. Reason the Concept was invalidated. Possible values are D (deleted), U (replaced with an update) or NULL when valid_end_date has the default value. |
+| amount_value | From DRUG_STRENGTH table. The numeric value or the amount of active ingredient contained within the drug product. |
+| amount_unit_concept_id | From DRUG_STRENGTH table. The Concept representing the Unit of measure for the amount of active ingredient contained within the drug product. |
+| numerator_value | From DRUG_STRENGTH table. The concentration of the active ingredient contained within the drug product. |
+| numerator_unit_concept_id | From DRUG_STRENGTH table. The Concept representing the Unit of measure for the concentration of active ingredient. |
+| numerator_unit | From the CONCEPT table. The concept name associated with the numerator_unit_concept_id. |
+| denominator_value | From DRUG_STRENGTH table. The amount of total liquid (or other divisible product, such as ointment, gel, spray, etc.). |
+| denominator_unit_concept_id | From DRUG_STRENGTH table. The Concept representing the denominator unit for the concentration of active ingredient. |
+| denominator_unit | From the CONCEPT table. The concept name associated with the denominator_unit_concept_id |
+| box_size | The number of units of Clinical Branded Drug or Quantified Clinical or Branded Drug contained in a box as dispensed to the patient. |
+| amount_unit | From DRUG_STRENGTH table. |
+| dose_form | From CONCEPT_RELATIONSHIP table. The RxNorm dose form associated with the drug concept. |
+| result_obscured | TRUE if count has been suppressed due to being below the minimum cell count, otherwise FALSE. |
 
 ### Saving the diagnostic output
 
@@ -218,6 +241,7 @@ Create your designated “output_folder” at your desired location and put
 the path if not the working directory.
 
 ``` r
+
 writeResultToDisk(all_checks,
   databaseId = "your_database",
   outputFolder = "output_folder"
@@ -227,6 +251,7 @@ writeResultToDisk(all_checks,
 ### View results in the Shiny app & make it available for publishing
 
 ``` r
+
 viewResults(
   dataFolder = file.path(getwd(), "output_folder"),
   makePublishable = TRUE,

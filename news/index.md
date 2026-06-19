@@ -2,7 +2,15 @@
 
 ## DrugExposureDiagnostics (development version)
 
+## DrugExposureDiagnostics 1.1.8
+
+- Fix error verbatim_end_date
+  ([\#345](https://github.com/darwin-eu/DrugExposureDiagnostics/issues/345))
+- Update documentation on connection setup
+
 ## DrugExposureDiagnostics 1.1.7
+
+CRAN release: 2026-04-15
 
 - Suppress results diagnostics summary
   ([\#332](https://github.com/darwin-eu/DrugExposureDiagnostics/issues/332))
