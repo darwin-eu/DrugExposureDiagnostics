@@ -1,5 +1,9 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 1.1.8
+* Fix error verbatim_end_date (#345)
+* Update documentation on connection setup 
+
 # DrugExposureDiagnostics 1.1.7
 * Suppress results diagnostics summary (#332)
 * Update ingredient concept plot section (#338)
