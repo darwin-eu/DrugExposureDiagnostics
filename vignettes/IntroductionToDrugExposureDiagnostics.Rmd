@@ -24,19 +24,19 @@ https://darwin-eu.github.io/CDMConnector/articles/a04_DBI_connection_examples.ht
 Here we use the internal mock database. 
 
 ```{r}
-#' conn <- DBI::dbConnect(
-#'  RPostgres::Postgres(),
-#'  dbname = dbname,
-#'  port = port,
-#'  host = host,
-#'  user = user,
-#'  password = password,
-#'  bigint = c("numeric")
-#' )
-#' cdm <- CDMConnector::cdmFromCon(
-#'   con = conn,
-#'   cdmSchema = "cdm schema name"
-#' )
+# conn <- DBI::dbConnect(
+#  RPostgres::Postgres(),
+#  dbname = dbname,
+#  port = port,
+#  host = host,
+#  user = user,
+#  password = password,
+#  bigint = c("numeric")
+# )
+# cdm <- CDMConnector::cdmFromCon(
+#   con = conn,
+#   cdmSchema = "cdm schema name"
+# )
 cdm <- mockDrugExposure()
 ```
 
