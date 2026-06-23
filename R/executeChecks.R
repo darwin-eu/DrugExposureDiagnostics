@@ -256,7 +256,8 @@ executeChecksSingleIngredient <- function(cdm,
     dplyr::relocate("ingredient", .after = "ingredient_concept_id") %>%
     dplyr::relocate("numerator_unit", .after = "numerator_unit_concept_id") %>%
     dplyr::relocate("denominator_unit", .after = "denominator_unit_concept_id") %>%
-    dplyr::collect()
+    dplyr::collect() %>%
+    dplyr::select(!tidyselect::starts_with("_"))
 
   # sample
   # the ingredient overview is for all records
