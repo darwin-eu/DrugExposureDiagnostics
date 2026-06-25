@@ -205,7 +205,7 @@ executeChecksSingleIngredient <- function(cdm,
     verbose = verbose,
     tablePrefix = tablePrefix
   ) %>%
-    dplyr::compute(name = "ingredient_concepts")
+    dplyr::compute(name = "ingredient_concepts", overwrite = TRUE)
 
   if (!is.null(subsetToConceptId)) {
     includedConceptIds <- as.numeric(subsetToConceptId[subsetToConceptId > 0])
@@ -235,7 +235,7 @@ executeChecksSingleIngredient <- function(cdm,
     exposureTypeId = exposureTypeId,
     tablePrefix = tablePrefix
   ) %>%
-    dplyr::compute(name = "ingredient_drug_records")
+    dplyr::compute(name = "ingredient_drug_records", overwrite = TRUE)
 
   if (verbose == TRUE) {
     start <- printDurationAndMessage("Progress: get concepts used", start)
