@@ -59,9 +59,17 @@ obscureCounts <- function(table,
       table <- table %>%
         dplyr::rowwise() %>%
         dplyr::mutate(result_obscured = any(dplyr::across(dplyr::all_of(checkColNames), ~ (. < minCellCount & . > 0)))) %>%
-        dplyr::mutate_at(dplyr::vars(dplyr::all_of(colNames)), ~ ifelse(result_obscured, substitute, .))
+        dplyr::mutate_at(dplyr::vars(dplyr::all_of(colNames)), ~ substituteObscuredValues(., result_obscured, substitute))
     }
   }
 
   return(table)
+}
+
+substituteObscuredValues <- function(x, resultObscured, substitute) {
+  if (is.integer(x) && is.numeric(substitute) && !is.na(substitute) && substitute == as.integer(substitute)) {
+    substitute <- as.integer(substitute)
+  }
+  x[resultObscured] <- substitute
+  x
 }
