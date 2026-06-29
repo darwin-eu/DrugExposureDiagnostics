@@ -40,7 +40,7 @@ citation("DrugExposureDiagnostics")
 #> 
 #>   Inberg G, Burn E, Burkard T (????). _DrugExposureDiagnostics:
 #>   Diagnostics for OMOP Common Data Model Drug Records_. R package
-#>   version 1.1.7, https://github.com/darwin-eu/DrugExposureDiagnostics,
+#>   version 1.1.8, https://github.com/darwin-eu/DrugExposureDiagnostics,
 #>   <https://darwin-eu.github.io/DrugExposureDiagnostics/>.
 #> 
 #> A BibTeX entry for LaTeX users is
@@ -48,7 +48,7 @@ citation("DrugExposureDiagnostics")
 #>   @Manual{,
 #>     title = {DrugExposureDiagnostics: Diagnostics for OMOP Common Data Model Drug Records},
 #>     author = {Ger Inberg and Edward Burn and Theresa Burkard},
-#>     note = {R package version 1.1.7, https://github.com/darwin-eu/DrugExposureDiagnostics},
+#>     note = {R package version 1.1.8, https://github.com/darwin-eu/DrugExposureDiagnostics},
 #>     url = {https://darwin-eu.github.io/DrugExposureDiagnostics/},
 #>   }
 ```
@@ -61,27 +61,30 @@ library(CDMConnector)
 library(dplyr)
 ```
 
-First setup a database connection. The package is using the CDMConnector
+First, connect to the database. The package is using the CDMConnector
 object. You can create this object by passing a DBI connection and
 schema names. When creating a DBIConnection using dbConnect, please
-don’t forget to specify the bigint parameter. If this is not set, you
-could get a merge error when running DrugExposureDiagnostics. In this
-case we will be using the mock that is provided by the package.
+don’t forget to specify the bigint parameter (see below). If this is not
+set, you could get a merge error when running DrugExposureDiagnostics.
+More examples of how to connect your database using CDMConnector can be
+found here:
+<https://darwin-eu.github.io/CDMConnector/articles/a04_DBI_connection_examples.html>  
+Here we use the internal mock database.
 
 ``` r
-#' conn <- DBI::dbConnect(
-#'  RPostgres::Postgres(),
-#'  dbname = dbname,
-#'  port = port,
-#'  host = host,
-#'  user = user,
-#'  password = password,
-#'  bigint = c("numeric")
-#' )
-#' cdm <- CDMConnector::cdmFromCon(
-#'   con = conn,
-#'   cdmSchema = "cdm schema name"
-#' )
+# conn <- DBI::dbConnect(
+#  RPostgres::Postgres(),
+#  dbname = dbname,
+#  port = port,
+#  host = host,
+#  user = user,
+#  password = password,
+#  bigint = c("numeric")
+# )
+# cdm <- CDMConnector::cdmFromCon(
+#   con = conn,
+#   cdmSchema = "cdm schema name"
+# )
 cdm <- mockDrugExposure()
 ```
 
@@ -106,9 +109,9 @@ all_checks <- executeChecks(
 #>   q75, q95, min, max
 #> ! Table is collected to memory as not all requested estimates are supported on
 #>   the database side
-#> → Start summary of data, at 2026-06-18 06:56:58.970158
+#> → Start summary of data, at 2026-06-29 09:13:38.363196
 #> 
-#> ✔ Summary finished, at 2026-06-18 06:56:59.256113
+#> ✔ Summary finished, at 2026-06-29 09:13:38.572797
 ```
 
 The output is a list which contains the following set of tibbles:
@@ -136,21 +139,21 @@ glimpse(all_checks$conceptSummary)
 #> Rows: 6
 #> Columns: 26
 #> Rowwise: 
-#> $ drug_concept_id             <int> 1127078, 40229134, 19133768, 40231925, 401…
-#> $ drug                        <chr> "acetaminophen 750 MG / Hydrocodone Bitart…
+#> $ drug_concept_id             <int> 19133768, 1127078, 40231925, 1127433, 4022…
+#> $ drug                        <chr> "acetaminophen 160 MG Oral Tablet", "aceta…
 #> $ ingredient_concept_id       <int> 1125315, 1125315, 1125315, 1125315, 112531…
 #> $ ingredient                  <chr> "acetaminophen", "acetaminophen", "acetami…
-#> $ n_records                   <int> 19, 12, 14, 10, 18, 13
-#> $ n_patients                  <int> 13, 11, 13, 9, 15, 11
+#> $ n_records                   <int> 14, 19, 10, 13, 12, 18
+#> $ n_patients                  <int> 13, 13, 9, 11, 11, 15
 #> $ domain_id                   <chr> "Drug", "Drug", "Drug", "Drug", "Drug", "D…
 #> $ vocabulary_id               <chr> "RxNorm", "RxNorm", "RxNorm", "RxNorm", "R…
 #> $ concept_class_id            <chr> "Clinical Drug", "Clinical Drug", "Clinica…
 #> $ standard_concept            <chr> "S", "S", "S", "S", "S", "S"
-#> $ concept_code                <chr> "833036", "1043400", "282464", "857005", "…
+#> $ concept_code                <chr> "282464", "833036", "857005", "1049221", "…
 #> $ valid_start_date            <date> 1970-01-01, 1970-01-01, 1970-01-01, 1970-0…
 #> $ valid_end_date              <date> 2099-12-31, 2099-12-31, 2099-12-31, 2099-1…
 #> $ invalid_reason              <chr> NA, NA, NA, NA, NA, NA
-#> $ amount_value                <dbl> 300, 200, 300, 200, 200, 200
+#> $ amount_value                <dbl> 200, 300, 300, 100, 100, 100
 #> $ amount_unit_concept_id      <int> 9655, 9655, 9655, 9655, 9655, 9655
 #> $ numerator_value             <dbl> NA, NA, NA, NA, NA, NA
 #> $ numerator_unit_concept_id   <int> NA, NA, NA, NA, NA, NA
@@ -168,12 +171,12 @@ all_checks$conceptSummary %>%
 #> # Rowwise: 
 #>   drug_concept_id drug                                          
 #>             <int> <chr>                                         
-#> 1         1127078 acetaminophen 750 MG / Hydrocodone Bitartrate 
-#> 2        40229134 acetaminophen 21.7 MG/ML / Dextromethorphan   
-#> 3        19133768 acetaminophen 160 MG Oral Tablet              
-#> 4        40231925 acetaminophen 325 MG / Hydrocodone Bitartrate 
-#> 5        40162522 acetaminophen 325 MG Oral Tablet              
-#> 6         1127433 acetaminophen 325 MG / Oxycodone Hydrochloride
+#> 1        19133768 acetaminophen 160 MG Oral Tablet              
+#> 2         1127078 acetaminophen 750 MG / Hydrocodone Bitartrate 
+#> 3        40231925 acetaminophen 325 MG / Hydrocodone Bitartrate 
+#> 4         1127433 acetaminophen 325 MG / Oxycodone Hydrochloride
+#> 5        40229134 acetaminophen 21.7 MG/ML / Dextromethorphan   
+#> 6        40162522 acetaminophen 325 MG Oral Tablet
 ```
 
 Other tibbles then contain information from the various checks

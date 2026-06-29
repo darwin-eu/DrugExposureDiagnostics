@@ -50,22 +50,25 @@ library(CDMConnector)
 library(dplyr)
 ```
 
-First setup a database connection. The package is using the CDMConnector object. You can create this object by passing a DBI connection and schema names. When creating a DBIConnection using dbConnect, please don't forget to specify the bigint parameter (see below). If this is not set, you could get a merge error when running DrugExposureDiagnostics. 
-In this case we will be using the mock that is provided by the package.
+First, connect to the database. The package is using the CDMConnector object. You can create this object by passing a DBI connection and schema names. When creating a DBIConnection using dbConnect, please don't forget to specify the bigint parameter (see below). If this is not set, you could get a merge error when running DrugExposureDiagnostics. 
+More examples of how to connect your database using CDMConnector can be found here: 
+https://darwin-eu.github.io/CDMConnector/articles/a04_DBI_connection_examples.html \
+Here we use the internal mock database. 
+
 ```{r}
-#' conn <- DBI::dbConnect(
-#'  RPostgres::Postgres(),
-#'  dbname = dbname,
-#'  port = port,
-#'  host = host,
-#'  user = user,
-#'  password = password,
-#'  bigint = c("numeric")
-#' )
-#' cdm <- CDMConnector::cdmFromCon(
-#'   con = conn,
-#'   cdmSchema = "cdm schema name"
-#' )
+# conn <- DBI::dbConnect(
+#  RPostgres::Postgres(),
+#  dbname = dbname,
+#  port = port,
+#  host = host,
+#  user = user,
+#  password = password,
+#  bigint = c("numeric")
+# )
+# cdm <- CDMConnector::cdmFromCon(
+#   con = conn,
+#   cdmSchema = "cdm schema name"
+# )
 cdm <- mockDrugExposure()
 ```
 
