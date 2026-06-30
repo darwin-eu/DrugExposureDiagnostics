@@ -2,7 +2,16 @@
 
 ## DrugExposureDiagnostics (development version)
 
+## DrugExposureDiagnostics 1.1.9
+
+- Remove unexpected columns in output
+  ([\#349](https://github.com/darwin-eu/DrugExposureDiagnostics/issues/349))
+- Keep column types when obscuring results
+  ([\#350](https://github.com/darwin-eu/DrugExposureDiagnostics/issues/350))
+
 ## DrugExposureDiagnostics 1.1.8
+
+CRAN release: 2026-06-19
 
 - Fix error verbatim_end_date
   ([\#345](https://github.com/darwin-eu/DrugExposureDiagnostics/issues/345))
