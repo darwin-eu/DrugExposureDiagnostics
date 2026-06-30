@@ -93,9 +93,9 @@ all_checks <- executeChecks(cdm,
 #>   q75, q95, min, max
 #> ! Table is collected to memory as not all requested estimates are supported on
 #>   the database side
-#> → Start summary of data, at 2026-06-30 08:19:29.835586
+#> → Start summary of data, at 2026-06-30 08:27:46.72728
 #> 
-#> ✔ Summary finished, at 2026-06-30 08:19:30.311289
+#> ✔ Summary finished, at 2026-06-30 08:27:47.190772
 ```
 
 The `cdm` is the database reference of the OMOP CDM using the
