@@ -57,6 +57,22 @@ test_that("execute default checks, default ingredient, verbose", {
   DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
 })
 
+test_that("conceptSummary drops source columns starting with underscore", {
+  cdm <- mockDrugExposure()
+  drugStrength <- cdm$drug_strength %>%
+    dplyr::collect() %>%
+    dplyr::mutate("_src" = "source")
+  DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
+
+  cdm <- mockDrugExposure(drug_strength = drugStrength)
+  result <- executeChecksMock(cdm = cdm, checks = c())
+
+  expect_false(any(startsWith(colnames(result$conceptSummary), "_")))
+  expect_false("_src" %in% colnames(result$conceptSummary))
+
+  DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
+})
+
 test_that("execute all checks, given ingredient", {
   cdm <- mockDrugExposure()
 

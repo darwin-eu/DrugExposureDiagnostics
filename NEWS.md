@@ -1,5 +1,9 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 1.1.9
+* Remove unexpected columns in output (#349)
+* Keep column types when obscuring results (#350)
+
 # DrugExposureDiagnostics 1.1.8
 * Fix error verbatim_end_date (#345)
 * Update documentation on connection setup 

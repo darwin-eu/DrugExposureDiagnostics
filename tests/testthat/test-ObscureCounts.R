@@ -82,3 +82,24 @@ test_that("check for conceptSummary|diagnosticsSummary", {
     expect_equal(typeof(result$result_obscured), "logical")
   })
 })
+
+test_that("obscuring preserves numeric column types", {
+  table <- tibble::tibble(
+    drug_concept_id = 44818188L,
+    drug = "ceritinib",
+    ingredient_concept_id = 44818466L,
+    ingredient = "ceritinib",
+    n_records = 3L,
+    n_patients = 3L,
+    proportion_records = 0.5
+  )
+
+  result <- obscureCounts(table, "conceptSummary", minCellCount = 5, substitute = NA)
+
+  expect_equal(result$n_records, NA_integer_)
+  expect_equal(result$n_patients, NA_integer_)
+  expect_equal(typeof(result$n_records), "integer")
+  expect_equal(typeof(result$n_patients), "integer")
+  expect_equal(typeof(result$proportion_records), "double")
+})
+

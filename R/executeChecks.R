@@ -47,7 +47,15 @@
 #'
 #' @examples
 #' \dontrun{
-#' db <- DBI::dbConnect(" Your database connection here ")
+#' db <- DBI::dbConnect(
+#'  RPostgres::Postgres(),
+#'  dbname = dbname,
+#'  port = port,
+#'  host = host,
+#'  user = user,
+#'  password = password,
+#'  bigint = c("numeric")
+#' )
 #' cdm <- CDMConnector::cdmFromCon(
 #'   con = db,
 #'   cdmSchema = "cdm schema name"
@@ -248,7 +256,8 @@ executeChecksSingleIngredient <- function(cdm,
     dplyr::relocate("ingredient", .after = "ingredient_concept_id") %>%
     dplyr::relocate("numerator_unit", .after = "numerator_unit_concept_id") %>%
     dplyr::relocate("denominator_unit", .after = "denominator_unit_concept_id") %>%
-    dplyr::collect()
+    dplyr::collect() %>%
+    dplyr::select(!tidyselect::starts_with("_"))
 
   # sample
   # the ingredient overview is for all records
