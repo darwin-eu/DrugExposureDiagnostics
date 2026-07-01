@@ -45,7 +45,10 @@ summariseTimeBetween <- function(cdm,
     grouping <- c("ingredient_concept_id", "ingredient")
   }
 
+  dbConnection <- attr(cdm, "dbcon")
   records <- cdm[[drugRecordsTable]]
+  dbPlatform <- c(class(dbConnection), class(records))
+  isSqlServer <- any(grepl("sql\\s*server|sqlserver", dbPlatform, ignore.case = TRUE))
 
   recordDays <- records %>%
     dplyr::select(
@@ -65,9 +68,16 @@ summariseTimeBetween <- function(cdm,
     dplyr::mutate(time_between_days = !!CDMConnector::datediff(start = "prev_drug_exposure_start_date",
                                                                end = "drug_exposure_start_date",
                                                                interval = "day")) %>%
-    dplyr::select(-.data$prev_drug_exposure_start_date) %>%
+    dplyr::select(-dplyr::all_of("prev_drug_exposure_start_date")) %>%
     dplyr::filter(!is.na(.data$time_between_days)) %>%
-    dplyr::ungroup() %>%
+    dplyr::ungroup()
+
+  if (isTRUE(isSqlServer)) {
+    summ <- summ %>%
+      dplyr::collect()
+  }
+
+  summ <- summ %>%
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
     dplyr::summarise(
       n_records = as.integer(dplyr::n()),
