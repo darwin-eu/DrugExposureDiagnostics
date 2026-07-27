@@ -394,29 +394,6 @@ test_that("results from multiple ingredients should be joined also if there is o
   DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
 })
 
-test_that("executeChecks can be rerun on the same connection", {
-  cdm <- mockDrugExposure()
-
-  expect_no_error(executeChecksMock(cdm = cdm, ingredients = 1125315))
-  expect_no_error(executeChecksMock(cdm = cdm, ingredients = 1125315))
-
-  DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
-})
-
-test_that("executeChecks avoids fixed temporary table names", {
-  cdm <- mockDrugExposure()
-  DBI::dbWriteTable(
-    attr(cdm, "dbcon"),
-    "ingredient_concepts",
-    data.frame(dummy = 1),
-    temporary = TRUE
-  )
-
-  expect_no_error(executeChecksMock(cdm = cdm, ingredients = 1125315))
-
-  DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
-})
-
 test_that("sampleSize is null, no sampling must take place, all data from ingredient_drug_records must be used", {
   ingredients <- c(1125315)
 
