@@ -1,5 +1,8 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 1.1.10
+* Fix daysBetween check on SQL server (#352)
+
 # DrugExposureDiagnostics 1.1.9
 * Remove unexpected columns in output (#349)
 * Keep column types when obscuring results (#350)

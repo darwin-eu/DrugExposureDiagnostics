@@ -205,8 +205,7 @@ executeChecksSingleIngredient <- function(cdm,
     verbose = verbose,
     tablePrefix = tablePrefix
   ) %>%
-    dplyr::compute(name = CDMConnector::uniqueTableName()) %>%
-    omopgenerics::newCdmTable(omopgenerics::cdmSource(cdm), "ingredient_concepts")
+    dplyr::compute(name = "ingredient_concepts")
 
   if (!is.null(subsetToConceptId)) {
     includedConceptIds <- as.numeric(subsetToConceptId[subsetToConceptId > 0])
@@ -236,8 +235,7 @@ executeChecksSingleIngredient <- function(cdm,
     exposureTypeId = exposureTypeId,
     tablePrefix = tablePrefix
   ) %>%
-    dplyr::compute(name = CDMConnector::uniqueTableName()) %>%
-    omopgenerics::newCdmTable(omopgenerics::cdmSource(cdm), "ingredient_drug_records")
+    dplyr::compute(name = "ingredient_drug_records")
 
   if (verbose == TRUE) {
     start <- printDurationAndMessage("Progress: get concepts used", start)

@@ -17,11 +17,15 @@ test_that("test methods against test server", {
                                   cdmSchema = Sys.getenv("TESTDB_CDM_SCHEMA"),
                                   writeSchema = Sys.getenv("TESTDB_WRITE_SCHEMA"))
 
-  result <- executeChecks(cdm = cdm, ingredients = c(1125315), verbose = TRUE) # acetaminophen
+  result <- executeChecks(cdm = cdm,
+                          ingredients = c(1307863), #verapamil
+                          checks = DrugExposureDiagnostics:::getAllCheckOptions(),
+                          sample = 1000,
+                          verbose = TRUE)
 
   # checks
-  expect_equal(length(result), 8)
-  expect_true(all(grepl("acetaminophen", result$ingredientConcepts$concept_name)))
+  expect_equal(length(result), 23)
+  expect_true(all(grepl("verapamil", result$ingredientConcepts$concept_name)))
 
   DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE)
 })
