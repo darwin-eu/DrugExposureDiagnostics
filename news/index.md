@@ -2,7 +2,16 @@
 
 ## DrugExposureDiagnostics (development version)
 
+## DrugExposureDiagnostics 1.1.10
+
+CRAN release: 2026-07-26
+
+- Fix daysBetween check on SQL server
+  ([\#352](https://github.com/darwin-eu/DrugExposureDiagnostics/issues/352))
+
 ## DrugExposureDiagnostics 1.1.9
+
+CRAN release: 2026-06-30
 
 - Remove unexpected columns in output
   ([\#349](https://github.com/darwin-eu/DrugExposureDiagnostics/issues/349))

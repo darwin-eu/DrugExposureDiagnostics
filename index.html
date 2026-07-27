@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">DrugExposureDiagnostics</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.10</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,9 +88,11 @@
 <span><span class="co">#&gt; To cite package 'DrugExposureDiagnostics' in publications use:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Inberg G, Burn E, Burkard T (2026). _DrugExposureDiagnostics:</span></span>
-<span><span class="co">#&gt;   Diagnostics for OMOP Common Data Model Drug Records_. R package</span></span>
-<span><span class="co">#&gt;   version 1.1.7, commit a2252b98a38603ab7c8342d3a91bd25a13ecf65b,</span></span>
-<span><span class="co">#&gt;   &lt;https://github.com/darwin-eu/DrugExposureDiagnostics&gt;.</span></span>
+<span><span class="co">#&gt;   Diagnostics for OMOP Common Data Model Drug Records_.</span></span>
+<span><span class="co">#&gt;   doi:10.32614/CRAN.package.DrugExposureDiagnostics</span></span>
+<span><span class="co">#&gt;   &lt;https://doi.org/10.32614/CRAN.package.DrugExposureDiagnostics&gt;. R</span></span>
+<span><span class="co">#&gt;   package version 1.1.10,</span></span>
+<span><span class="co">#&gt;   &lt;https://CRAN.R-project.org/package=DrugExposureDiagnostics&gt;.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; A BibTeX entry for LaTeX users is</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -98,8 +100,9 @@
 <span><span class="co">#&gt;     title = {DrugExposureDiagnostics: Diagnostics for OMOP Common Data Model Drug Records},</span></span>
 <span><span class="co">#&gt;     author = {Ger Inberg and Edward Burn and Theresa Burkard},</span></span>
 <span><span class="co">#&gt;     year = {2026},</span></span>
-<span><span class="co">#&gt;     note = {R package version 1.1.7, commit a2252b98a38603ab7c8342d3a91bd25a13ecf65b},</span></span>
-<span><span class="co">#&gt;     url = {https://github.com/darwin-eu/DrugExposureDiagnostics},</span></span>
+<span><span class="co">#&gt;     note = {R package version 1.1.10},</span></span>
+<span><span class="co">#&gt;     url = {https://CRAN.R-project.org/package=DrugExposureDiagnostics},</span></span>
+<span><span class="co">#&gt;     doi = {10.32614/CRAN.package.DrugExposureDiagnostics},</span></span>
 <span><span class="co">#&gt;   }</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -143,9 +146,9 @@ Here we use the internal mock database.</p>
 <span><span class="co">#&gt;   q75, q95, min, max</span></span>
 <span><span class="co">#&gt; ! Table is collected to memory as not all requested estimates are supported on</span></span>
 <span><span class="co">#&gt;   the database side</span></span>
-<span><span class="co">#&gt; → Start summary of data, at 2026-06-18 09:51:45.790348</span></span>
+<span><span class="co">#&gt; → Start summary of data, at 2026-07-27 11:37:22.451515</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ✔ Summary finished, at 2026-06-18 09:51:45.995946</span></span></code></pre></div>
+<span><span class="co">#&gt; ✔ Summary finished, at 2026-07-27 11:37:22.67954</span></span></code></pre></div>
 <p>The output is a list which contains the following set of tibbles:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">all_checks</span><span class="op">)</span></span>
@@ -166,27 +169,27 @@ Here we use the internal mock database.</p>
 <span><span class="co">#&gt; Rows: 6</span></span>
 <span><span class="co">#&gt; Columns: 26</span></span>
 <span><span class="co">#&gt; Rowwise: </span></span>
-<span><span class="co">#&gt; $ drug_concept_id             &lt;int&gt; 40162522, 1127078, 40229134, 1127433, 4023…</span></span>
-<span><span class="co">#&gt; $ drug                        &lt;chr&gt; "acetaminophen 325 MG Oral Tablet", "aceta…</span></span>
+<span><span class="co">#&gt; $ drug_concept_id             &lt;int&gt; 40231925, 19133768, 1127078, 40162522, 402…</span></span>
+<span><span class="co">#&gt; $ drug                        &lt;chr&gt; "acetaminophen 325 MG / Hydrocodone Bitart…</span></span>
 <span><span class="co">#&gt; $ ingredient_concept_id       &lt;int&gt; 1125315, 1125315, 1125315, 1125315, 112531…</span></span>
 <span><span class="co">#&gt; $ ingredient                  &lt;chr&gt; "acetaminophen", "acetaminophen", "acetami…</span></span>
-<span><span class="co">#&gt; $ n_records                   &lt;int&gt; 18, 19, 12, 13, 10, 14</span></span>
-<span><span class="co">#&gt; $ n_patients                  &lt;int&gt; 15, 13, 11, 11, 9, 13</span></span>
+<span><span class="co">#&gt; $ n_records                   &lt;int&gt; 10, 14, 19, 18, 12, 13</span></span>
+<span><span class="co">#&gt; $ n_patients                  &lt;int&gt; 9, 13, 13, 15, 11, 11</span></span>
 <span><span class="co">#&gt; $ domain_id                   &lt;chr&gt; "Drug", "Drug", "Drug", "Drug", "Drug", "D…</span></span>
 <span><span class="co">#&gt; $ vocabulary_id               &lt;chr&gt; "RxNorm", "RxNorm", "RxNorm", "RxNorm", "R…</span></span>
 <span><span class="co">#&gt; $ concept_class_id            &lt;chr&gt; "Clinical Drug", "Clinical Drug", "Clinica…</span></span>
 <span><span class="co">#&gt; $ standard_concept            &lt;chr&gt; "S", "S", "S", "S", "S", "S"</span></span>
-<span><span class="co">#&gt; $ concept_code                &lt;chr&gt; "313782", "833036", "1043400", "1049221", …</span></span>
+<span><span class="co">#&gt; $ concept_code                &lt;chr&gt; "857005", "282464", "833036", "313782", "1…</span></span>
 <span><span class="co">#&gt; $ valid_start_date            &lt;date&gt; 1970-01-01, 1970-01-01, 1970-01-01, 1970-0…</span></span>
 <span><span class="co">#&gt; $ valid_end_date              &lt;date&gt; 2099-12-31, 2099-12-31, 2099-12-31, 2099-1…</span></span>
 <span><span class="co">#&gt; $ invalid_reason              &lt;chr&gt; NA, NA, NA, NA, NA, NA</span></span>
-<span><span class="co">#&gt; $ amount_value                &lt;dbl&gt; 300, NA, 300, 100, 200, 100</span></span>
-<span><span class="co">#&gt; $ amount_unit_concept_id      &lt;int&gt; 8576, NA, 8576, 8576, 8576, 8576</span></span>
-<span><span class="co">#&gt; $ numerator_value             &lt;dbl&gt; NA, 3, NA, NA, NA, NA</span></span>
-<span><span class="co">#&gt; $ numerator_unit_concept_id   &lt;int&gt; NA, 8576, NA, NA, NA, NA</span></span>
+<span><span class="co">#&gt; $ amount_value                &lt;dbl&gt; NA, 300, 200, 300, 300, 200</span></span>
+<span><span class="co">#&gt; $ amount_unit_concept_id      &lt;int&gt; NA, 8587, 8587, 8587, 8587, 8587</span></span>
+<span><span class="co">#&gt; $ numerator_value             &lt;dbl&gt; 2, NA, NA, NA, NA, NA</span></span>
+<span><span class="co">#&gt; $ numerator_unit_concept_id   &lt;int&gt; 8576, NA, NA, NA, NA, NA</span></span>
 <span><span class="co">#&gt; $ numerator_unit              &lt;chr&gt; NA, NA, NA, NA, NA, NA</span></span>
-<span><span class="co">#&gt; $ denominator_value           &lt;dbl&gt; NA, 1, NA, NA, NA, NA</span></span>
-<span><span class="co">#&gt; $ denominator_unit_concept_id &lt;int&gt; NA, 8576, NA, NA, NA, NA</span></span>
+<span><span class="co">#&gt; $ denominator_value           &lt;dbl&gt; 1, NA, NA, NA, NA, NA</span></span>
+<span><span class="co">#&gt; $ denominator_unit_concept_id &lt;int&gt; 8576, NA, NA, NA, NA, NA</span></span>
 <span><span class="co">#&gt; $ denominator_unit            &lt;chr&gt; NA, NA, NA, NA, NA, NA</span></span>
 <span><span class="co">#&gt; $ box_size                    &lt;dbl&gt; 0, 0, 0, 0, 0, 0</span></span>
 <span><span class="co">#&gt; $ amount_unit                 &lt;chr&gt; NA, NA, NA, NA, NA, NA</span></span>
@@ -198,12 +201,12 @@ Here we use the internal mock database.</p>
 <span><span class="co">#&gt; # Rowwise: </span></span>
 <span><span class="co">#&gt;   drug_concept_id drug                                          </span></span>
 <span><span class="co">#&gt;             &lt;int&gt; &lt;chr&gt;                                         </span></span>
-<span><span class="co">#&gt; 1        40162522 acetaminophen 325 MG Oral Tablet              </span></span>
-<span><span class="co">#&gt; 2         1127078 acetaminophen 750 MG / Hydrocodone Bitartrate </span></span>
-<span><span class="co">#&gt; 3        40229134 acetaminophen 21.7 MG/ML / Dextromethorphan   </span></span>
-<span><span class="co">#&gt; 4         1127433 acetaminophen 325 MG / Oxycodone Hydrochloride</span></span>
-<span><span class="co">#&gt; 5        40231925 acetaminophen 325 MG / Hydrocodone Bitartrate </span></span>
-<span><span class="co">#&gt; 6        19133768 acetaminophen 160 MG Oral Tablet</span></span></code></pre></div>
+<span><span class="co">#&gt; 1        40231925 acetaminophen 325 MG / Hydrocodone Bitartrate </span></span>
+<span><span class="co">#&gt; 2        19133768 acetaminophen 160 MG Oral Tablet              </span></span>
+<span><span class="co">#&gt; 3         1127078 acetaminophen 750 MG / Hydrocodone Bitartrate </span></span>
+<span><span class="co">#&gt; 4        40162522 acetaminophen 325 MG Oral Tablet              </span></span>
+<span><span class="co">#&gt; 5        40229134 acetaminophen 21.7 MG/ML / Dextromethorphan   </span></span>
+<span><span class="co">#&gt; 6         1127433 acetaminophen 325 MG / Oxycodone Hydrochloride</span></span></code></pre></div>
 <p>Other tibbles then contain information from the various checks performed.</p>
 <p>For example, we can see a summary of missingness for the ingredient-related records in the drug exposure table, both overall and by concept.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -345,7 +348,7 @@ Here we use the internal mock database.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>
