@@ -16,16 +16,18 @@
 
 #' Check time in between drug records per person and report the summary
 #'
+#' This check requires complete exposure sequences, so `executeChecks()` runs it
+#' on all eligible records rather than on the record-level sample used by other
+#' checks.
+#'
 #' @param cdm CDMConnector reference object
 #' @param drugRecordsTable a modified version of the drug exposure table, default "ingredient_drug_records"
 #' @param byConcept whether to get result by drug concept
-#' @param sampleSize the sample size given in execute checks
 #'
 #' @return a table with the stats about the time between
 summariseTimeBetween <- function(cdm,
                                  drugRecordsTable = "ingredient_drug_records",
-                                 byConcept = TRUE,
-                                 sampleSize = 10000) {
+                                 byConcept = TRUE) {
   errorMessage <- checkmate::makeAssertCollection()
   checkDbType(cdm = cdm, messageStore = errorMessage)
   checkTableExists(
@@ -81,7 +83,6 @@ summariseTimeBetween <- function(cdm,
     dplyr::group_by(dplyr::across(dplyr::all_of(grouping))) %>%
     dplyr::summarise(
       n_records = as.integer(dplyr::n()),
-      n_sample = .env$sampleSize,
       n_person = dplyr::n_distinct(.data$person_id),
       minimum_time_between_days = min(.data$time_between_days, na.rm = T),
       q05_time_between_days = stats::quantile(

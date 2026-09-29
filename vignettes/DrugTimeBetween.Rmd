@@ -1,0 +1,83 @@
+---
+title: "Drug Time Between"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Drug Time Between}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+options(rmarkdown.html_vignette.check_title = FALSE)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Run the drug time-between check
+
+```{r setup}
+library(DrugExposureDiagnostics)
+cdm <- mockDrugExposure()
+result <- executeChecks(
+  cdm = cdm,
+  checks = "daysBetween",
+  sample = 10
+)
+```
+
+## Drug time between overall
+
+This check calculates the number of days between the start dates of consecutive
+drug exposure records for each person, summarised at the ingredient level.
+Only people with at least two records in the relevant group contribute an
+interval.
+
+`sample` is **not used** for this check. Sampling individual records would
+remove records from a person's exposure sequence and create artificial gaps.
+Therefore, even when a sample size is supplied to `executeChecks()`, the
+time-between check uses all eligible records after any `earliestStartDate`,
+concept, and exposure-type restrictions have been applied. The other requested
+checks continue to use the record-level sample.
+
+```{r}
+knitr::kable(result$drugTimeBetween)
+```
+
+| Column | Description |
+| :--- | :--- |
+| ingredient_concept_id | Concept ID of the ingredient. |
+| ingredient | Name of the drug ingredient. |
+| n_records | Number of consecutive-record intervals included in the summary. This is not the number of original drug exposure records. |
+| n_person | Number of people contributing at least one consecutive-record interval. |
+| minimum_time_between_days | Minimum number of days between consecutive drug exposure start dates. |
+| q05_time_between_days | 5th percentile of the time between consecutive records. |
+| q10_time_between_days | 10th percentile of the time between consecutive records. |
+| q25_time_between_days | 25th percentile of the time between consecutive records. |
+| median_time_between_days | Median number of days between consecutive records. |
+| q75_time_between_days | 75th percentile of the time between consecutive records. |
+| q90_time_between_days | 90th percentile of the time between consecutive records. |
+| q95_time_between_days | 95th percentile of the time between consecutive records. |
+| maximum_time_between_days | Maximum number of days between consecutive drug exposure start dates. |
+| result_obscured | `TRUE` if counts have been suppressed because they are below the minimum cell count; otherwise `FALSE`. |
+
+There is no `n_sample` column because this check does not use a record-level
+sample.
+
+## Drug time between by drug concept
+
+When `byConcept = TRUE` (the default), `drugTimeBetweenByConcept` provides the
+same summary separately for each drug concept. Consecutive records are
+determined within person and drug concept.
+
+| Column | Description |
+| :--- | :--- |
+| drug_concept_id | ID of the drug concept. |
+| drug | Name of the drug concept. |
+
+```{r, eval=FALSE}
+knitr::kable(result$drugTimeBetweenByConcept)
+```

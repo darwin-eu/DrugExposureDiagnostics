@@ -102,3 +102,4 @@ test_that("obscuring preserves numeric column types", {
   expect_equal(typeof(result$n_patients), "integer")
   expect_equal(typeof(result$proportion_records), "double")
 })
+

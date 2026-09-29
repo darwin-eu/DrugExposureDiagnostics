@@ -16,8 +16,8 @@ getTestData <- function(verbatimEndDate = as.Date(c(NA, "2017-01-03", "2018-05-0
 test_that("checkVerbatimEndDate overall", {
   testData <- getTestData()
   result <- checkVerbatimEndDate(testData, "ingredient_drug_records",
-                                 byConcept = FALSE,
-                                 sampleSize = 100
+    byConcept = FALSE,
+    sampleSize = 100
   ) %>%
     dplyr::collect() %>%
     dplyr::mutate(ingredient_concept_id = as.numeric(.data$ingredient_concept_id)) %>%
@@ -42,8 +42,8 @@ test_that("checkVerbatimEndDate byConcept", {
   testData <- getTestData()
 
   result <- checkVerbatimEndDate(testData, "ingredient_drug_records",
-                                 byConcept = TRUE,
-                                 sampleSize = 100
+    byConcept = TRUE,
+    sampleSize = 100
   ) %>%
     dplyr::collect() %>%
     dplyr::mutate(ingredient_concept_id = as.numeric(.data$ingredient_concept_id)) %>%
@@ -54,10 +54,10 @@ test_that("checkVerbatimEndDate byConcept", {
   expect_equal(result$n_records, c(1, 1, 2, 1))
   expect_equal(result$n_verbatim_end_date_and_drug_exposure_end_date_differ, c(0, 0, 1, 1))
   expect_equal(sum(result$n_records), sum(result$n_not_missing_verbatim_end_date) +
-                 sum(result$n_missing_verbatim_end_date))
+    sum(result$n_missing_verbatim_end_date))
   expect_equal(sum(result$n_records), sum(result$n_verbatim_end_date_and_drug_exposure_end_date_differ) +
-                 sum(result$n_verbatim_end_date_and_drug_exposure_end_date_differ) +
-                 sum(result$n_missing_verbatim_end_date))
+    sum(result$n_verbatim_end_date_and_drug_exposure_end_date_differ) +
+    sum(result$n_missing_verbatim_end_date))
 
 
   DBI::dbDisconnect(attr(testData, "dbcon"), shutdown = TRUE)

@@ -104,7 +104,9 @@ a negative one will be excluded. If NULL, all concept IDs for an ingredient will
 `checks` allows to select the checks to be executed, by default the missing values, the
 exposure duration and the quantity checks will be run.
 The `minCellCount` is minimum number of events to report, numbers lower than this will be obscured.
-`sample` is the number of samples, by default, 10.000 drug record samples will be used.  
+`sample` is the number of samples, by default, 10.000 drug record samples will be used.
+The `daysBetween` check is an exception: it uses all eligible records because
+record-level sampling would alter the sequence of records within a person.  
 The `tablePrefix` is an optional value for database tables that will be created during executeChecks.
 `earliestStartDate` is the earliest data from which drug records will be included.
 `verbose` is a parameter that enables the printing of messages to the console.

@@ -27,7 +27,9 @@
 #' "verbatimEndDate", "dose", "sig", "quantity", "daysBetween" and "diagnosticsSummary"
 #' @param minCellCount minimum number of events to report- results
 #' lower than this will be obscured. If 0 all results will be reported.
-#' @param sample the number of samples, default 10.000
+#' @param sample the number of samples, default 10.000. The `daysBetween` check
+#' uses all eligible records, because record-level sampling would alter the
+#' sequence of records within a person.
 #' @param tablePrefix The stem for the permanent tables that will
 #' be created when running the diagnostics. Permanent tables will be created using
 #' this prefix, and any existing tables that start with this will be at risk of
@@ -157,7 +159,9 @@ executeChecks <- function(cdm,
 #' exposure duration and the quantity.
 #' @param minCellCount minimum number of events to report- results
 #' lower than this will be obscured. If 0 all results will be reported.
-#' @param sampleSize the number of samples, default 10.000
+#' @param sampleSize the number of samples, default 10.000. The `daysBetween`
+#' check uses all eligible records, because record-level sampling would alter
+#' the sequence of records within a person.
 #' @param tablePrefix The stem for the permanent tables that will
 #' be created when running the diagnostics. Permanent tables will be created using
 #' this prefix, and any existing tables that start with this will be at risk of
@@ -262,6 +266,18 @@ executeChecksSingleIngredient <- function(cdm,
   # sample
   # the ingredient overview is for all records
   # all other checks for sampled records
+  # Time between records is calculated on all eligible records: sampling
+  # individual records would create artificial gaps between exposures.
+  if ("daysBetween" %in% checks) {
+    timeBetweenRecords <- cdm[["ingredient_drug_records"]]
+    if (!is.null(earliestStartDate)) {
+      timeBetweenRecords <- timeBetweenRecords %>%
+        dplyr::filter(.data$drug_exposure_start_date > .env$earliestStartDate)
+    }
+    cdm[["ingredient_drug_records_time_between"]] <- timeBetweenRecords %>%
+      dplyr::compute()
+  }
+
   if (!is.null(sampleSize)) {
     if (verbose == TRUE) {
       start <- printDurationAndMessage("Progress: sampling drug records", start)
@@ -432,9 +448,9 @@ executeChecksSingleIngredient <- function(cdm,
       start <- printDurationAndMessage("Progress: check time between drug records", start)
     }
 
-    drugTimeBetween <- summariseTimeBetween(cdm, "ingredient_drug_records", byConcept = FALSE, sampleSize = sampleSize) %>% dplyr::collect()
+    drugTimeBetween <- summariseTimeBetween(cdm, "ingredient_drug_records_time_between", byConcept = FALSE) %>% dplyr::collect()
     if (isTRUE(byConcept)) {
-      drugTimeBetweenByConcept <- summariseTimeBetween(cdm, "ingredient_drug_records", byConcept = byConcept, sampleSize = sampleSize) %>% dplyr::collect()
+      drugTimeBetweenByConcept <- summariseTimeBetween(cdm, "ingredient_drug_records_time_between", byConcept = byConcept) %>% dplyr::collect()
     }
   }
 

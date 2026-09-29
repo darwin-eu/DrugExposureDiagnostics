@@ -9,8 +9,9 @@ export(runBenchmarkExecuteSingleIngredient)
 export(viewResults)
 export(writeResultToDisk)
 import(R6)
-importFrom(graphics,hist)
 importFrom(magrittr,"%>%")
-importFrom(rlang,":=")
-importFrom(rlang,.data)
-importFrom(rlang,.env)
+importFrom(rlang,
+  ":=",
+  .data,
+  .env
+)

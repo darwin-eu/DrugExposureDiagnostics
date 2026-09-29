@@ -1,6 +1,6 @@
 Package: DrugExposureDiagnostics
 Title: Diagnostics for OMOP Common Data Model Drug Records
-Version: 1.1.10
+Version: 1.2.0
 Authors@R: c(
     person("Ger", "Inberg", email = "g.inberg@erasmusmc.nl", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8993-8748")),
@@ -24,7 +24,6 @@ Description: Ingredient specific diagnostics for drug exposure records in the Ob
 License: Apache License (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 Depends: 
     R (>= 4.0)
 Imports: 
@@ -50,7 +49,6 @@ Suggests:
     lubridate,
     tibble,
     DT,
-    graphics,
     SqlRender,
     ggplot2,
     plotly,
@@ -94,3 +92,4 @@ Collate:
     'summariseChecks.R'
     'utils-pipe.R'
     'utils.R'
+Config/roxygen2/version: 8.1.0

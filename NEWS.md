@@ -1,5 +1,8 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 1.2.0
+* DaysBetween: remove sampling and add a vignette(#354)
+
 # DrugExposureDiagnostics 1.1.10
 * Fix daysBetween check on SQL server (#352)
 

@@ -33,7 +33,9 @@ exposure duration and the quantity.}
 \item{minCellCount}{minimum number of events to report- results
 lower than this will be obscured. If 0 all results will be reported.}
 
-\item{sampleSize}{the number of samples, default 10.000}
+\item{sampleSize}{the number of samples, default 10.000. The \code{daysBetween}
+check uses all eligible records, because record-level sampling would alter
+the sequence of records within a person.}
 
 \item{tablePrefix}{The stem for the permanent tables that will
 be created when running the diagnostics. Permanent tables will be created using

@@ -24,7 +24,7 @@ getInputDb <- function() {
 test_that("check summary calculation overall", {
   testData <- getInputDb()
 
-  result <- summariseTimeBetween(testData, "ingredient_drug_records", byConcept = FALSE, sampleSize = 100)
+  result <- summariseTimeBetween(testData, "ingredient_drug_records", byConcept = FALSE)
 
   expect_identical(as.double(result$minimum_time_between_days), 59)
   expect_identical(as.double(result$maximum_time_between_days), 671)
@@ -36,7 +36,7 @@ test_that("check summary calculation overall", {
 test_that("check summary calculation by concept", {
   testData <- getInputDb()
 
-  result <- summariseTimeBetween(testData, "ingredient_drug_records", byConcept = TRUE, sampleSize = 100) %>%
+  result <- summariseTimeBetween(testData, "ingredient_drug_records", byConcept = TRUE) %>%
     dplyr::arrange(drug_concept_id)
 
   expect_identical(as.double(result$minimum_time_between_days), c(59, 214))
@@ -44,4 +44,30 @@ test_that("check summary calculation by concept", {
   expect_identical(round(as.numeric(result$q05_time_between_days), 1), c(89.6, 214))
 
   DBI::dbDisconnect(attr(testData, "dbcon"), shutdown = TRUE)
+})
+
+test_that("time between results do not use the record sample", {
+  sampledCdm <- mockDrugExposure(drug_exposure_size = 1000, patient_size = 10)
+  sampledResult <- executeChecks(
+    cdm = sampledCdm,
+    checks = "daysBetween",
+    sample = 5,
+    minCellCount = 0,
+    earliestStartDate = NULL
+  )
+
+  fullCdm <- mockDrugExposure(drug_exposure_size = 1000, patient_size = 10)
+  fullResult <- executeChecks(
+    cdm = fullCdm,
+    checks = "daysBetween",
+    sample = NULL,
+    minCellCount = 0,
+    earliestStartDate = NULL
+  )
+
+  expect_equal(sampledResult$drugTimeBetween, fullResult$drugTimeBetween)
+  expect_false("n_sample" %in% names(sampledResult$drugTimeBetween))
+
+  DBI::dbDisconnect(attr(sampledCdm, "dbcon"), shutdown = TRUE)
+  DBI::dbDisconnect(attr(fullCdm, "dbcon"), shutdown = TRUE)
 })

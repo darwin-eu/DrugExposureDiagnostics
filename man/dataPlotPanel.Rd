@@ -3,42 +3,38 @@
 \name{dataPlotPanel}
 \alias{dataPlotPanel}
 \title{dataPlotPanel}
-\value{
-\code{self}
-}
 \description{
 Class to view the data and plot view of a DrugExposureDiagnostics check.
 }
 \section{Super class}{
-\code{\link[DrugExposureDiagnostics:ShinyModule]{DrugExposureDiagnostics::ShinyModule}} -> \code{dataPlotPanel}
+\code{\link[DrugExposureDiagnostics:ShinyModule]{ShinyModule}} -> \code{dataPlotPanel}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-dataPlotPanel-new}{\code{dataPlotPanel$new()}}
-\item \href{#method-dataPlotPanel-uiBody}{\code{dataPlotPanel$uiBody()}}
-\item \href{#method-dataPlotPanel-clone}{\code{dataPlotPanel$clone()}}
+  \itemize{
+    \item \href{#method-dataPlotPanel-initialize}{\code{dataPlotPanel$new()}}
+    \item \href{#method-dataPlotPanel-uiBody}{\code{dataPlotPanel$uiBody()}}
+    \item \href{#method-dataPlotPanel-clone}{\code{dataPlotPanel$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="DrugExposureDiagnostics" data-topic="ShinyModule" data-id="UI"><a href='../../DrugExposureDiagnostics/html/ShinyModule.html#method-ShinyModule-UI'><code>DrugExposureDiagnostics::ShinyModule$UI()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DrugExposureDiagnostics" data-topic="ShinyModule" data-id="server"><a href='../../DrugExposureDiagnostics/html/ShinyModule.html#method-ShinyModule-server'><code>DrugExposureDiagnostics::ShinyModule$server()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DrugExposureDiagnostics" data-topic="ShinyModule" data-id="validate"><a href='../../DrugExposureDiagnostics/html/ShinyModule.html#method-ShinyModule-validate'><code>DrugExposureDiagnostics::ShinyModule$validate()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DrugExposureDiagnostics" data-topic="ShinyModule" data-id="UI"><a href='../../DrugExposureDiagnostics/html/ShinyModule.html#method-ShinyModule-UI'><code>ShinyModule$UI()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DrugExposureDiagnostics" data-topic="ShinyModule" data-id="server"><a href='../../DrugExposureDiagnostics/html/ShinyModule.html#method-ShinyModule-server'><code>ShinyModule$server()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DrugExposureDiagnostics" data-topic="ShinyModule" data-id="validate"><a href='../../DrugExposureDiagnostics/html/ShinyModule.html#method-ShinyModule-validate'><code>ShinyModule$validate()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-dataPlotPanel-new"></a>}}
-\if{latex}{\out{\hypertarget{method-dataPlotPanel-new}{}}}
-\subsection{Method \code{new()}}{
-Method to handle the back-end.
+\if{html}{\out{<a id="method-dataPlotPanel-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-dataPlotPanel-initialize}{}}}
+\subsection{\code{dataPlotPanel$new()}}{
+  Method to handle the back-end.
 
 
-Initializer method
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{dataPlotPanel$new(
+  Initializer method
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{dataPlotPanel$new(
   data,
   dataByConcept = NULL,
   id,
@@ -48,73 +44,67 @@ Initializer method
   byConcept,
   downloadFilename,
   selectedColumns = colnames(data)
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{data}}{data from the \code{DrugExposureDiagnostics} package.}
-
-\item{\code{dataByConcept}}{data by drug concept}
-
-\item{\code{id}}{the unique reference id for the module}
-
-\item{\code{title}}{panel title}
-
-\item{\code{description}}{description of data table}
-
-\item{\code{plotPercentage}}{if plot by percentage should be enabled}
-
-\item{\code{byConcept}}{add byConcept switch}
-
-\item{\code{downloadFilename}}{filename of the downloaded file}
-
-\item{\code{selectedColumns}}{default selected columns}
-
-\item{\code{input}}{(\code{input})\cr
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{data}}{data from the \code{DrugExposureDiagnostics} package.}
+      \item{\code{dataByConcept}}{data by drug concept}
+      \item{\code{id}}{the unique reference id for the module}
+      \item{\code{title}}{panel title}
+      \item{\code{description}}{description of data table}
+      \item{\code{plotPercentage}}{if plot by percentage should be enabled}
+      \item{\code{byConcept}}{add byConcept switch}
+      \item{\code{downloadFilename}}{filename of the downloaded file}
+      \item{\code{selectedColumns}}{default selected columns}
+      \item{\code{input}}{(\code{input})\cr
 Input from the server function.}
-
-\item{\code{output}}{(\code{output})\cr
+      \item{\code{output}}{(\code{output})\cr
 Output from the server function.}
-
-\item{\code{session}}{(\code{session})\cr
+      \item{\code{session}}{(\code{session})\cr
 Session from the server function.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (\code{NULL})
+  }
 }
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(\code{NULL})
-}
-}
+
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-dataPlotPanel-uiBody"></a>}}
 \if{latex}{\out{\hypertarget{method-dataPlotPanel-uiBody}{}}}
-\subsection{Method \code{uiBody()}}{
-Method to include a \link[shiny]{tabPanel} to include the body.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{dataPlotPanel$uiBody()}\if{html}{\out{</div>}}
+\subsection{\code{dataPlotPanel$uiBody()}}{
+  Method to include a \link[shiny]{tabPanel} to include the body.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{dataPlotPanel$uiBody()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (\code{tabItem})
+  }
 }
 
-\subsection{Returns}{
-(\code{tabItem})
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-dataPlotPanel-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-dataPlotPanel-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{dataPlotPanel$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{dataPlotPanel$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{dataPlotPanel$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }
