@@ -1,6 +1,9 @@
 # Check time in between drug records per person and report the summary
 
-Check time in between drug records per person and report the summary
+This check requires complete exposure sequences, so
+[`executeChecks()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/executeChecks.md)
+runs it on all eligible records rather than on the record-level sample
+used by other checks.
 
 ## Usage
 
@@ -8,8 +11,7 @@ Check time in between drug records per person and report the summary
 summariseTimeBetween(
   cdm,
   drugRecordsTable = "ingredient_drug_records",
-  byConcept = TRUE,
-  sampleSize = 10000
+  byConcept = TRUE
 )
 ```
 
@@ -27,10 +29,6 @@ summariseTimeBetween(
 - byConcept:
 
   whether to get result by drug concept
-
-- sampleSize:
-
-  the sample size given in execute checks
 
 ## Value
 

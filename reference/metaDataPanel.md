@@ -2,20 +2,16 @@
 
 Class to view the metadata of a DrugExposureDiagnostics execution.
 
-## Value
-
-`self`
-
 ## Super class
 
-[`DrugExposureDiagnostics::ShinyModule`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.md)
+[`ShinyModule`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.md)
 -\> `metaDataPanel`
 
 ## Methods
 
 ### Public methods
 
-- [`metaDataPanel$new()`](#method-metaDataPanel-new)
+- [`metaDataPanel$new()`](#method-metaDataPanel-initialize)
 
 - [`metaDataPanel$uiBody()`](#method-metaDataPanel-uiBody)
 
@@ -23,13 +19,13 @@ Class to view the metadata of a DrugExposureDiagnostics execution.
 
 Inherited methods
 
-- [`DrugExposureDiagnostics::ShinyModule$UI()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.html#method-UI)
-- [`DrugExposureDiagnostics::ShinyModule$server()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.html#method-server)
-- [`DrugExposureDiagnostics::ShinyModule$validate()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.html#method-validate)
+- [`ShinyModule$UI()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.html#method-UI)
+- [`ShinyModule$server()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.html#method-server)
+- [`ShinyModule$validate()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.html#method-validate)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `metaDataPanel$new()`
 
 Method to handle the back-end.
 
@@ -82,7 +78,7 @@ Initializer method
 
 ------------------------------------------------------------------------
 
-### Method `uiBody()`
+### `metaDataPanel$uiBody()`
 
 Method to include a
 [tabPanel](https://rdrr.io/pkg/shiny/man/tabPanel.html) to include the
@@ -98,7 +94,7 @@ body.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `metaDataPanel$clone()`
 
 The objects of this class are cloneable with this method.
 

@@ -13,6 +13,8 @@
   Sig](https://darwin-eu.github.io/DrugExposureDiagnostics/articles/DrugSig.md):
 - [Drug Source
   Concepts](https://darwin-eu.github.io/DrugExposureDiagnostics/articles/DrugSourceConcepts.md):
+- [Drug Time
+  Between](https://darwin-eu.github.io/DrugExposureDiagnostics/articles/DrugTimeBetween.md):
 - [Drug
   Types](https://darwin-eu.github.io/DrugExposureDiagnostics/articles/DrugTypes.md):
 - [Introduction To

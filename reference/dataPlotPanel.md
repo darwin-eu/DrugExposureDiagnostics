@@ -2,20 +2,16 @@
 
 Class to view the data and plot view of a DrugExposureDiagnostics check.
 
-## Value
-
-`self`
-
 ## Super class
 
-[`DrugExposureDiagnostics::ShinyModule`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.md)
+[`ShinyModule`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.md)
 -\> `dataPlotPanel`
 
 ## Methods
 
 ### Public methods
 
-- [`dataPlotPanel$new()`](#method-dataPlotPanel-new)
+- [`dataPlotPanel$new()`](#method-dataPlotPanel-initialize)
 
 - [`dataPlotPanel$uiBody()`](#method-dataPlotPanel-uiBody)
 
@@ -23,13 +19,13 @@ Class to view the data and plot view of a DrugExposureDiagnostics check.
 
 Inherited methods
 
-- [`DrugExposureDiagnostics::ShinyModule$UI()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.html#method-UI)
-- [`DrugExposureDiagnostics::ShinyModule$server()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.html#method-server)
-- [`DrugExposureDiagnostics::ShinyModule$validate()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.html#method-validate)
+- [`ShinyModule$UI()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.html#method-UI)
+- [`ShinyModule$server()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.html#method-server)
+- [`ShinyModule$validate()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.html#method-validate)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `dataPlotPanel$new()`
 
 Method to handle the back-end.
 
@@ -108,7 +104,7 @@ Initializer method
 
 ------------------------------------------------------------------------
 
-### Method `uiBody()`
+### `dataPlotPanel$uiBody()`
 
 Method to include a
 [tabPanel](https://rdrr.io/pkg/shiny/man/tabPanel.html) to include the
@@ -124,7 +120,7 @@ body.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `dataPlotPanel$clone()`
 
 The objects of this class are cloneable with this method.
 

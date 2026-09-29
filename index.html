@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">DrugExposureDiagnostics</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,6 +41,7 @@
     <li><a class="dropdown-item" href="articles/DrugDuration.html">DrugDuration</a></li>
     <li><a class="dropdown-item" href="articles/DrugSig.html">Drug Sig</a></li>
     <li><a class="dropdown-item" href="articles/DrugSourceConcepts.html">Drug Source Concepts</a></li>
+    <li><a class="dropdown-item" href="articles/DrugTimeBetween.html">Drug Time Between</a></li>
     <li><a class="dropdown-item" href="articles/DrugTypes.html">Drug Types</a></li>
     <li><a class="dropdown-item" href="articles/IntroductionToDrugExposureDiagnostics.html">Introduction To DrugExposureDiagnostics</a></li>
     <li><a class="dropdown-item" href="articles/Missingness.html">Missingness</a></li>
@@ -91,7 +92,7 @@
 <span><span class="co">#&gt;   Diagnostics for OMOP Common Data Model Drug Records_.</span></span>
 <span><span class="co">#&gt;   doi:10.32614/CRAN.package.DrugExposureDiagnostics</span></span>
 <span><span class="co">#&gt;   &lt;https://doi.org/10.32614/CRAN.package.DrugExposureDiagnostics&gt;. R</span></span>
-<span><span class="co">#&gt;   package version 1.1.10,</span></span>
+<span><span class="co">#&gt;   package version 1.2.0,</span></span>
 <span><span class="co">#&gt;   &lt;https://CRAN.R-project.org/package=DrugExposureDiagnostics&gt;.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; A BibTeX entry for LaTeX users is</span></span>
@@ -100,7 +101,7 @@
 <span><span class="co">#&gt;     title = {DrugExposureDiagnostics: Diagnostics for OMOP Common Data Model Drug Records},</span></span>
 <span><span class="co">#&gt;     author = {Ger Inberg and Edward Burn and Theresa Burkard},</span></span>
 <span><span class="co">#&gt;     year = {2026},</span></span>
-<span><span class="co">#&gt;     note = {R package version 1.1.10},</span></span>
+<span><span class="co">#&gt;     note = {R package version 1.2.0},</span></span>
 <span><span class="co">#&gt;     url = {https://CRAN.R-project.org/package=DrugExposureDiagnostics},</span></span>
 <span><span class="co">#&gt;     doi = {10.32614/CRAN.package.DrugExposureDiagnostics},</span></span>
 <span><span class="co">#&gt;   }</span></span></code></pre></div>
@@ -146,9 +147,9 @@ Here we use the internal mock database.</p>
 <span><span class="co">#&gt;   q75, q95, min, max</span></span>
 <span><span class="co">#&gt; ! Table is collected to memory as not all requested estimates are supported on</span></span>
 <span><span class="co">#&gt;   the database side</span></span>
-<span><span class="co">#&gt; → Start summary of data, at 2026-07-27 11:37:22.451515</span></span>
+<span><span class="co">#&gt; → Start summary of data, at 2026-09-29 08:59:47.911416</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ✔ Summary finished, at 2026-07-27 11:37:22.67954</span></span></code></pre></div>
+<span><span class="co">#&gt; ✔ Summary finished, at 2026-09-29 08:59:48.140317</span></span></code></pre></div>
 <p>The output is a list which contains the following set of tibbles:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">all_checks</span><span class="op">)</span></span>
@@ -169,27 +170,27 @@ Here we use the internal mock database.</p>
 <span><span class="co">#&gt; Rows: 6</span></span>
 <span><span class="co">#&gt; Columns: 26</span></span>
 <span><span class="co">#&gt; Rowwise: </span></span>
-<span><span class="co">#&gt; $ drug_concept_id             &lt;int&gt; 40231925, 19133768, 1127078, 40162522, 402…</span></span>
-<span><span class="co">#&gt; $ drug                        &lt;chr&gt; "acetaminophen 325 MG / Hydrocodone Bitart…</span></span>
+<span><span class="co">#&gt; $ drug_concept_id             &lt;int&gt; 40229134, 1127433, 19133768, 40231925, 401…</span></span>
+<span><span class="co">#&gt; $ drug                        &lt;chr&gt; "acetaminophen 21.7 MG/ML / Dextromethorph…</span></span>
 <span><span class="co">#&gt; $ ingredient_concept_id       &lt;int&gt; 1125315, 1125315, 1125315, 1125315, 112531…</span></span>
 <span><span class="co">#&gt; $ ingredient                  &lt;chr&gt; "acetaminophen", "acetaminophen", "acetami…</span></span>
-<span><span class="co">#&gt; $ n_records                   &lt;int&gt; 10, 14, 19, 18, 12, 13</span></span>
-<span><span class="co">#&gt; $ n_patients                  &lt;int&gt; 9, 13, 13, 15, 11, 11</span></span>
+<span><span class="co">#&gt; $ n_records                   &lt;int&gt; 12, 13, 14, 10, 18, 19</span></span>
+<span><span class="co">#&gt; $ n_patients                  &lt;int&gt; 11, 11, 13, 9, 15, 13</span></span>
 <span><span class="co">#&gt; $ domain_id                   &lt;chr&gt; "Drug", "Drug", "Drug", "Drug", "Drug", "D…</span></span>
 <span><span class="co">#&gt; $ vocabulary_id               &lt;chr&gt; "RxNorm", "RxNorm", "RxNorm", "RxNorm", "R…</span></span>
 <span><span class="co">#&gt; $ concept_class_id            &lt;chr&gt; "Clinical Drug", "Clinical Drug", "Clinica…</span></span>
 <span><span class="co">#&gt; $ standard_concept            &lt;chr&gt; "S", "S", "S", "S", "S", "S"</span></span>
-<span><span class="co">#&gt; $ concept_code                &lt;chr&gt; "857005", "282464", "833036", "313782", "1…</span></span>
+<span><span class="co">#&gt; $ concept_code                &lt;chr&gt; "1043400", "1049221", "282464", "857005", …</span></span>
 <span><span class="co">#&gt; $ valid_start_date            &lt;date&gt; 1970-01-01, 1970-01-01, 1970-01-01, 1970-0…</span></span>
 <span><span class="co">#&gt; $ valid_end_date              &lt;date&gt; 2099-12-31, 2099-12-31, 2099-12-31, 2099-1…</span></span>
 <span><span class="co">#&gt; $ invalid_reason              &lt;chr&gt; NA, NA, NA, NA, NA, NA</span></span>
-<span><span class="co">#&gt; $ amount_value                &lt;dbl&gt; NA, 300, 200, 300, 300, 200</span></span>
-<span><span class="co">#&gt; $ amount_unit_concept_id      &lt;int&gt; NA, 8587, 8587, 8587, 8587, 8587</span></span>
-<span><span class="co">#&gt; $ numerator_value             &lt;dbl&gt; 2, NA, NA, NA, NA, NA</span></span>
-<span><span class="co">#&gt; $ numerator_unit_concept_id   &lt;int&gt; 8576, NA, NA, NA, NA, NA</span></span>
+<span><span class="co">#&gt; $ amount_value                &lt;dbl&gt; 100, 200, 300, 300, 100, 300</span></span>
+<span><span class="co">#&gt; $ amount_unit_concept_id      &lt;int&gt; 8576, 8576, 8576, 8576, 8576, 8576</span></span>
+<span><span class="co">#&gt; $ numerator_value             &lt;dbl&gt; NA, NA, NA, NA, NA, NA</span></span>
+<span><span class="co">#&gt; $ numerator_unit_concept_id   &lt;int&gt; NA, NA, NA, NA, NA, NA</span></span>
 <span><span class="co">#&gt; $ numerator_unit              &lt;chr&gt; NA, NA, NA, NA, NA, NA</span></span>
-<span><span class="co">#&gt; $ denominator_value           &lt;dbl&gt; 1, NA, NA, NA, NA, NA</span></span>
-<span><span class="co">#&gt; $ denominator_unit_concept_id &lt;int&gt; 8576, NA, NA, NA, NA, NA</span></span>
+<span><span class="co">#&gt; $ denominator_value           &lt;dbl&gt; NA, NA, NA, NA, NA, NA</span></span>
+<span><span class="co">#&gt; $ denominator_unit_concept_id &lt;int&gt; NA, NA, NA, NA, NA, NA</span></span>
 <span><span class="co">#&gt; $ denominator_unit            &lt;chr&gt; NA, NA, NA, NA, NA, NA</span></span>
 <span><span class="co">#&gt; $ box_size                    &lt;dbl&gt; 0, 0, 0, 0, 0, 0</span></span>
 <span><span class="co">#&gt; $ amount_unit                 &lt;chr&gt; NA, NA, NA, NA, NA, NA</span></span>
@@ -201,12 +202,12 @@ Here we use the internal mock database.</p>
 <span><span class="co">#&gt; # Rowwise: </span></span>
 <span><span class="co">#&gt;   drug_concept_id drug                                          </span></span>
 <span><span class="co">#&gt;             &lt;int&gt; &lt;chr&gt;                                         </span></span>
-<span><span class="co">#&gt; 1        40231925 acetaminophen 325 MG / Hydrocodone Bitartrate </span></span>
-<span><span class="co">#&gt; 2        19133768 acetaminophen 160 MG Oral Tablet              </span></span>
-<span><span class="co">#&gt; 3         1127078 acetaminophen 750 MG / Hydrocodone Bitartrate </span></span>
-<span><span class="co">#&gt; 4        40162522 acetaminophen 325 MG Oral Tablet              </span></span>
-<span><span class="co">#&gt; 5        40229134 acetaminophen 21.7 MG/ML / Dextromethorphan   </span></span>
-<span><span class="co">#&gt; 6         1127433 acetaminophen 325 MG / Oxycodone Hydrochloride</span></span></code></pre></div>
+<span><span class="co">#&gt; 1        40229134 acetaminophen 21.7 MG/ML / Dextromethorphan   </span></span>
+<span><span class="co">#&gt; 2         1127433 acetaminophen 325 MG / Oxycodone Hydrochloride</span></span>
+<span><span class="co">#&gt; 3        19133768 acetaminophen 160 MG Oral Tablet              </span></span>
+<span><span class="co">#&gt; 4        40231925 acetaminophen 325 MG / Hydrocodone Bitartrate </span></span>
+<span><span class="co">#&gt; 5        40162522 acetaminophen 325 MG Oral Tablet              </span></span>
+<span><span class="co">#&gt; 6         1127078 acetaminophen 750 MG / Hydrocodone Bitartrate</span></span></code></pre></div>
 <p>Other tibbles then contain information from the various checks performed.</p>
 <p>For example, we can see a summary of missingness for the ingredient-related records in the drug exposure table, both overall and by concept.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -238,16 +239,16 @@ Here we use the internal mock database.</p>
 <span><span class="co">#&gt; # Rowwise:  drug_concept_id, drug, ingredient_concept_id, ingredient</span></span>
 <span><span class="co">#&gt;    drug_concept_id drug      ingredient_concept_id ingredient variable n_records</span></span>
 <span><span class="co">#&gt;              &lt;int&gt; &lt;chr&gt;                     &lt;int&gt; &lt;chr&gt;      &lt;chr&gt;        &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1        19133768 acetamin…               1125315 acetamino… n_missi…         8</span></span>
-<span><span class="co">#&gt;  2        19133768 acetamin…               1125315 acetamino… n_missi…         8</span></span>
-<span><span class="co">#&gt;  3        19133768 acetamin…               1125315 acetamino… n_missi…         8</span></span>
-<span><span class="co">#&gt;  4        19133768 acetamin…               1125315 acetamino… n_missi…         8</span></span>
-<span><span class="co">#&gt;  5        19133768 acetamin…               1125315 acetamino… n_missi…         8</span></span>
-<span><span class="co">#&gt;  6        19133768 acetamin…               1125315 acetamino… n_missi…         8</span></span>
-<span><span class="co">#&gt;  7        19133768 acetamin…               1125315 acetamino… n_missi…         8</span></span>
-<span><span class="co">#&gt;  8        19133768 acetamin…               1125315 acetamino… n_missi…         8</span></span>
-<span><span class="co">#&gt;  9        19133768 acetamin…               1125315 acetamino… n_missi…         8</span></span>
-<span><span class="co">#&gt; 10        19133768 acetamin…               1125315 acetamino… n_missi…         8</span></span>
+<span><span class="co">#&gt;  1        40229134 acetamin…               1125315 acetamino… n_missi…         6</span></span>
+<span><span class="co">#&gt;  2        40229134 acetamin…               1125315 acetamino… n_missi…         6</span></span>
+<span><span class="co">#&gt;  3        40229134 acetamin…               1125315 acetamino… n_missi…         6</span></span>
+<span><span class="co">#&gt;  4        40229134 acetamin…               1125315 acetamino… n_missi…         6</span></span>
+<span><span class="co">#&gt;  5        40229134 acetamin…               1125315 acetamino… n_missi…         6</span></span>
+<span><span class="co">#&gt;  6        40229134 acetamin…               1125315 acetamino… n_missi…         6</span></span>
+<span><span class="co">#&gt;  7        40229134 acetamin…               1125315 acetamino… n_missi…         6</span></span>
+<span><span class="co">#&gt;  8        40229134 acetamin…               1125315 acetamino… n_missi…         6</span></span>
+<span><span class="co">#&gt;  9        40229134 acetamin…               1125315 acetamino… n_missi…         6</span></span>
+<span><span class="co">#&gt; 10        40229134 acetamin…               1125315 acetamino… n_missi…         6</span></span>
 <span><span class="co">#&gt; # ℹ 80 more rows</span></span>
 <span><span class="co">#&gt; # ℹ 6 more variables: n_sample &lt;dbl&gt;, n_person &lt;dbl&gt;,</span></span>
 <span><span class="co">#&gt; #   n_records_not_missing_value &lt;dbl&gt;, n_records_missing_value &lt;dbl&gt;,</span></span>

@@ -31,10 +31,14 @@ Here we use the internal mock database.
 #   cdmSchema = "cdm schema name"
 # )
 cdm <- mockDrugExposure()
-#> duckdb is keeping downloaded extensions in a temporary directory:
-#> ℹ /tmp/RtmpFHwTOn/duckdb/extensions
-#> This is removed when the R session ends, so extensions are re-downloaded each session.
-#> ℹ To keep them, point `options(duckdb.extension_directory =)` or the `DUCKDB_EXTENSION_DIRECTORY` environment variable at a permanent path.
+#> duckdb keeps downloaded extensions and secrets in a temporary directory:
+#> ℹ /tmp/RtmpOlaaTb/duckdb
+#> This is removed when the R session ends.
+#> • Extensions are re-downloaded each session.
+#> • Secrets are lost.
+#> ℹ Run duckdb(shared_home = TRUE) (or create ~/.duckdb) to keep them (suitable for most users).
+#> ℹ Run duckdb(shared_home = FALSE) to accept the temporary directory (and silence this message).
+#> ℹ See ?duckdb_storage for details and alternatives.
 ```
 
 ### Drug(s) of interest
@@ -96,10 +100,10 @@ all_checks <- executeChecks(cdm,
 #> • daily_dose: count_missing, percentage_missing, mean, sd, q05, q25, median,
 #>   q75, q95, min, max
 #> ! Table is collected to memory as not all requested estimates are supported on
-#>   the database side
-#> → Start summary of data, at 2026-07-27 09:53:15.644455
+#>   the database side.
+#> → Start summary of data, at 2026-09-29 07:12:50.423279
 #> 
-#> ✔ Summary finished, at 2026-07-27 09:53:16.093054
+#> ✔ Summary finished, at 2026-09-29 07:12:50.910093
 ```
 
 The `cdm` is the database reference of the OMOP CDM using the
@@ -113,7 +117,9 @@ to be executed, by default the missing values, the exposure duration and
 the quantity checks will be run. The `minCellCount` is minimum number of
 events to report, numbers lower than this will be obscured. `sample` is
 the number of samples, by default, 10.000 drug record samples will be
-used.  
+used. The `daysBetween` check is an exception: it uses all eligible
+records because record-level sampling would alter the sequence of
+records within a person.  
 The `tablePrefix` is an optional value for database tables that will be
 created during executeChecks. `earliestStartDate` is the earliest data
 from which drug records will be included. `verbose` is a parameter that

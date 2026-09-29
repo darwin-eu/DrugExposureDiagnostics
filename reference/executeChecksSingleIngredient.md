@@ -48,7 +48,9 @@ executeChecksSingleIngredient(
 
 - sampleSize:
 
-  the number of samples, default 10.000
+  the number of samples, default 10.000. The `daysBetween` check uses
+  all eligible records, because record-level sampling would alter the
+  sequence of records within a person.
 
 - tablePrefix:
 

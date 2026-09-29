@@ -2,8 +2,6 @@
 
 Module Decorator Class
 
-Module Decorator Class
-
 ## Active bindings
 
 - `instanceId`:
@@ -38,7 +36,7 @@ Module Decorator Class
 
 ### Public methods
 
-- [`ShinyModule$new()`](#method-ShinyModule-new)
+- [`ShinyModule$new()`](#method-ShinyModule-initialize)
 
 - [`ShinyModule$validate()`](#method-ShinyModule-validate)
 
@@ -50,7 +48,7 @@ Module Decorator Class
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `ShinyModule$new()`
 
 Initializer method
 
@@ -64,7 +62,7 @@ Initializer method
 
 ------------------------------------------------------------------------
 
-### Method `validate()`
+### `ShinyModule$validate()`
 
 Validator method
 
@@ -78,7 +76,7 @@ Validator method
 
 ------------------------------------------------------------------------
 
-### Method `UI()`
+### `ShinyModule$UI()`
 
 Method to include a
 [tagList](https://rstudio.github.io/htmltools/reference/tagList.html) to
@@ -94,7 +92,7 @@ include the body.
 
 ------------------------------------------------------------------------
 
-### Method `server()`
+### `ShinyModule$server()`
 
 Method to handle the back-end.
 
@@ -122,7 +120,7 @@ Method to handle the back-end.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `ShinyModule$clone()`
 
 The objects of this class are cloneable with this method.
 

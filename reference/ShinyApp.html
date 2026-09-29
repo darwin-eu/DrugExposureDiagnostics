@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">DrugExposureDiagnostics</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,6 +24,7 @@
     <li><a class="dropdown-item" href="../articles/DrugDuration.html">DrugDuration</a></li>
     <li><a class="dropdown-item" href="../articles/DrugSig.html">Drug Sig</a></li>
     <li><a class="dropdown-item" href="../articles/DrugSourceConcepts.html">Drug Source Concepts</a></li>
+    <li><a class="dropdown-item" href="../articles/DrugTimeBetween.html">Drug Time Between</a></li>
     <li><a class="dropdown-item" href="../articles/DrugTypes.html">Drug Types</a></li>
     <li><a class="dropdown-item" href="../articles/IntroductionToDrugExposureDiagnostics.html">Introduction To DrugExposureDiagnostics</a></li>
     <li><a class="dropdown-item" href="../articles/Missingness.html">Missingness</a></li>
@@ -44,7 +45,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>DrugExposureDiagnostics ShinyApp</h1>
-      <small class="dont-index">Source: <a href="https://github.com/darwin-eu/DrugExposureDiagnostics/blob/v1.1.10/R/shinyApp.R" class="external-link"><code>R/shinyApp.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/darwin-eu/DrugExposureDiagnostics/blob/main/R/shinyApp.R" class="external-link"><code>R/shinyApp.R</code></a></small>
       <div class="d-none name"><code>ShinyApp.Rd</code></div>
     </div>
 
@@ -65,51 +66,46 @@
 </dl></div>
     <div class="section level2">
     <h2 id="super-class">Super class<a class="anchor" aria-label="anchor" href="#super-class"></a></h2>
-    <p><code><a href="ShinyModule.html">DrugExposureDiagnostics::ShinyModule</a></code> -&gt; <code>ShinyApp</code></p>
+    <p><code><a href="ShinyModule.html">ShinyModule</a></code> -&gt; <code>ShinyApp</code></p>
     </div>
     <div class="section level2">
     <h2 id="methods">Methods<a class="anchor" aria-label="anchor" href="#methods"></a></h2>
 
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
-
-<ul><li><p><a href="#method-ShinyApp-new"><code>ShinyApp$new()</code></a></p></li>
+<p></p><ul><li><p><a href="#method-ShinyApp-initialize"><code>ShinyApp$new()</code></a></p></li>
 <li><p><a href="#method-ShinyApp-clone"><code>ShinyApp$clone()</code></a></p></li>
-</ul></div><p><details open><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="DrugExposureDiagnostics" data-topic="ShinyModule" data-id="UI"><a href="ShinyModule.html#method-UI"><code>DrugExposureDiagnostics::ShinyModule$UI()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DrugExposureDiagnostics" data-topic="ShinyModule" data-id="server"><a href="ShinyModule.html#method-server"><code>DrugExposureDiagnostics::ShinyModule$server()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DrugExposureDiagnostics" data-topic="ShinyModule" data-id="validate"><a href="ShinyModule.html#method-validate"><code>DrugExposureDiagnostics::ShinyModule$validate()</code></a></span></li>
-</ul></details></p><hr><a id="method-ShinyApp-new"></a><div class="section">
-<h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
+</ul></div><p><details open><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="DrugExposureDiagnostics" data-topic="ShinyModule" data-id="UI"><a href="ShinyModule.html#method-UI"><code>ShinyModule$UI()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DrugExposureDiagnostics" data-topic="ShinyModule" data-id="server"><a href="ShinyModule.html#method-server"><code>ShinyModule$server()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DrugExposureDiagnostics" data-topic="ShinyModule" data-id="validate"><a href="ShinyModule.html#method-validate"><code>ShinyModule$validate()</code></a></span></li>
+</ul></details></p><hr><a id="method-ShinyApp-initialize"></a><div class="section">
+<h3 id="shinyapp-new-"><code>ShinyApp$new()</code><a class="anchor" aria-label="anchor" href="#shinyapp-new-"></a></h3>
 <p>Initializer method</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/ShinyApp.html">ShinyApp</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">resultList</span>, database_id <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>resultList</code></dt>
 <dd><p>(<code>list</code>) List containing the output of the checks</p></dd>
 
-
-<dt><code>database_id</code></dt>
+      <dt><code>database_id</code></dt>
 <dd><p>(<code>character</code>) Database identifier (optional)</p></dd>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
 <p>(<code>invisible(self)</code>)</p>
 </div>
 
-</div><p></p><hr><a id="method-ShinyApp-clone"></a><div class="section">
-<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
+</div>
+
+<p></p><hr><a id="method-ShinyApp-clone"></a><div class="section">
+<h3 id="shinyapp-clone-"><code>ShinyApp$clone()</code><a class="anchor" aria-label="anchor" href="#shinyapp-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ShinyApp</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
+</div><p></p><div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
@@ -119,6 +115,7 @@
 </div>
 
 </div>
+
 
     </div>
 

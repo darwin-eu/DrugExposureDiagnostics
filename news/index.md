@@ -2,6 +2,13 @@
 
 ## DrugExposureDiagnostics (development version)
 
+## DrugExposureDiagnostics 1.2.0
+
+CRAN release: 2026-09-28
+
+- DaysBetween: remove sampling and add a
+  vignette([\#354](https://github.com/darwin-eu/DrugExposureDiagnostics/issues/354))
+
 ## DrugExposureDiagnostics 1.1.10
 
 CRAN release: 2026-07-26

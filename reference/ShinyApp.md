@@ -16,26 +16,26 @@ The module consists of the following:
 
 ## Super class
 
-[`DrugExposureDiagnostics::ShinyModule`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.md)
+[`ShinyModule`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.md)
 -\> `ShinyApp`
 
 ## Methods
 
 ### Public methods
 
-- [`ShinyApp$new()`](#method-ShinyApp-new)
+- [`ShinyApp$new()`](#method-ShinyApp-initialize)
 
 - [`ShinyApp$clone()`](#method-ShinyApp-clone)
 
 Inherited methods
 
-- [`DrugExposureDiagnostics::ShinyModule$UI()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.html#method-UI)
-- [`DrugExposureDiagnostics::ShinyModule$server()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.html#method-server)
-- [`DrugExposureDiagnostics::ShinyModule$validate()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.html#method-validate)
+- [`ShinyModule$UI()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.html#method-UI)
+- [`ShinyModule$server()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.html#method-server)
+- [`ShinyModule$validate()`](https://darwin-eu.github.io/DrugExposureDiagnostics/reference/ShinyModule.html#method-validate)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `ShinyApp$new()`
 
 Initializer method
 
@@ -59,7 +59,7 @@ Initializer method
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `ShinyApp$clone()`
 
 The objects of this class are cloneable with this method.
 
