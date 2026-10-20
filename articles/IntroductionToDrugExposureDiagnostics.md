@@ -32,7 +32,7 @@ Here we use the internal mock database.
 # )
 cdm <- mockDrugExposure()
 #> duckdb keeps downloaded extensions and secrets in a temporary directory:
-#> ℹ /tmp/Rtmpn5u4Gp/duckdb
+#> ℹ /tmp/Rtmpa7vNw0/duckdb
 #> This is removed when the R session ends.
 #> • Extensions are re-downloaded each session.
 #> • Secrets are lost.
@@ -101,9 +101,9 @@ all_checks <- executeChecks(cdm,
 #>   q75, q95, min, max
 #> ! Table is collected to memory as not all requested estimates are supported on
 #>   the database side.
-#> → Start summary of data, at 2026-09-29 07:21:07.355849
+#> → Start summary of data, at 2026-10-20 07:42:02.668965
 #> 
-#> ✔ Summary finished, at 2026-09-29 07:21:07.715328
+#> ✔ Summary finished, at 2026-10-20 07:42:03.13817
 ```
 
 The `cdm` is the database reference of the OMOP CDM using the

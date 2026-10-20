@@ -2,6 +2,11 @@
 
 ## DrugExposureDiagnostics (development version)
 
+## DrugExposureDiagnostics 1.2.1
+
+- Duckdb v2 compatibility
+  ([\#356](https://github.com/darwin-eu/DrugExposureDiagnostics/issues/356))
+
 ## DrugExposureDiagnostics 1.2.0
 
 CRAN release: 2026-09-28
