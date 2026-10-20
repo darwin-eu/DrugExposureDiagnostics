@@ -1,5 +1,8 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 1.2.1
+* Duckdb v2 compatibility (#356)
+
 # DrugExposureDiagnostics 1.2.0
 * DaysBetween: remove sampling and add a vignette(#354)
 

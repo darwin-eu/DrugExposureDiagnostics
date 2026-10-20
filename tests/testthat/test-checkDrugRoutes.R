@@ -58,7 +58,8 @@ test_that("getDrugRoutes", {
   expect_equal(result$proportion_records, c(2 / 5, 3 / 5))
 
   result <- getDrugRoutes(cdm, "ingredient_drug_records", byConcept = TRUE) %>%
-    dplyr::collect()
+    dplyr::collect() %>%
+    dplyr::arrange(.data$drug_concept_id)
 
   expect_equal(nrow(result), 5)
   expect_equal(ncol(result), 10)
