@@ -28,7 +28,7 @@ If NULL (default), all concept IDs for an ingredient will be considered.}
 
 \item{checks}{the checks to be executed, by default the missing values, the
 exposure duration and the quantity. Possible options are "missing",
-"exposureDuration", "type", "route", "sourceConcept", "daysSupply",
+"exposureDuration", "type", "route", "provider", "sourceConcept", "daysSupply",
 "verbatimEndDate", "dose", "sig", "quantity" and "diagnosticsSummary"}
 
 \item{minCellCount}{minimum number of events to report- results

@@ -21,7 +21,8 @@ mockDrugExposure(
   num_unit = c(8587, 8576, 9655),
   denom_unit = c(8587, 8576, 8505),
   num_val = c(1, 2, 3),
-  seed = 1
+  seed = 1,
+  provider = NULL
 )
 }
 \arguments{
@@ -58,9 +59,11 @@ mockDrugExposure(
 \item{num_val}{vector of possible numeric numerator denominator value drug strength table}
 
 \item{seed}{seed to make results reproducible}
+
+\item{provider}{optional provider table; defaults to synthetic providers}
 }
 \value{
-CDMConnector CDM reference object to duckdb database with mock data include  concept_ancestor, concept, drug_strength, drug_exposure tables
+CDMConnector CDM reference object to duckdb database with mock data include  concept_ancestor, concept, drug_strength, drug_exposure and provider tables
 }
 \description{
 Mock Drug exposure tables for ingredients of interest

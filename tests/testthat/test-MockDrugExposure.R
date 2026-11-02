@@ -214,3 +214,24 @@ test_that("check expected errors", {
     mockDrugExposure(patient_size = -1)
   )
 })
+
+test_that("mock providers are linked to generated records", {
+  cdm <- mockDrugExposure()
+  on.exit(DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE))
+  providers <- dplyr::collect(cdm$provider)
+  records <- dplyr::collect(cdm$drug_exposure)
+  expect_equal(nrow(providers), 5)
+  expect_true(all(nzchar(providers$provider_name)))
+  expect_true(all(stats::na.omit(records$provider_id) %in% providers$provider_id))
+  expect_true(anyNA(records$provider_id))
+  expect_gt(dplyr::n_distinct(stats::na.omit(records$provider_id)), 1)
+})
+
+test_that("custom providers are used by generated records", {
+  provider <- data.frame(provider_id = c(10L, 20L), provider_name = c("A", "B"))
+  cdm <- mockDrugExposure(provider = provider)
+  on.exit(DBI::dbDisconnect(attr(cdm, "dbcon"), shutdown = TRUE))
+  expect_equal(dplyr::collect(cdm$provider)$provider_name, provider$provider_name)
+  ids <- dplyr::collect(cdm$drug_exposure)$provider_id
+  expect_setequal(stats::na.omit(ids), provider$provider_id)
+})

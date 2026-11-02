@@ -397,6 +397,12 @@ dataPlotPanel <- R6::R6Class(
             dplyr::rename(variable = drug_type, count = n_records) %>%
             private$filterTopN(topN) %>%
             private$createBarChart()
+        } else if (private$.id == "drugProviders") {
+          data %>%
+            dplyr::mutate(variable = paste0(dplyr::coalesce(.data$provider_name, "Unknown"), " (", dplyr::coalesce(as.character(.data$provider_id), "NA"), ")")) %>%
+            dplyr::rename(count = n_records) %>%
+            private$filterTopN(topN) %>%
+            private$createBarChart()
         } else if (private$.id == "drugSourceConcepts") {
           data %>%
             dplyr::rename(variable = drug_source, count = n_records) %>%

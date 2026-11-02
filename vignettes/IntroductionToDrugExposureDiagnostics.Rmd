@@ -120,6 +120,7 @@ The `tablePrefix` is an optional value for database tables that will be created 
 The check "missing" outputs the `missingValuesOverall` if `byConcept = FALSE` and additionally `missingValuesbyConcept` if `byConcept = TRUE` \
 The check "exposureDuration" outputs the `drugExposureDurationOverall` if `byConcept = FALSE` and additionally `drugExposureDurationbyConcept` if `byConcept = TRUE` \
 The check "type"  outputs the `drugTypesOverall` if `byConcept = FALSE` and additionally `drugTypesbyConcept` if `byConcept = TRUE` \
+The check "provider" outputs `drugProvidersOverall` and, when `byConcept = TRUE`, `drugProvidersByConcept`. Results include provider IDs and names, counts, and proportions of sampled ingredient records, including missing or unmatched IDs. The provider table is required. \
 The check "route"  outputs the `drugRoutesOverall` if `byConcept = FALSE` and additionally `drugRoutesbyConcept` if `byConcept = TRUE` \
 The check "sourceConcept"  outputs the `sourceConceptsOverall` (which is actually the drug concept level. It disregards the `byConcept` argument because only the drug concept level makes sense here) \
 The check "daysSupply"  outputs the `drugDaysSupplyOverall` if `byConcept = FALSE` and additionally `drugDaysSupplybyConcept` if `byConcept = TRUE` \

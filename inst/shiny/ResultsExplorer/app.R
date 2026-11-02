@@ -57,6 +57,10 @@ if (exists("drugtypesoverall")) {
   data <- append(data, list("drugTypesOverall" = drugtypesoverall,
                             "drugTypesByConcept" = drugtypesbyconcept))
 }
+if (exists("drugprovidersoverall")) {
+  data <- append(data, list("drugProvidersOverall" = drugprovidersoverall,
+                            "drugProvidersByConcept" = if (exists("drugprovidersbyconcept")) drugprovidersbyconcept else NULL))
+}
 if (exists("drugsourceconceptsoverall")) {
   data <- append(data, list("drugSourceConceptsOverall" = drugsourceconceptsoverall))
 }

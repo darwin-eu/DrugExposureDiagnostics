@@ -23,8 +23,10 @@
 #'  If NULL, all concept IDs for an ingredient will be considered.
 #' @param checks the checks to be executed, by default the missing values, the
 #' exposure duration and the quantity. Possible options are "missing",
-#' "exposureDuration", "type", "route", "sourceConcept", "daysSupply",
+#' "exposureDuration", "type", "route", "provider", "sourceConcept", "daysSupply",
 #' "verbatimEndDate", "dose", "sig", "quantity", "daysBetween" and "diagnosticsSummary"
+#' The "provider" check requires the provider table and reports the fraction of
+#' sampled ingredient records in each group, including missing or unmatched IDs.
 #' @param minCellCount minimum number of events to report- results
 #' lower than this will be obscured. If 0 all results will be reported.
 #' @param sample the number of samples, default 10.000. The `daysBetween` check
@@ -377,6 +379,21 @@ executeChecksSingleIngredient <- function(cdm,
     }
   }
 
+  drugProvidersOverall <- drugProvidersByConcept <- NULL
+  if ("provider" %in% checks) {
+    if (verbose == TRUE) {
+      start <- printDurationAndMessage("Progress: check drugProviders", start)
+    }
+    drugProvidersOverall <- getDrugProviders(cdm, "ingredient_drug_records",
+      byConcept = FALSE, sampleSize = sampleSize
+    ) %>% dplyr::collect()
+    if (isTRUE(byConcept)) {
+      drugProvidersByConcept <- getDrugProviders(cdm, "ingredient_drug_records",
+        byConcept = TRUE, sampleSize = sampleSize
+      ) %>% dplyr::collect()
+    }
+  }
+
   drugSourceConcepts <- NULL
   if ("sourceConcept" %in% checks) {
     if (verbose == TRUE) {
@@ -479,6 +496,8 @@ executeChecksSingleIngredient <- function(cdm,
     "drugTypesByConcept" = drugTypesByConcept,
     "drugRoutesOverall" = drugRoutesOverall,
     "drugRoutesByConcept" = drugRoutesByConcept,
+    "drugProvidersOverall" = drugProvidersOverall,
+    "drugProvidersByConcept" = drugProvidersByConcept,
     "drugSourceConceptsOverall" = drugSourceConcepts,
     "drugDaysSupply" = drugDaysSupply,
     "drugDaysSupplyByConcept" = drugDaysSupplyByConcept,

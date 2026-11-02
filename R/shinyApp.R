@@ -54,6 +54,7 @@ ShinyApp <- R6::R6Class(
       private$.initIngredientConceptsTab()
       private$.initDrugRoutesTab()
       private$.initDrugTypesTab()
+      private$.initDrugProvidersTab()
       private$.initDrugSourceConceptsTab()
       private$.initDrugExposureDurationTab()
       private$.initMissingValuesTab()
@@ -146,6 +147,22 @@ ShinyApp <- R6::R6Class(
           plotPercentage = FALSE,
           byConcept = TRUE,
           downloadFilename = "DrugTypes.csv"
+        )
+        newModule$parentNamespace <- self$namespace
+        private$.modules <- append(private$.modules, newModule)
+      }
+    },
+    .initDrugProvidersTab = function() {
+      if (!is.null(private$.resultList$drugProvidersOverall) && nrow(private$.resultList$drugProvidersOverall) > 0) {
+        newModule <- DrugExposureDiagnostics::dataPlotPanel$new(
+          data = private$.resultList$drugProvidersOverall,
+          dataByConcept = private$.resultList$drugProvidersByConcept,
+          id = "drugProviders",
+          title = "Drug providers",
+          description = "Drug providers",
+          plotPercentage = FALSE,
+          byConcept = TRUE,
+          downloadFilename = "DrugProviders.csv"
         )
         newModule$parentNamespace <- self$namespace
         private$.modules <- append(private$.modules, newModule)

@@ -32,8 +32,10 @@ If NULL, all concept IDs for an ingredient will be considered.}
 
 \item{checks}{the checks to be executed, by default the missing values, the
 exposure duration and the quantity. Possible options are "missing",
-"exposureDuration", "type", "route", "sourceConcept", "daysSupply",
-"verbatimEndDate", "dose", "sig", "quantity", "daysBetween" and "diagnosticsSummary"}
+"exposureDuration", "type", "route", "provider", "sourceConcept", "daysSupply",
+"verbatimEndDate", "dose", "sig", "quantity", "daysBetween" and "diagnosticsSummary"
+The "provider" check requires the provider table and reports the fraction of
+sampled ingredient records in each group, including missing or unmatched IDs.}
 
 \item{minCellCount}{minimum number of events to report- results
 lower than this will be obscured. If 0 all results will be reported.}

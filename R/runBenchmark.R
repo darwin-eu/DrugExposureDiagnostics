@@ -23,7 +23,7 @@
 #' If NULL (default), all concept IDs for an ingredient will be considered.
 #' @param checks the checks to be executed, by default the missing values, the
 #' exposure duration and the quantity. Possible options are "missing",
-#' "exposureDuration", "type", "route", "sourceConcept", "daysSupply",
+#' "exposureDuration", "type", "route", "provider", "sourceConcept", "daysSupply",
 #' "verbatimEndDate", "dose", "sig", "quantity" and "diagnosticsSummary"
 #' @param minCellCount minimum number of events to report- results
 #' lower than this will be obscured. If 0 all results will be reported.

@@ -69,6 +69,7 @@ Collate:
     'checkDaysSupply.R'
     'checkDrugDose.R'
     'checkDrugExposureDuration.R'
+    'checkDrugProviders.R'
     'checkDrugQuantity.R'
     'checkDrugRoutes.R'
     'checkDrugSig.R'

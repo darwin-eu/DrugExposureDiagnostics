@@ -33,8 +33,9 @@
 #' @param denom_unit vector of possible numerator unit type drug strength table representing milligram, milliliter and hour
 #' @param num_val vector of possible numeric numerator denominator value drug strength table
 #' @param seed seed to make results reproducible
+#' @param provider optional provider table; defaults to synthetic providers
 #'
-#' @return CDMConnector CDM reference object to duckdb database with mock data include  concept_ancestor, concept, drug_strength, drug_exposure tables
+#' @return CDMConnector CDM reference object to duckdb database with mock data include  concept_ancestor, concept, drug_strength, drug_exposure and provider tables
 #' @export
 mockDrugExposure <- function(drug_exposure = NULL,
                              concept_ancestor = NULL,
@@ -52,7 +53,8 @@ mockDrugExposure <- function(drug_exposure = NULL,
                              num_unit = c(8587, 8576, 9655),
                              denom_unit = c(8587, 8576, 8505),
                              num_val = c(1, 2, 3),
-                             seed = 1) {
+                             seed = 1,
+                             provider = NULL) {
   # checks
   errorMessage <- checkmate::makeAssertCollection()
   checkmate::assert_int(drug_exposure_size, lower = 1)
@@ -184,6 +186,24 @@ mockDrugExposure <- function(drug_exposure = NULL,
   }
 
 
+  # Synthetic provider names and identifiers are for demonstration only.
+  if (is.null(provider)) {
+    provider <- data.frame(
+      provider_id = 1:5,
+      provider_name = c("Alex Morgan", "Jamie Patel", "Taylor Chen",
+                        "Jordan Williams", "Samira Ahmed"),
+      npi = NA_character_, dea = NA_character_,
+      specialty_concept_id = 0L, care_site_id = NA_integer_,
+      year_of_birth = NA_integer_, gender_concept_id = 0L,
+      provider_source_value = paste0("provider_", 1:5),
+      specialty_source_value = NA_character_, specialty_source_concept_id = 0L,
+      gender_source_value = NA_character_, gender_source_concept_id = 0L
+    )
+  }
+  providerIds <- provider$provider_id[!is.na(provider$provider_id)]
+  # Include missing IDs so completeness checks have a representative example.
+  exposureProviderIds <- c(providerIds, NA)
+
   # ingredient_drug_records PLACEHOLDER
   set.seed(seed)
   if (is.null(ingredient_drug_records)) {
@@ -252,7 +272,7 @@ mockDrugExposure <- function(drug_exposure = NULL,
     ), drug_exposure_size, replace = TRUE)
     route_concept_id <- as.integer(c(rep(4132161, drug_exposure_size)))
     lot_number <- c(rep("0", drug_exposure_size))
-    provider_id <- as.integer(c(rep(0, drug_exposure_size)))
+    provider_id <- rep(exposureProviderIds, length.out = drug_exposure_size)
     visit_occurrence_id <-
       as.integer(seq(1:drug_exposure_size))
     drug_source_value <-
@@ -359,7 +379,7 @@ mockDrugExposure <- function(drug_exposure = NULL,
         race_concept_id = as.integer(race_concept_id),
         ethnicity_concept_id = as.integer(ethnicity_concept_id),
         location_id = id,
-        provider_id = id,
+        provider_id = rep(exposureProviderIds, length.out = patient_size),
         care_site_id = id,
         person_source_value = as.character(values),
         gender_source_value = as.character(values),
@@ -466,6 +486,11 @@ mockDrugExposure <- function(drug_exposure = NULL,
     overwrite = TRUE
   )
 
+  DBI::dbWriteTable(db, "provider",
+    provider,
+    overwrite = TRUE
+  )
+
   DBI::dbWriteTable(db, "vocabulary",
     vocabulary,
     overwrite = TRUE
@@ -474,7 +499,7 @@ mockDrugExposure <- function(drug_exposure = NULL,
   cdm <- CDMConnector::cdmFromCon(db, cdmSchema = "main", writeSchema = "main") %>%
     omopgenerics::cdmSelect(c(
       person, observation_period, concept_ancestor, concept_relationship,
-      concept, drug_strength, drug_exposure, cdm_source, vocabulary
+      concept, drug_strength, drug_exposure, provider, cdm_source, vocabulary
     ))
 
   cdm$ingredient_drug_records <- dplyr::tbl(db, "main.ingredient_drug_records") %>%
