@@ -1,5 +1,8 @@
 # DrugExposureDiagnostics (development version)
 
+# DrugExposureDiagnostics 1.2.2
+* Add provider check
+
 # DrugExposureDiagnostics 1.2.1
 * Duckdb v2 compatibility (#356)
 
